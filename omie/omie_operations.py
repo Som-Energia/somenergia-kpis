@@ -4,7 +4,7 @@ import urllib.request, gzip
 
 from sqlalchemy import create_engine
 
-from dbconfig import puppis_prod_db, local_superset_db
+from dbconfig import local_db
 
 
 # imports
@@ -16,7 +16,7 @@ def get_historical_hour_price(verbose=2, dry_run=False):
 
     request_time = datetime.datetime.now(datetime.timezone.utc)
     noms_columnes = ['year','month','day','hour','price']
-    engine = create_engine(local_superset_db['dbapi'])
+    engine = create_engine(local_db['dbapi'])
 
     hist_files_url = 'https://www.omie.es/es/file-access-list?parents%5B0%5D=/&parents%5B1%5D=Mercado%20Diario&parents%5B2%5D=1.%20Precios&dir=Precios%20horarios%20del%20mercado%20diario%20en%20Espa%C3%B1a&realdir=marginalpdbc'
     file_base_url = 'https://www.omie.es/es/file-download?parents%5B0%5D=marginalpdbc&filename='

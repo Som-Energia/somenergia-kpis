@@ -7,7 +7,7 @@ from datetime import timedelta
 import getopt, sys
 import click
 
-from dbconfig import helpscout_api, puppis_prod_db
+from dbconfig import helpscout_api, local_db
 
 # Mailboxes objectiu:
 # {'id': 25853, 'name': 'Comercialització Som Energia', 'slug': '0d45beceef2334dc', 'email': 'comercialitzacio@somenergia.coop'}
@@ -19,7 +19,7 @@ from dbconfig import helpscout_api, puppis_prod_db
 # https://trello.com/c/xCsZRcXR/4595-0-6-p28-an%C3%A0lisi-afegir-kpis-de-helpscout-al-superset
 
 def create_HS_engine():
-    engine = create_engine(puppis_prod_db['dbapi'])
+    engine = create_engine(local_db['dbapi'])
     hs = HelpScout(app_id=helpscout_api['app_id'], app_secret=helpscout_api['app_secret'], sleep_on_rate_limit_exceeded=True)
     return hs, engine
 
