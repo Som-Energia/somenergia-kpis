@@ -4,12 +4,12 @@ from meff.meff_operations import (
     update_closing_prices_day,
     update_closing_prices_month
 )
-# from omie.omie_operations import get_historical_hour_price
-
+from omie.omie_operations import get_historical_hour_price
 
 function_list = {
     'update_closing_prices_day': update_closing_prices_day,
-    'update_closing_prices_month': update_closing_prices_month
+    'update_closing_prices_month': update_closing_prices_month,
+    'get_historical_hour_price': get_historical_hour_price
 }
 
 # TODO use logging instead of -v
