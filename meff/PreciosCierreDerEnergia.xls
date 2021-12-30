@@ -1,0 +1,211 @@
+﻿<html><head><title></title><STYLE type="text/css">body{font-family:Arial,sans-serif}TH{text-transform:uppercase;text-align:center;border-bottom:1px solid #c2c2c2}TD{border-bottom:1px solid #c2c2c2}TD.DifBj{color:#c12a2a}TD.DifSb{color:#61c250}TD.Destacado,TD.Destacado A{color:#000;text-decoration:none}TD.colCompra{background:#e9e9d6}TD.colVenta{background:#e4ebfa}TD.colVcto{background:#f0f7ff;border-right:1px solid #c2c2c2;border-left:1px solid #c2c2c2}TD.colVcto:first-child{border-left:none}TD.Sep{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAACCAAAAACryHkyAAAAAnRSTlMA/1uRIrUAAAASSURBVHgBY/qPAEwMIHACTAIAykoLwoAkcbEAAAAASUVORK5CYII=) repeat-y center top}TD.Sep,TH.Sep{width:11px;padding:0}TR.Total>TD{background:#e9f1f5;font-weight:700;color:#000}.text-left>td,.text-left>th{text-align:left}.text-right>td,.text-right>th{text-align:right}.text-center>td,.text-center>th{text-align:center}.text-left,td.text-left,th.text-left{text-align:left}.text-right,td.text-right,th.text-right{text-align:right}.text-center,td.text-center,th.text-center{text-align:center}</STYLE></head><body><form method="post" action="./Precios-Cierre.aspx?id=esp&amp;excel=si" id="Form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+</div>
+
+
+<div class="tblcaption peq">
+    MIÉRCOLES, 29 DE DICIEMBRE DE 2021
+</div>
+
+<div>
+	<table class="Precios" cellspacing="1" cellpadding="1" id="Contenido_Contenido_tblDatos">
+		<thead>
+			<tr>
+				<th rowspan="2" scope="col">&nbsp;</th><th class="Sep" rowspan="2" scope="col">&nbsp;</th><th colspan="3">BASE</th><th class="Sep" rowspan="2" scope="col">&nbsp;</th><th colspan="3">PUNTA</th>
+			</tr><tr>
+				<th scope="col">Precio</th><th scope="col">Dif.</th><th scope="col">Dif.(%)</th><th scope="col">Precio</th><th scope="col">Dif.</th><th scope="col">Dif.(%)</th>
+			</tr>
+		</thead><tbody>
+			<tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 30-dic-2021</td><td class="Sep">&nbsp;</td><td>200,68</td><td class="DifSb">+19,59</td><td class="DifSb">+10,82</td><td class="Sep">&nbsp;</td><td>205,54</td><td class="DifSb">+16,96</td><td class="DifSb">+8,99</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 31-dic-2021</td><td class="Sep">&nbsp;</td><td>200,68</td><td class="DifSb">+19,59</td><td class="DifSb">+10,82</td><td class="Sep">&nbsp;</td><td>208,98</td><td class="DifSb">+20,40</td><td class="DifSb">+10,82</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 1-ene-2022</td><td class="Sep">&nbsp;</td><td>265,81</td><td class="DifBj">-5,53</td><td class="DifBj">-2,04</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 2-ene-2022</td><td class="Sep">&nbsp;</td><td>215,58</td><td class="DifBj">-4,48</td><td class="DifBj">-2,04</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 3-ene-2022</td><td class="Sep">&nbsp;</td><td>290,51</td><td class="DifBj">-15,05</td><td class="DifBj">-4,93</td><td class="Sep">&nbsp;</td><td>302,53</td><td class="DifBj">-15,68</td><td class="DifBj">-4,93</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 4-ene-2022</td><td class="Sep">&nbsp;</td><td>290,51</td><td class="DifBj">-15,05</td><td class="DifBj">-4,93</td><td class="Sep">&nbsp;</td><td>302,53</td><td class="DifBj">-15,68</td><td class="DifBj">-4,93</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 5-ene-2022</td><td class="Sep">&nbsp;</td><td>290,51</td><td class="DifBj">-15,05</td><td class="DifBj">-4,93</td><td class="Sep">&nbsp;</td><td>302,53</td><td class="DifBj">-15,68</td><td class="DifBj">-4,93</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 6-ene-2022</td><td class="Sep">&nbsp;</td><td>290,51</td><td class="DifBj">-15,05</td><td class="DifBj">-4,93</td><td class="Sep">&nbsp;</td><td>302,53</td><td class="DifBj">-15,68</td><td class="DifBj">-4,93</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 7-ene-2022</td><td class="Sep">&nbsp;</td><td>290,51</td><td class="DifBj">-15,05</td><td class="DifBj">-4,93</td><td class="Sep">&nbsp;</td><td>302,53</td><td class="DifBj">-15,68</td><td class="DifBj">-4,93</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 8-ene-2022</td><td class="Sep">&nbsp;</td><td>218,74</td><td class="DifBj">-11,33</td><td class="DifBj">-4,92</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 9-ene-2022</td><td class="Sep">&nbsp;</td><td>177,39</td><td class="DifBj">-9,18</td><td class="DifBj">-4,92</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 10-ene-2022</td><td class="Sep">&nbsp;</td><td>291,55</td><td class="DifBj">-15,05</td><td class="DifBj">-4,91</td><td class="Sep">&nbsp;</td><td>303,62</td><td class="DifBj">-15,67</td><td class="DifBj">-4,91</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 11-ene-2022</td><td class="Sep">&nbsp;</td><td>291,55</td><td class="DifBj">-15,05</td><td class="DifBj">-4,91</td><td class="Sep">&nbsp;</td><td>303,62</td><td class="DifBj">-15,67</td><td class="DifBj">-4,91</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 12-ene-2022</td><td class="Sep">&nbsp;</td><td>291,55</td><td class="DifBj">-15,05</td><td class="DifBj">-4,91</td><td class="Sep">&nbsp;</td><td>303,62</td><td class="DifBj">-15,67</td><td class="DifBj">-4,91</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 13-ene-2022</td><td class="Sep">&nbsp;</td><td>291,55</td><td class="DifBj">-15,05</td><td class="DifBj">-4,91</td><td class="Sep">&nbsp;</td><td>303,62</td><td class="DifBj">-15,67</td><td class="DifBj">-4,91</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 14-ene-2022</td><td class="Sep">&nbsp;</td><td>291,55</td><td class="DifBj">-15,05</td><td class="DifBj">-4,91</td><td class="Sep">&nbsp;</td><td>303,62</td><td class="DifBj">-15,67</td><td class="DifBj">-4,91</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 15-ene-2022</td><td class="Sep">&nbsp;</td><td>219,52</td><td class="DifBj">-11,33</td><td class="DifBj">-4,91</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 16-ene-2022</td><td class="Sep">&nbsp;</td><td>178,03</td><td class="DifBj">-9,18</td><td class="DifBj">-4,90</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 17-ene-2022</td><td class="Sep">&nbsp;</td><td>281,03</td><td class="DifBj">-15,05</td><td class="DifBj">-5,08</td><td class="Sep">&nbsp;</td><td>292,66</td><td class="DifBj">-15,67</td><td class="DifBj">-5,08</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 18-ene-2022</td><td class="Sep">&nbsp;</td><td>281,03</td><td class="DifBj">-15,05</td><td class="DifBj">-5,08</td><td class="Sep">&nbsp;</td><td>292,66</td><td class="DifBj">-15,67</td><td class="DifBj">-5,08</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 19-ene-2022</td><td class="Sep">&nbsp;</td><td>281,03</td><td class="DifBj">-15,05</td><td class="DifBj">-5,08</td><td class="Sep">&nbsp;</td><td>292,66</td><td class="DifBj">-15,67</td><td class="DifBj">-5,08</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 20-ene-2022</td><td class="Sep">&nbsp;</td><td>281,03</td><td class="DifBj">-15,05</td><td class="DifBj">-5,08</td><td class="Sep">&nbsp;</td><td>292,66</td><td class="DifBj">-15,67</td><td class="DifBj">-5,08</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 21-ene-2022</td><td class="Sep">&nbsp;</td><td>281,03</td><td class="DifBj">-15,05</td><td class="DifBj">-5,08</td><td class="Sep">&nbsp;</td><td>292,66</td><td class="DifBj">-15,67</td><td class="DifBj">-5,08</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 22-ene-2022</td><td class="Sep">&nbsp;</td><td>211,59</td><td class="DifBj">-11,33</td><td class="DifBj">-5,08</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 23-ene-2022</td><td class="Sep">&nbsp;</td><td>171,60</td><td class="DifBj">-9,18</td><td class="DifBj">-5,08</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 24-ene-2022</td><td class="Sep">&nbsp;</td><td>291,04</td><td class="DifBj">-15,05</td><td class="DifBj">-4,92</td><td class="Sep">&nbsp;</td><td>303,08</td><td class="DifBj">-15,68</td><td class="DifBj">-4,92</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 25-ene-2022</td><td class="Sep">&nbsp;</td><td>291,04</td><td class="DifBj">-15,05</td><td class="DifBj">-4,92</td><td class="Sep">&nbsp;</td><td>303,08</td><td class="DifBj">-15,68</td><td class="DifBj">-4,92</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 26-ene-2022</td><td class="Sep">&nbsp;</td><td>291,04</td><td class="DifBj">-15,05</td><td class="DifBj">-4,92</td><td class="Sep">&nbsp;</td><td>303,08</td><td class="DifBj">-15,68</td><td class="DifBj">-4,92</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 27-ene-2022</td><td class="Sep">&nbsp;</td><td>291,04</td><td class="DifBj">-15,05</td><td class="DifBj">-4,92</td><td class="Sep">&nbsp;</td><td>303,08</td><td class="DifBj">-15,68</td><td class="DifBj">-4,92</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 28-ene-2022</td><td class="Sep">&nbsp;</td><td>291,04</td><td class="DifBj">-15,05</td><td class="DifBj">-4,92</td><td class="Sep">&nbsp;</td><td>303,08</td><td class="DifBj">-15,68</td><td class="DifBj">-4,92</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 29-ene-2022</td><td class="Sep">&nbsp;</td><td>219,12</td><td class="DifBj">-11,33</td><td class="DifBj">-4,92</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 30-ene-2022</td><td class="Sep">&nbsp;</td><td>177,71</td><td class="DifBj">-9,19</td><td class="DifBj">-4,92</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 31-ene-2022</td><td class="Sep">&nbsp;</td><td>204,50</td><td class="DifBj">-8,55</td><td class="DifBj">-4,01</td><td class="Sep">&nbsp;</td><td>212,96</td><td class="DifBj">-8,91</td><td class="DifBj">-4,02</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 1-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 2-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 3-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 4-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 5-feb-2022</td><td class="Sep">&nbsp;</td><td>216,16</td><td class="DifBj">-13,25</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 6-feb-2022</td><td class="Sep">&nbsp;</td><td>175,31</td><td class="DifBj">-10,74</td><td class="DifBj">-5,77</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 7-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 8-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 9-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 10-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 11-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 12-feb-2022</td><td class="Sep">&nbsp;</td><td>216,16</td><td class="DifBj">-13,25</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 13-feb-2022</td><td class="Sep">&nbsp;</td><td>175,31</td><td class="DifBj">-10,74</td><td class="DifBj">-5,77</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 14-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 15-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 16-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 17-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 18-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 19-feb-2022</td><td class="Sep">&nbsp;</td><td>216,16</td><td class="DifBj">-13,25</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 20-feb-2022</td><td class="Sep">&nbsp;</td><td>175,31</td><td class="DifBj">-10,74</td><td class="DifBj">-5,77</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 21-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 22-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 23-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 24-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 25-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 26-feb-2022</td><td class="Sep">&nbsp;</td><td>216,16</td><td class="DifBj">-13,25</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 27-feb-2022</td><td class="Sep">&nbsp;</td><td>175,31</td><td class="DifBj">-10,74</td><td class="DifBj">-5,77</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">D&#237;a 28-feb-2022</td><td class="Sep">&nbsp;</td><td>287,10</td><td class="DifBj">-17,61</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>298,98</td><td class="DifBj">-18,34</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Fin de Semana 52-2021</td><td class="Sep">&nbsp;</td><td>240,70</td><td class="DifBj">-5,00</td><td class="DifBj">-2,04</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Fin de Semana 1-2022</td><td class="Sep">&nbsp;</td><td>198,07</td><td class="DifBj">-10,25</td><td class="DifBj">-4,92</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Fin de Semana 2-2022</td><td class="Sep">&nbsp;</td><td>198,78</td><td class="DifBj">-10,25</td><td class="DifBj">-4,90</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Fin de Semana 3-2022</td><td class="Sep">&nbsp;</td><td>191,60</td><td class="DifBj">-10,25</td><td class="DifBj">-5,08</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Semana 1-2022</td><td class="Sep">&nbsp;</td><td>264,10</td><td class="DifBj">-13,68</td><td class="DifBj">-4,92</td><td class="Sep">&nbsp;</td><td>307,33</td><td class="DifBj">-15,92</td><td class="DifBj">-4,92</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Semana 2-2022</td><td class="Sep">&nbsp;</td><td>265,04</td><td class="DifBj">-13,68</td><td class="DifBj">-4,91</td><td class="Sep">&nbsp;</td><td>308,42</td><td class="DifBj">-15,92</td><td class="DifBj">-4,91</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Semana 3-2022</td><td class="Sep">&nbsp;</td><td>255,48</td><td class="DifBj">-13,68</td><td class="DifBj">-5,08</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Semana 4-2022</td><td class="Sep">&nbsp;</td><td>264,58</td><td class="DifBj">-13,68</td><td class="DifBj">-4,92</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Mes ene-2022</td><td class="Sep">&nbsp;</td><td>259,04</td><td class="DifBj">-12,96</td><td class="DifBj">-4,76</td><td class="Sep">&nbsp;</td><td>301,44</td><td class="DifBj">-15,08</td><td class="DifBj">-4,76</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Mes feb-2022</td><td class="Sep">&nbsp;</td><td>261,00</td><td class="DifBj">-16,00</td><td class="DifBj">-5,78</td><td class="Sep">&nbsp;</td><td>303,72</td><td class="DifBj">-18,62</td><td class="DifBj">-5,78</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Mes mar-2022</td><td class="Sep">&nbsp;</td><td>231,00</td><td class="DifBj">-2,00</td><td class="DifBj">-0,86</td><td class="Sep">&nbsp;</td><td>268,81</td><td class="DifBj">-2,33</td><td class="DifBj">-0,86</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Mes abr-2022</td><td class="Sep">&nbsp;</td><td>200,35</td><td class="DifBj">-1,48</td><td class="DifBj">-0,73</td><td class="Sep">&nbsp;</td><td>233,14</td><td class="DifBj">-1,72</td><td class="DifBj">-0,73</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Mes may-2022</td><td class="Sep">&nbsp;</td><td>200,00</td><td class="DifBj">-0,07</td><td class="DifBj">-0,03</td><td class="Sep">&nbsp;</td><td>232,73</td><td class="DifBj">-0,09</td><td class="DifBj">-0,04</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Mes jun-2022</td><td class="Sep">&nbsp;</td><td>214,81</td><td class="DifBj">-1,49</td><td class="DifBj">-0,69</td><td class="Sep">&nbsp;</td><td>249,97</td><td class="DifBj">-1,73</td><td class="DifBj">-0,69</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Trimestre 1-2022</td><td class="Sep">&nbsp;</td><td>250,00</td><td class="DifBj">-10,13</td><td class="DifBj">-3,89</td><td class="Sep">&nbsp;</td><td>290,92</td><td class="DifBj">-11,79</td><td class="DifBj">-3,89</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Trimestre 2-2022</td><td class="Sep">&nbsp;</td><td>205,00</td><td class="DifBj">-1,00</td><td class="DifBj">-0,49</td><td class="Sep">&nbsp;</td><td>238,55</td><td class="DifBj">-1,17</td><td class="DifBj">-0,49</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Trimestre 3-2022</td><td class="Sep">&nbsp;</td><td>208,00</td><td class="DifBj">-7,00</td><td class="DifBj">-3,26</td><td class="Sep">&nbsp;</td><td>242,04</td><td class="DifBj">-8,15</td><td class="DifBj">-3,26</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Trimestre 4-2022</td><td class="Sep">&nbsp;</td><td>213,53</td><td class="DifSb">+5,85</td><td class="DifSb">+2,82</td><td class="Sep">&nbsp;</td><td>248,48</td><td class="DifSb">+6,81</td><td class="DifSb">+2,82</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Trimestre 1-2023</td><td class="Sep">&nbsp;</td><td>227,00</td><td class="DifSb">+5,50</td><td class="DifSb">+2,48</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Trimestre 2-2023</td><td class="Sep">&nbsp;</td><td>51,99</td><td class="DifSb">+5,50</td><td class="DifSb">+11,83</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Trimestre 3-2023</td><td class="Sep">&nbsp;</td><td>55,13</td><td class="DifSb">+5,50</td><td class="DifSb">+11,08</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">Trimestre 4-2023</td><td class="Sep">&nbsp;</td><td>64,23</td><td class="DifSb">+5,50</td><td class="DifSb">+9,36</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">A&#241;o 2022</td><td class="Sep">&nbsp;</td><td>219,00</td><td class="DifBj">-3,03</td><td class="DifBj">-1,36</td><td class="Sep">&nbsp;</td><td>254,85</td><td class="DifBj">-3,52</td><td class="DifBj">-1,36</td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">A&#241;o 2023</td><td class="Sep">&nbsp;</td><td>99,00</td><td class="DifSb">+5,50</td><td class="DifSb">+5,88</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">A&#241;o 2024</td><td class="Sep">&nbsp;</td><td>76,00</td><td class="DifSb">+3,50</td><td class="DifSb">+4,83</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">A&#241;o 2025</td><td class="Sep">&nbsp;</td><td>62,00</td><td class="DifSb">+2,00</td><td class="DifSb">+3,33</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">A&#241;o 2026</td><td class="Sep">&nbsp;</td><td>47,75</td><td class="DifSb">+0,75</td><td class="DifSb">+1,60</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">A&#241;o 2027</td><td class="Sep">&nbsp;</td><td>40,75</td><td class="DifSb">+0,75</td><td class="DifSb">+1,88</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">A&#241;o 2028</td><td class="Sep">&nbsp;</td><td>39,65</td><td class="DifSb">+0,75</td><td class="DifSb">+1,93</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">A&#241;o 2029</td><td class="Sep">&nbsp;</td><td>38,55</td><td class="DifSb">+0,75</td><td class="DifSb">+1,98</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">A&#241;o 2030</td><td class="Sep">&nbsp;</td><td>38,25</td><td class="DifSb">+0,75</td><td class="DifSb">+2,00</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr><tr class="text-right">
+				<td class="Destacado text-left">A&#241;o 2031</td><td class="Sep">&nbsp;</td><td>38,10</td><td class="DifSb">+0,75</td><td class="DifSb">+2,01</td><td class="Sep">&nbsp;</td><td></td><td class="DifIg"></td><td class="DifIg"></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</form></body></html>
