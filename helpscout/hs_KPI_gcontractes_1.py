@@ -7,7 +7,7 @@ from datetime import timedelta
 import getopt, sys
 import click
 
-from dbconfig import helpscoutAPI, puppis_prod_db
+from dbconfig import helpscout_api, puppis_prod_db
 
 # Mailboxes objectiu:
 # {'id': 25853, 'name': 'Comercialització Som Energia', 'slug': '0d45beceef2334dc', 'email': 'comercialitzacio@somenergia.coop'}
