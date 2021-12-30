@@ -42,7 +42,7 @@ def update_closing_prices_day(verbose=2, dry_run=False):
         print(precios_cierre_dia)
     else:
         try:
-            precios_cierre_dia.to_sql('meff_precios_cierre_dia', engine, index = False, if_exists = 'replace')
+            precios_cierre_dia.to_sql('meff_precios_cierre_dia', engine, index = False, if_exists = 'append')
         except:
             # TODO handle exceptions
             raise
@@ -77,7 +77,7 @@ def update_closing_prices_month(verbose=2, dry_run=False):
         print(precios_cierre_mes)
     else:
         try:
-            precios_cierre_mes.to_sql('meff_precios_cierre_mes', engine, index = False, if_exists = 'replace')
+            precios_cierre_mes.to_sql('meff_precios_cierre_mes', engine, index = False, if_exists = 'append')
         except:
             # TODO handle exceptions
             raise
