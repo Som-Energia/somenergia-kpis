@@ -4,12 +4,16 @@ from meff.meff_operations import (
     update_closing_prices_day,
     update_closing_prices_month
 )
-from omie.omie_operations import get_historical_hour_price
+from omie.omie_operations import (
+    get_historical_hour_price,
+    update_historical_hour_price
+)
 
 function_list = {
     'update_closing_prices_day': update_closing_prices_day,
     'update_closing_prices_month': update_closing_prices_month,
-    'get_historical_hour_price': get_historical_hour_price
+    'get_historical_hour_price': get_historical_hour_price,
+    'update_historical_hour_price': update_historical_hour_price
 }
 
 # TODO use logging instead of -v
@@ -31,13 +35,13 @@ def dispatch(function, verbose, list_functions, dry_run):
 
         if function:
             result = operation_function(verbose, dry_run)
-            if result != 0 and verbose > 0 or result and verbose > 1: 
+            if result != 0 and verbose > 0 or result and verbose > 1:
                 print(f'{function} ended with result {result}')
         else:
             if verbose > 0:
                 print(f'{function} not found. options: {list(function_list.keys())}')
             result = -1
-    
+
         results.append(result)
 
     if verbose > 1:

@@ -54,14 +54,14 @@ def update_closing_prices_month(verbose=2, dry_run=False):
     if not dry_run:
         engine = create_engine(local_db['dbapi'])
 
-    if verbose > 2:
-        print(precios_cierre)
-
     try:
         precios_cierre = pd.read_html('https://www.meff.es/ing/Commodities-Derivatives/Close-Prices/Excel')[0]
     except:
         # TODO handle exceptions
         raise
+
+    if verbose > 2:
+        print(precios_cierre)
 
     precios_cierre_mes = precios_cierre\
         .set_axis(noms_columnes, axis=1)\
