@@ -11,15 +11,17 @@ cp dbconfig.example.py dbconfig.py
 
 Edit `dbconfig.py` with your data. You will have to create a database.
 
-The visualization user has to have access to new tables by default. You can set this with:
+The visualization user has to have access to new tables by default, because some scripts replace the table each day. You can set this with:
 
 ```
 ALTER DEFAULT PRIVILEGES IN SCHEMA public
 GRANT SELECT ON TABLES TO username;
 ```
 
-
 # run
 
 `python main.py --help` or `python main.py --list-functions`
 
+# test
+
+testing will require installing `b2btest` which in turn requires `lxml` to be installed manually via pip
