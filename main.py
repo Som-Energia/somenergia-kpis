@@ -8,6 +8,7 @@ from omie.omie_operations import (
     get_historical_hour_price,
     update_latest_hour_price
 )
+import datetime
 
 function_list = {
     'update_closing_prices_day': update_closing_prices_day,
@@ -23,6 +24,9 @@ function_list = {
 @click.option('-l','--list-functions', default=False, is_flag=True)
 @click.option('-s','--dry-run', default=False, is_flag=True, help='Show dataframes but dont save to db')
 def dispatch(function, verbose, list_functions, dry_run):
+
+    if verbose > 1:
+        print(f"[{datetime.datetime.now()}] Start operations")
 
     if list_functions:
         print(f'Available functions {list(function_list.keys())}')
@@ -46,7 +50,7 @@ def dispatch(function, verbose, list_functions, dry_run):
 
     if verbose > 1:
         print(results)
-        print("Job's Done, Have a Nice Day")
+        print(f"[{datetime.datetime.now()}] Job's Done, Have a Nice Day")
     return results
 
 if __name__ == '__main__':

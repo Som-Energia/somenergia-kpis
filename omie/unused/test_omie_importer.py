@@ -6,7 +6,7 @@ import datetime
 
 from sqlalchemy import create_engine
 
-from omie.omie_importer import import_marginalpdbc
+from omie.unused.omie_importer import import_marginalpdbc
 
 @skipIf(True, "we're not importing from file atm")
 class OmieImporterTest(unittest.TestCase):

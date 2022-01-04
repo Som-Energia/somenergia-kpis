@@ -17,7 +17,7 @@ from omie.omie_operations import (
 )
 
 
-class OperationsTest(unittest.TestCase):
+class OmieOperationsTest(unittest.TestCase):
 
     from b2btest.b2btest import assertB2BEqual
 
