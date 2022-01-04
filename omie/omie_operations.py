@@ -57,8 +57,6 @@ def shape_omie(pathfile, request_time):
 # TODO merge get_historical_hour_price and update_historical_hour_price into one function and one table
 def get_historical_hour_price(verbose=2, dry_run=False):
 
-    engine = create_engine(local_db['dbapi'])
-
     request_time = datetime.datetime.now(datetime.timezone.utc)
 
     filetype = 'marginalpdbc'
@@ -80,6 +78,8 @@ def get_historical_hour_price(verbose=2, dry_run=False):
             if dry_run:
                 print(df)
             else:
+                engine = create_engine(local_db['dbapi'])
+
                 try:
                     df.to_sql('omie_price_hour', engine, index = False, if_exists = 'append')
                 except:
@@ -93,7 +93,6 @@ def get_historical_hour_price(verbose=2, dry_run=False):
 def update_latest_hour_price(verbose=2, dry_run=False):
 
     request_time = datetime.datetime.now(datetime.timezone.utc)
-    engine = create_engine(local_db['dbapi'])
 
     filetype = 'marginalpdbc'
     hist_files = get_file_list(filetype)
@@ -110,6 +109,8 @@ def update_latest_hour_price(verbose=2, dry_run=False):
         if dry_run:
             print(df)
         else:
+            engine = create_engine(local_db['dbapi'])
+
             try:
                 df.to_sql('omie_price_hour', engine, index = False, if_exists = 'replace')
             except:
@@ -118,15 +119,6 @@ def update_latest_hour_price(verbose=2, dry_run=False):
                 # TODO handle exceptions
                 raise
     return 0
-
-def shape_energy_buy(df, request_time):
-
-    noms_columnes = ['year','month','day','hour','text_id','var','flag1','flag2','ref']
-    df = base_shape(df, noms_columnes)
-    df = df[["date", "text_id", "var"]] # what to select?
-    df['request_time'] = request_time
-
-    return df
 
 def download_and_unzip(pathfile, file_index=None):
     file_index = file_index or -1
@@ -138,6 +130,15 @@ def download_and_unzip(pathfile, file_index=None):
         # if we only need latest
         with z.open(filename) as zfile:
            df = pd.read_csv(zfile, sep = ';')
+
+    return df
+
+def shape_energy_buy(df, request_time):
+
+    noms_columnes = ['year','month','day','hour','text_id','var','flag1','flag2','ref']
+    df = base_shape(df, noms_columnes)
+    df = df[["date", "text_id", "var"]] # what to select?
+    df['request_time'] = request_time
 
     return df
 
@@ -157,14 +158,13 @@ def update_energy_buy(verbose=2, dry_run=False):
     request_time = datetime.datetime.now(datetime.timezone.utc)
     df = download_and_unzip(pathfile)
 
-
-    engine = create_engine(local_db['dbapi'])
-
     if pathfile[-1:] == '1':
         df = shape_energy_buy(df, request_time)
         if dry_run:
             print(df)
         else:
+            engine = create_engine(local_db['dbapi'])
+
             try:
                 df.to_sql('omie_energy_buy', engine, index = False, if_exists = 'append')
             except:
