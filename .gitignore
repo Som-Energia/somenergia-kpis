@@ -131,3 +131,6 @@ dmypy.json
 
 # somenergia config files
 dbconfig.py
+
+# examples data
+sampledata
