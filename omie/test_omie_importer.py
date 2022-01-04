@@ -1,4 +1,5 @@
 import unittest
+from unittest.case import skipIf
 import pandas as pd
 from pandas.testing import assert_frame_equal
 import datetime
@@ -7,7 +8,7 @@ from sqlalchemy import create_engine
 
 from omie.omie_importer import import_marginalpdbc
 
-
+@skipIf(True, "we're not importing from file atm")
 class OmieImporterTest(unittest.TestCase):
 
     from b2btest.b2btest import assertB2BEqual
