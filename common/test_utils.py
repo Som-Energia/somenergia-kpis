@@ -2,6 +2,7 @@ import unittest
 
 import pandas as pd
 import datetime
+from pathlib import Path
 from sqlalchemy import text, insert, MetaData, Table, Column, Integer, String, DateTime
 
 from sqlalchemy import create_engine
@@ -12,6 +13,7 @@ from common.utils import (
     setup_file_table,
     insert_processed_file,
     check_processed_file,
+    list_new_files,
     kpis_file_table_name
 )
 
@@ -72,3 +74,8 @@ class UtilsTest(unittest.TestCase):
 
         exists = check_processed_file(self.engine, filename)
         self.assertTrue(exists)
+
+    def test__list_new_files(self):
+        files = list_new_files(self.engine, 'testdata/OTHER/')
+        expected = {Path('testdata/OTHER/pdbc_SOMEN_20211213.1'): False}
+        self.assertDictEqual(files, expected)

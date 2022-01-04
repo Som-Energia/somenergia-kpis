@@ -12,6 +12,9 @@ from sqlalchemy import (
     DateTime
 )
 
+from pathlib import Path
+
+
 kpis_file_table_name = 'file_table'
 
 
@@ -58,3 +61,19 @@ def check_processed_file(engine, filename, date_from=None):
     # alternatively
     # filefound = pd.read_sql(query, engine)
     return filefound
+
+def list_new_files(engine, directory, type=None, date_from=None):
+
+    # create graveyard directory if it doesn't exist
+    Path(f'{directory}/graveyard').mkdir(parents=False, exist_ok=True)
+
+    flist = {p:False for p in Path(directory).iterdir() if p.is_file()}
+
+    for f in flist.keys():
+        is_logged = check_processed_file(engine, str(f), date_from)
+        flist[f] = is_logged
+
+    return flist
+
+
+
