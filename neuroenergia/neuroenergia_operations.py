@@ -3,9 +3,12 @@ import datetime
 import urllib.request, gzip
 
 from sqlalchemy import create_engine
+from common.utils import list_new_files
 
-from dbconfig import local_db
-
+from dbconfig import (
+    local_db,
+    directories
+)
 
 # imports
 # https://www.meff.es/esp/Derivados-Commodities/Precios-Cierre
@@ -15,6 +18,11 @@ from dbconfig import local_db
 def update_neuroenergia(verbose=2, dry_run=False):
 
     request_time = datetime.datetime.now(datetime.timezone.utc)
+
+    neuro_dir = directories['NEUROENERGIA']
+    engine = create_engine(local_db['dbapi'])
+    flist = list_new_files(engine, neuro_dir)
+
     noms_columnes = ['dia','res','base_precio','base_dif','base_dif_per','res','punta_precio','punta_dif','punta_dif_per']
 
     try:
@@ -36,12 +44,9 @@ def update_neuroenergia(verbose=2, dry_run=False):
             dia = lambda x: pd.to_datetime(x['dia'], format='Day %d-%b-%Y').dt.date
         )
 
-
-
     if dry_run:
         print(precios_cierre_dia)
     else:
-        engine = create_engine(local_db['dbapi'])
         try:
             precios_cierre_dia.to_sql('meff_precios_cierre_dia', engine, index = False, if_exists = 'append')
         except:

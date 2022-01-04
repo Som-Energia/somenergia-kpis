@@ -14,3 +14,7 @@ local_db = dict(
 test_db = dict(
     dbapi = 'postgresql://superset:superset@localhost:5432/dades_test'
 )
+
+directories = {
+    'NEUROENERGIA': '~/somenergia/somenergia-indicadors-kpis/testdata/NEUROENERGIA'
+}
