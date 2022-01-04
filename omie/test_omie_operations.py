@@ -1,4 +1,5 @@
 import unittest
+from unittest.case import skipIf
 
 import pandas as pd
 import datetime
@@ -22,6 +23,7 @@ class OperationsTest(unittest.TestCase):
     def setUp(self):
         self.b2bdatapath='testdata/b2bdata'
 
+    @skipIf(True, "downloads from website, maybe don't abuse it")
     def test_get_file_list(self):
 
         hist_files = get_file_list('marginalpdbc')
