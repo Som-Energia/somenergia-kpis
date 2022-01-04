@@ -16,7 +16,7 @@ from dbconfig import local_db
 def get_historical_hour_price(verbose=2, dry_run=False):
 
     request_time = datetime.datetime.now(datetime.timezone.utc)
-    noms_columnes = ['year','month','day','hour','price']
+    noms_columnes = ['year','month','day','hour','price_pt','price']
     engine = create_engine(local_db['dbapi'])
 
     hist_files_url = 'https://www.omie.es/es/file-access-list?parents%5B0%5D=/&parents%5B1%5D=Mercado%20Diario&parents%5B2%5D=1.%20Precios&dir=Precios%20horarios%20del%20mercado%20diario%20en%20Espa%C3%B1a&realdir=marginalpdbc'
@@ -45,7 +45,7 @@ def get_historical_hour_price(verbose=2, dry_run=False):
                 raise
 
             df_current_day_dated = df_current_day\
-                .reset_index().iloc[:,:5]\
+                .reset_index().iloc[:,:6]\
                 .set_axis(noms_columnes, axis=1)\
                 .dropna()\
                 .assign(date = lambda x: pd.to_datetime(x[['year', 'month', 'day']]))
@@ -74,7 +74,7 @@ def get_historical_hour_price(verbose=2, dry_run=False):
 def update_historical_hour_price(verbose=2, dry_run=False):
 
     request_time = datetime.datetime.now(datetime.timezone.utc)
-    noms_columnes = ['year','month','day','hour','price']
+    noms_columnes = ['year','month','day','hour','price_pt', 'price']
     engine = create_engine(local_db['dbapi'])
 
     hist_files_url = 'https://www.omie.es/es/file-access-list?parents%5B0%5D=/&parents%5B1%5D=Mercado%20Diario&parents%5B2%5D=1.%20Precios&dir=Precios%20horarios%20del%20mercado%20diario%20en%20Espa%C3%B1a&realdir=marginalpdbc'
@@ -104,7 +104,7 @@ def update_historical_hour_price(verbose=2, dry_run=False):
             raise
 
         df_current_day_dated = df_current_day\
-            .reset_index().iloc[:,:5]\
+            .reset_index().iloc[:,:6]\
             .set_axis(noms_columnes, axis=1)\
             .dropna()\
             .assign(date = lambda x: pd.to_datetime(x[['year', 'month', 'day']]))
