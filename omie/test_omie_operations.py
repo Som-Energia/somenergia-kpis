@@ -12,7 +12,8 @@ from omie.omie_operations import (
     get_file_list,
     shape_omie,
     update_latest_hour_price,
-    update_energy_buy
+    update_energy_buy,
+    shape_energy_buy
 )
 
 
@@ -41,3 +42,11 @@ class OperationsTest(unittest.TestCase):
 
         self.assertB2BEqual(df.to_csv(index=False))
 
+    def test_shape_energy_buy(self):
+        request_time = datetime.datetime(2022,1,1)
+        filename = 'testdata/PDBC/pdbc_SOMEN_20211213.1'
+        df = pd.read_csv(filename, sep = ';')
+
+        df = shape_energy_buy(df, request_time)
+
+        self.assertB2BEqual(df.to_csv(index=False))
