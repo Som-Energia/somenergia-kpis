@@ -27,7 +27,7 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
     def test_shape_neuroenergia(self):
         request_time = datetime.datetime(2022,1,1)
         filename = 'testdata/NEUROENERGIA/20220101_prevision-neuro.xlsx'
-        df = pd.read_xlsx(filename)
+        df = pd.read_excel(filename)
 
         # TODO
 

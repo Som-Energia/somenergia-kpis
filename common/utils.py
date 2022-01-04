@@ -64,9 +64,6 @@ def check_processed_file(engine, filename, date_from=None):
 
 def list_new_files(engine, directory, type=None, date_from=None):
 
-    # create graveyard directory if it doesn't exist
-    Path(f'{directory}/graveyard').mkdir(parents=False, exist_ok=True)
-
     flist = {p:False for p in Path(directory).iterdir() if p.is_file()}
 
     for f in flist.keys():
@@ -75,5 +72,14 @@ def list_new_files(engine, directory, type=None, date_from=None):
 
     return flist
 
+def graveyard_files(directory: Path, files):
 
+    # create graveyard directory if it doesn't exist
+    Path(directory / 'graveyard').mkdir(parents=False, exist_ok=True)
+    graveyard = Path(f'{directory}/graveyard')
+
+    # move files
+    for f in files:
+        destination = graveyard / f.name
+        f.rename(destination)
 

@@ -61,7 +61,7 @@ class UtilsTest(unittest.TestCase):
 
     def test__insert_processed_file(self):
         filename = 'deadbeef.csv'
-        insert_processed_file(self.engine, filename)
+        insert_processed_file(self.engine, filename, type=None)
 
 
     def test__check_file_processed__empty(self):
@@ -70,7 +70,7 @@ class UtilsTest(unittest.TestCase):
 
     def test__check_file_processed__exists(self):
         filename = 'deadbeef.csv'
-        insert_processed_file(self.engine, filename)
+        insert_processed_file(self.engine, filename, type=None)
 
         exists = check_processed_file(self.engine, filename)
         self.assertTrue(exists)
