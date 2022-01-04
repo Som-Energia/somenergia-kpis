@@ -47,6 +47,8 @@ def update_closing_prices_day(verbose=2, dry_run=False):
             # TODO handle exceptions
             raise
 
+    return 0
+
 def update_closing_prices_month(verbose=2, dry_run=False):
 
     request_time = datetime.datetime.now(datetime.timezone.utc)
@@ -81,6 +83,8 @@ def update_closing_prices_month(verbose=2, dry_run=False):
         except:
             # TODO handle exceptions
             raise
+
+    return 0
 
 
 def update_las_closing_prices_long(verbose=2, dry_run=False):

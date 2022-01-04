@@ -26,7 +26,7 @@ def get_file_list(filetype, verbose=2):
     if verbose > 2:
         print(hist_files['Nombre'][0])
 
-    return hist_files_url
+    return hist_files
 
 def shape_omie(pathfile, request_time):
 
@@ -107,7 +107,7 @@ def update_latest_hour_price(verbose=2, dry_run=False):
             print(df)
         else:
             try:
-                df.to_sql('omie_price_hour', engine, index = False, if_exists = 'append')
+                df.to_sql('omie_price_hour', engine, index = False, if_exists = 'replace')
             except:
                 if verbose > 0:
                     print('error on insert')
