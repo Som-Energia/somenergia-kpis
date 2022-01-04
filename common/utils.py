@@ -22,6 +22,7 @@ def setup_file_table(engine):
         kpis_table = Table(kpis_file_table_name,metadata,
                 Column('id',Integer, primary_key=True),
                 Column('filename',String),
+                Column('type', String),
                 Column('insert_time',DateTime(timezone=True)))
         kpis_table.create()
         return True
@@ -30,7 +31,7 @@ def setup_file_table(engine):
         return False
 
 
-def insert_processed_file(engine, filename):
+def insert_processed_file(engine, filename, type):
     insert_time = datetime.datetime.now(datetime.timezone.utc)
 
     with engine.connect() as conn:
@@ -38,6 +39,7 @@ def insert_processed_file(engine, filename):
         kpis_table = Table(kpis_file_table_name, metadata, autoload_with=engine)
         ins = kpis_table.insert().values(
             filename=filename,
+            type=type,
             insert_time=insert_time)
         conn.execute(ins)
 
