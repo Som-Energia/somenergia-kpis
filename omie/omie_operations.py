@@ -112,7 +112,7 @@ def update_latest_hour_price(verbose=2, dry_run=False):
             engine = create_engine(local_db['dbapi'])
 
             try:
-                df.to_sql('omie_price_hour', engine, index = False, if_exists = 'replace')
+                df.to_sql('omie_latest_price_hour', engine, index = False, if_exists = 'replace')
             except:
                 if verbose > 0:
                     print('error on insert')
