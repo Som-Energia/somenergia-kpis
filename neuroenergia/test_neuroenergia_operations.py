@@ -37,6 +37,6 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
         request_time = neurofile_to_date(Path(filename))
         neuro_df = pd.read_excel(filename)
 
-        shape_neuroenergia(neuro_df, noms_columnes, request_time, create_time)
+        df = shape_neuroenergia(neuro_df, noms_columnes, request_time, create_time)
 
-        self.assertB2BEqual(neuro_df.to_csv(index=False))
+        self.assertB2BEqual(df.to_csv(index=False))
