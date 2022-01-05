@@ -3,19 +3,16 @@ from unittest.case import skipIf
 
 import pandas as pd
 import datetime
+from pathlib import Path
+import pytz
 
 from sqlalchemy import create_engine
 
 from dbconfig import local_db
-
-from omie.omie_operations import (
-    get_file_list,
-    shape_omie,
-    update_latest_hour_price,
-    update_energy_buy,
-    shape_energy_buy
+from neuroenergia.neuroenergia_operations import (
+    shape_neuroenergia,
+    neurofile_to_date
 )
-
 
 class NeuroenergiaOperationsTest(unittest.TestCase):
 
@@ -24,11 +21,22 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
     def setUp(self):
         self.b2bdatapath='testdata/b2bdata'
 
+    def test__neurofile_to_date(self):
+        file = Path('testdata/NEUROENERGIA/20220101_prevision-neuro.xlsx')
+
+        request_time = neurofile_to_date(file)
+
+        expected = datetime.datetime(2021, 12, 31, 23, 0, tzinfo=datetime.timezone.utc)
+        self.assertEqual(request_time, expected)
+
     def test_shape_neuroenergia(self):
-        request_time = datetime.datetime(2022,1,1)
+        create_time = datetime.datetime(2022,1,1)
         filename = 'testdata/NEUROENERGIA/20220101_prevision-neuro.xlsx'
-        df = pd.read_excel(filename)
 
-        # TODO
+        noms_columnes = ['date','hour','base','market']
+        request_time = neurofile_to_date(Path(filename))
+        neuro_df = pd.read_excel(filename)
 
-        self.assertB2BEqual(df.to_csv(index=False))
+        shape_neuroenergia(neuro_df, noms_columnes, request_time, create_time)
+
+        self.assertB2BEqual(neuro_df.to_csv(index=False))

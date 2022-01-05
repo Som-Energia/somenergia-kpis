@@ -1,9 +1,10 @@
 import pandas as pd
 import datetime
 import urllib.request, gzip
+import pytz
 
 from sqlalchemy import create_engine
-from common.utils import list_new_files
+from common.utils import list_new_files, list_files
 
 from dbconfig import (
     local_db,
@@ -14,43 +15,71 @@ from dbconfig import (
 # https://www.meff.es/esp/Derivados-Commodities/Precios-Cierre
 # https://www.meff.es/esp/Derivados-Commodities/Precios-Cierre/Excel
 
+def shape_neuroenergia(neuro_df, noms_columnes, request_time, create_time, verbose=2):
 
-def update_neuroenergia(verbose=2, dry_run=False):
+    df_energy_forecast = neuro_df\
+        .iloc[2:,:len(noms_columnes)]\
+        .set_axis(noms_columnes, axis=1)\
+        .set_index('date', drop=False)\
+        .assign(
+            request_time = lambda x: request_time,
+            create_time = lambda x: create_time,
+            date = lambda x: pd.to_datetime(x['date'], format='%Y-%m-%d').dt.date,
+        )
 
-    request_time = datetime.datetime.now(datetime.timezone.utc)
+    return df_energy_forecast
 
-    neuro_dir = directories['NEUROENERGIA']
-    engine = create_engine(local_db['dbapi'])
-    flist = list_new_files(engine, neuro_dir)
+def neurofile_to_date(neurofile):
 
-    noms_columnes = ['dia','res','base_precio','base_dif','base_dif_per','res','punta_precio','punta_dif','punta_dif_per']
+    request_date_str = neurofile.stem.split('_')[0]
+    request_date = datetime.datetime.strptime(request_date_str, '%Y%m%d')
+    request_time = pytz.timezone('Europe/Madrid').localize(request_date)
+    request_time = request_time.astimezone(datetime.timezone.utc)
+
+    return request_time
+
+def update_one_neuroenergia(engine, neurofile, create_time, verbose=2, dry_run=False):
+
+    noms_columnes = ['date','hour','base','market']
+    request_time = neurofile_to_date(neurofile)
 
     try:
-        precios_cierre = pd.read_html('https://www.meff.es/ing/Commodities-Derivatives/Close-Prices/Excel')[0]
+        neuro_df = pd.read_excel(neurofile)
     except:
         # TODO handle exceptions
         raise
 
     if verbose > 2:
-        print(precios_cierre)
+        print(neuro_df)
 
-    precios_cierre_dia = precios_cierre\
-        .set_axis(noms_columnes, axis=1)\
-        .drop(columns='res', axis=1)\
-        .set_index('dia', drop=False)\
-        .filter(regex='^Day', axis=0)\
-        .assign(
-            request_time = lambda x: request_time,
-            dia = lambda x: pd.to_datetime(x['dia'], format='Day %d-%b-%Y').dt.date
-        )
+    df_energy_forecast = shape_neuroenergia(neuro_df, noms_columnes, request_time, create_time)
 
     if dry_run:
-        print(precios_cierre_dia)
+        print(df_energy_forecast)
     else:
+        if verbose > 2:
+            print(df_energy_forecast)
         try:
-            precios_cierre_dia.to_sql('meff_precios_cierre_dia', engine, index = False, if_exists = 'append')
+            df_energy_forecast.to_sql('energy_buy_forecast', engine, index = False, if_exists = 'append')
         except:
             # TODO handle exceptions
             raise
 
     return 0
+
+def update_neuroenergia(verbose=2, dry_run=False):
+
+    neuro_dir = directories['NEUROENERGIA']
+    engine = create_engine(local_db['dbapi'])
+    create_time = datetime.datetime.now(datetime.timezone.utc)
+
+    neurofiles = list_files(neuro_dir)
+
+    if not neurofiles:
+        print(f'No new files to process in {neuro_dir}')
+
+    results = [update_one_neuroenergia(engine, neurofile, create_time, verbose, dry_run) for neurofile in neurofiles]
+
+    worst_result = min(results)
+
+    return worst_result
