@@ -7,6 +7,8 @@ import io
 
 from sqlalchemy import create_engine
 
+from common.df_common import basic_shape
+
 from dbconfig import local_db
 
 def get_file_list(filetype, verbose=2):
@@ -25,20 +27,6 @@ def get_file_list(filetype, verbose=2):
 
     return hist_files
 
-def base_shape(df, noms_columnes):
-    df_dated = df\
-        .reset_index().iloc[:,:len(noms_columnes)]\
-        .set_axis(noms_columnes, axis=1)\
-        .dropna()\
-        .assign(date = lambda x: pd.to_datetime(x[['year', 'month', 'day']]))
-
-    first_hour = df_dated['date'].dt.tz_localize('Europe/Madrid').dt.tz_convert('UTC')[0]
-    last_hour = df_dated['date'].dt.tz_localize('Europe/Madrid').dt.tz_convert('UTC')[0] + pd.Timedelta(hours=len(df_dated))
-
-    df_dated['date'] = pd.Series(pd.date_range(first_hour,last_hour,freq='H'))
-
-    return df_dated
-
 def shape_omie(pathfile, request_time):
 
     try:
@@ -48,7 +36,8 @@ def shape_omie(pathfile, request_time):
         raise
 
     noms_columnes = ['year','month','day','hour','price_pt','price']
-    df = base_shape(df, noms_columnes)
+    df = basic_shape(df, noms_columnes)
+
     df = df[["date", "price"]]
     df['df_current_day_dated'] = request_time
 
@@ -139,7 +128,7 @@ def download_and_unzip(pathfile, file_index=None):
 def shape_energy_buy(df, request_time):
 
     noms_columnes = ['year','month','day','hour','text_id','var','flag1','flag2','ref']
-    df = base_shape(df, noms_columnes)
+    df = basic_shape(df, noms_columnes)
     df = df[["date", "text_id", "var"]] # what to select?
     df['request_time'] = request_time
 

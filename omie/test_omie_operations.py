@@ -33,7 +33,7 @@ class OmieOperationsTest(unittest.TestCase):
         self.assertTrue(len(hist_files) > 0)
         self.assertEqual(hist_files['Nombre'][0][-1:],'1')
 
-    def test_shape_omie(self):
+    def test__shape_omie(self):
 
         request_time = datetime.datetime(2022,1,1)
         filename = 'testdata/MARGINALPDBC/marginalpdbc_20211213.1'
@@ -42,7 +42,16 @@ class OmieOperationsTest(unittest.TestCase):
 
         self.assertB2BEqual(df.to_csv(index=False))
 
-    def test_shape_energy_buy(self):
+    def test__shape_omie__leading_zero(self):
+
+        request_time = datetime.datetime(2022,1,1)
+        filename = 'testdata/MARGINALPDBC/marginalpdbc_20220103.1'
+
+        df = shape_omie(filename, request_time)
+
+        self.assertB2BEqual(df.to_csv(index=False))
+
+    def test__shape_energy_buy(self):
         request_time = datetime.datetime(2022,1,1)
         filename = 'testdata/PDBC/pdbc_SOMEN_20211213.1'
         df = pd.read_csv(filename, sep = ';')

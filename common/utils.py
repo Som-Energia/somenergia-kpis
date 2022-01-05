@@ -62,6 +62,9 @@ def check_processed_file(engine, filename, date_from=None):
     # filefound = pd.read_sql(query, engine)
     return filefound
 
+def list_files(directory):
+    return {p:False for p in Path(directory).iterdir() if p.is_file()}
+
 def list_new_files(engine, directory, type=None, date_from=None):
 
     flist = {p:False for p in Path(directory).iterdir() if p.is_file()}
