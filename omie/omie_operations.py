@@ -111,6 +111,9 @@ def update_latest_hour_price(verbose=2, dry_run=False):
         else:
             engine = create_engine(local_db['dbapi'])
 
+            if verbose > 2:
+                print(df)
+
             try:
                 df.to_sql('omie_latest_price_hour', engine, index = False, if_exists = 'replace')
             except:
@@ -163,6 +166,10 @@ def update_energy_buy_fromweb(verbose=2, dry_run=False):
         if dry_run:
             print(df)
         else:
+
+            if verbose > 2:
+                print(df)
+
             engine = create_engine(local_db['dbapi'])
 
             try:
@@ -196,6 +203,10 @@ def update_energy_buy(verbose=2, dry_run=False):
         if dry_run:
             print(df)
         else:
+
+            if verbose > 2:
+                print(df)
+
             engine = create_engine(local_db['dbapi'])
 
             try:
