@@ -134,3 +134,6 @@ dbconfig.py
 
 # examples data
 sampledata
+
+# b2b
+testdata/b2bdata/*-result
