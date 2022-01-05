@@ -38,6 +38,7 @@
 
 - Hay que tener en cuenta todas las facturas? solo de contratos de electricidad?
 	- Por ejemplo, estan las facturas que se hacen para las aportaciones
+	- Se podria hacer desde la contabilidad (facturacion va muy lenta)
  
 
 
