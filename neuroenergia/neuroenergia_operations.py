@@ -4,7 +4,11 @@ import urllib.request, gzip
 import pytz
 
 from sqlalchemy import create_engine
-from common.utils import list_new_files, list_files
+
+from common.utils import (
+    list_files,
+    dateCETstr_to_tzdt
+)
 
 from dbconfig import (
     local_db,
@@ -32,10 +36,7 @@ def shape_neuroenergia(neuro_df, noms_columnes, request_time, create_time, verbo
 def neurofile_to_date(neurofile):
 
     request_date_str = neurofile.stem.split('_')[0]
-    request_date = datetime.datetime.strptime(request_date_str, '%Y%m%d')
-    request_time = pytz.timezone('Europe/Madrid').localize(request_date)
-    request_time = request_time.astimezone(datetime.timezone.utc)
-
+    request_time = dateCETstr_to_tzdt(request_date_str)
     return request_time
 
 def update_one_neuroenergia(engine, neurofile, create_time, verbose=2, dry_run=False):

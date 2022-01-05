@@ -5,6 +5,7 @@ import pandas as pd
 import datetime
 
 from sqlalchemy import create_engine
+from common.utils import dateCETstr_to_tzdt
 
 from dbconfig import local_db
 
@@ -52,7 +53,7 @@ class OmieOperationsTest(unittest.TestCase):
         self.assertB2BEqual(df.to_csv(index=False))
 
     def test__shape_energy_buy(self):
-        request_time = datetime.datetime(2022,1,1)
+        request_time = dateCETstr_to_tzdt('20211213')
         filename = 'testdata/PDBC/pdbc_SOMEN_20211213.1'
         df = pd.read_csv(filename, sep = ';')
 
