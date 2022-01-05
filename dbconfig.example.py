@@ -16,8 +16,15 @@ test_db = dict(
 )
 
 directories = {
-    'NEUROENERGIA_HISTORICAL': '~/somenergia/somenergia-indicadors-kpis/testdata/NEUROENERGIA',
-    'NEUROENERGIA_TEMP': '~/somenergia/somenergia-indicadors-kpis/testdata/NEUROENERGIATEMP',
-    'OMIE_HISTORICAL_PDBC': '~/somenergia/somenergia-indicadors-kpis/testdata/OMIE/PDBC',
-    'OMIE_TEMP_PDBC': '~/somenergia/somenergia-indicadors-kpis/testdata/OMIETEMP/PDBC'
+    'NEUROENERGIA_HISTORICAL': 'somenergia/somenergia-indicadors-kpis/realdata/NEUROENERGIA',
+    'NEUROENERGIA_TEMP': 'somenergia/somenergia-indicadors-kpis/realdata/NEUROENERGIATEMP',
+    'OMIE_HISTORICAL_PDBC': 'somenergia/somenergia-indicadors-kpis/realdata/OMIE/PDBC',
+    'OMIE_TEMP_PDBC': 'somenergia/somenergia-indicadors-kpis/realdata/OMIETEMP/PDBC'
+}
+
+test_directories = {
+    'NEUROENERGIA_HISTORICAL': 'testdata/NEUROENERGIA',
+    'NEUROENERGIA_TEMP': 'testdata/NEUROENERGIATEMP',
+    'OMIE_HISTORICAL_PDBC': 'testdata/OMIE/PDBC',
+    'OMIE_TEMP_PDBC': 'testdata/OMIETEMP/PDBC'
 }

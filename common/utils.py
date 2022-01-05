@@ -16,11 +16,24 @@ def graveyard_files(directory: Path, files, verbose=2):
     # move files
     for f in files:
         destination = graveyard / f.name
-        print(f'Moving file {f.resolve()} to {destination}')
+        if verbose > 1:
+            print(f'Moving file {f.resolve()} to {destination}')
         f.rename(destination)
 
+def restore_files(directory: Path, verbose=2):
+    graveyard = Path(f'{directory}/graveyard')
+
+    for f in graveyard.iterdir():
+        if f.is_file:
+            destination = graveyard / '..' / f.name
+            destination = destination.resolve()
+            if verbose > 1:
+                print(f'Restoring file {f.resolve()} to {destination}')
+            f.rename(destination)
+
+
 def dateCETstr_to_tzdt(date: str, format='%Y%m%d'):
-    date = datetime.datetime.strptime(date, '%Y%m%d')
+    date = datetime.datetime.strptime(date, format)
     time = pytz.timezone('Europe/Madrid').localize(date)
     time = time.astimezone(datetime.timezone.utc)
     return time

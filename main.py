@@ -49,8 +49,8 @@ def main_get_historical_energy_buy(verbose, dry_run):
 
 def main_update_energy_buy(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
-    omie_dir = Path(directories['OMIE_TEMP_PDBC'])
-    update_energy_buy(engine, omie_dir, verbose, dry_run)
+    omie_temp_dir = Path(directories['OMIE_TEMP_PDBC'])
+    update_energy_buy(engine, omie_temp_dir, verbose, dry_run)
 
 def main_update_neuroenergia(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])

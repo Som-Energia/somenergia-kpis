@@ -43,7 +43,7 @@ class OmieOperationsTest(unittest.TestCase):
 
     def test__shape_omie__leading_zero(self):
 
-        request_time = datetime.datetime(2022,1,1)
+        request_time = datetime.datetime(2022,1,1, tzinfo=datetime.timezone.utc)
         filename = 'testdata/MARGINALPDBC/marginalpdbc_20220103.1'
 
         df = shape_omie(filename, request_time)
@@ -52,9 +52,10 @@ class OmieOperationsTest(unittest.TestCase):
 
     def test__shape_energy_buy(self):
         request_time = dateCETstr_to_tzdt('20211213')
+        create_time = datetime.datetime(2022,1,1,12, tzinfo=datetime.timezone.utc)
         filename = 'testdata/PDBC/pdbc_SOMEN_20211213.1'
         df = pd.read_csv(filename, sep = ';')
 
-        df = shape_energy_buy(df, request_time)
+        df = shape_energy_buy(df, request_time, create_time)
 
         self.assertB2BEqual(df.to_csv(index=False))

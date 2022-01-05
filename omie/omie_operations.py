@@ -177,15 +177,15 @@ def update_energy_buy_fromweb(engine, verbose=2, dry_run=False):
 
 def update_one_energy_buy(engine, pdbcfile: Path, create_time, verbose=2, dry_run=False):
 
-    filetype, comer, date = pdbcfile.name.split('_')
+    filetype, comer, date = pdbcfile.stem.split('_')
     version = pdbcfile.suffix
     request_time = dateCETstr_to_tzdt(date)
 
     if verbose > 1:
         print(f'processing newest file of {pdbcfile.resolve()}')
 
-    if type != 'PDBC':
-        print("Wrong file type, expecting PDBC", file=sys.stderr)
+    if filetype.upper() != 'PDBC':
+        print(f"Wrong file type, expecting PDBC got {filetype}", file=sys.stderr)
         return -2
 
     try:
@@ -194,7 +194,7 @@ def update_one_energy_buy(engine, pdbcfile: Path, create_time, verbose=2, dry_ru
         # TODO handle exceptions
         raise
 
-    if version == '1':
+    if version == '.1':
         df = shape_energy_buy(df, request_time, create_time)
         if dry_run:
             print(df)
@@ -210,26 +210,31 @@ def update_one_energy_buy(engine, pdbcfile: Path, create_time, verbose=2, dry_ru
                     print('error on insert')
                 # TODO handle exceptions
                 raise
+    else:
+        print(f"Wrong version, expecting 1 got {version}", file=sys.stderr)
+        return -3
 
     return 0
 
 # moves provessed files to graveyard
-def update_energy_buy(engine, omie_dir, verbose=2, dry_run=False):
+def update_energy_buy(engine, omie_pdbc_temp_dir, verbose=2, dry_run=False):
 
     create_time = datetime.datetime.now(datetime.timezone.utc)
-    omie_pdbc_dir = omie_dir / 'PDBC'
-    pdbcfiles = list_files(omie_pdbc_dir)
+    pdbcfiles = list_files(omie_pdbc_temp_dir)
+
+    if not pdbcfiles:
+        print(f'No files in {omie_pdbc_temp_dir}.')
+        return 1
 
     results = {f:update_one_energy_buy(engine, f, create_time, verbose, dry_run) for f in pdbcfiles}
 
     files_ok = [f for f,result in results.items()]
 
-    graveyard_files(omie_pdbc_dir, files_ok, verbose)
-
-    return min(results)
+    graveyard_files(omie_pdbc_temp_dir, files_ok, verbose)
+    return min(results.values())
 
 # same as update_energy_buy but without moving files, used once in ambits readonly directories
-def get_historical_energy_buy(engine, omie_pdbc_dir, verbose=2, dry_run=False):
+def get_historical_energy_buy(engine, omie_pdbc_dir: Path, verbose=2, dry_run=False):
 
     create_time = datetime.datetime.now(datetime.timezone.utc)
     pdbcfiles = list_files(omie_pdbc_dir)
