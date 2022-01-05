@@ -72,14 +72,3 @@ def list_new_files(engine, directory, type=None, date_from=None):
 
     return flist
 
-def graveyard_files(directory: Path, files):
-
-    # create graveyard directory if it doesn't exist
-    Path(directory / 'graveyard').mkdir(parents=False, exist_ok=True)
-    graveyard = Path(f'{directory}/graveyard')
-
-    # move files
-    for f in files:
-        destination = graveyard / f.name
-        f.rename(destination)
-
