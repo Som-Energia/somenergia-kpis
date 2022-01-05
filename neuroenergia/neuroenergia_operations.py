@@ -10,11 +10,6 @@ from common.utils import (
     dateCETstr_to_tzdt
 )
 
-from dbconfig import (
-    local_db,
-    directories
-)
-
 # imports
 # https://www.meff.es/esp/Derivados-Commodities/Precios-Cierre
 # https://www.meff.es/esp/Derivados-Commodities/Precios-Cierre/Excel
@@ -68,10 +63,8 @@ def update_one_neuroenergia(engine, neurofile, create_time, verbose=2, dry_run=F
 
     return 0
 
-def update_neuroenergia(verbose=2, dry_run=False):
+def update_neuroenergia(engine, neuro_dir, verbose=2, dry_run=False):
 
-    neuro_dir = directories['NEUROENERGIA']
-    engine = create_engine(local_db['dbapi'])
     create_time = datetime.datetime.now(datetime.timezone.utc)
 
     neurofiles = list_files(neuro_dir)

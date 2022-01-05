@@ -16,11 +16,6 @@ from common.utils import (
     dateCETstr_to_tzdt
 )
 
-from dbconfig import (
-    local_db,
-    directories
-)
-
 def get_file_list(filetype, verbose=2):
 
     file_listing_base_url = 'https://www.omie.es/es/file-access-list'
@@ -54,7 +49,7 @@ def shape_omie(pathfile, request_time):
     return df
 
 # TODO merge get_historical_hour_price and update_historical_hour_price into one function and one table
-def get_historical_hour_price(verbose=2, dry_run=False):
+def get_historical_hour_price(engine, verbose=2, dry_run=False):
 
     request_time = datetime.datetime.now(datetime.timezone.utc)
 
@@ -77,7 +72,6 @@ def get_historical_hour_price(verbose=2, dry_run=False):
             if dry_run:
                 print(df)
             else:
-                engine = create_engine(local_db['dbapi'])
 
                 try:
                     df.to_sql('omie_price_hour', engine, index = False, if_exists = 'append')
@@ -89,7 +83,7 @@ def get_historical_hour_price(verbose=2, dry_run=False):
 
     return 0
 
-def update_latest_hour_price(verbose=2, dry_run=False):
+def update_latest_hour_price(engine, verbose=2, dry_run=False):
 
     request_time = datetime.datetime.now(datetime.timezone.utc)
 
@@ -108,7 +102,6 @@ def update_latest_hour_price(verbose=2, dry_run=False):
         if dry_run:
             print(df)
         else:
-            engine = create_engine(local_db['dbapi'])
 
             if verbose > 2:
                 print(df)
@@ -146,7 +139,7 @@ def shape_energy_buy(df, request_time, create_time):
 
     return df
 
-def update_energy_buy_fromweb(verbose=2, dry_run=False):
+def update_energy_buy_fromweb(engine, verbose=2, dry_run=False):
 
     filetype = 'pdbc'
     hist_files = get_file_list(filetype)
@@ -171,8 +164,6 @@ def update_energy_buy_fromweb(verbose=2, dry_run=False):
 
             if verbose > 2:
                 print(df)
-
-            engine = create_engine(local_db['dbapi'])
 
             try:
                 df.to_sql('omie_energy_buy', engine, index = False, if_exists = 'append')
@@ -223,10 +214,8 @@ def update_one_energy_buy(engine, pdbcfile: Path, create_time, verbose=2, dry_ru
     return 0
 
 # moves provessed files to graveyard
-def update_energy_buy(verbose=2, dry_run=False):
+def update_energy_buy(engine, omie_dir, verbose=2, dry_run=False):
 
-    omie_dir = Path(directories['OMIE_TEMP_PDBC'])
-    engine = create_engine(local_db['dbapi'])
     create_time = datetime.datetime.now(datetime.timezone.utc)
     omie_pdbc_dir = omie_dir / 'PDBC'
     pdbcfiles = list_files(omie_pdbc_dir)
@@ -240,10 +229,8 @@ def update_energy_buy(verbose=2, dry_run=False):
     return min(results)
 
 # same as update_energy_buy but without moving files, used once in ambits readonly directories
-def get_historical_energy_buy(verbose=2, dry_run=False):
+def get_historical_energy_buy(engine, omie_pdbc_dir, verbose=2, dry_run=False):
 
-    omie_pdbc_dir = Path(directories['OMIE_HISTORICAL_PDBC'])
-    engine = create_engine(local_db['dbapi'])
     create_time = datetime.datetime.now(datetime.timezone.utc)
     pdbcfiles = list_files(omie_pdbc_dir)
 

@@ -7,8 +7,6 @@ import datetime
 from sqlalchemy import create_engine
 from common.utils import dateCETstr_to_tzdt
 
-from dbconfig import local_db
-
 from omie.omie_operations import (
     get_file_list,
     shape_omie,

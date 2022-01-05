@@ -4,20 +4,16 @@ import urllib.request, gzip
 
 from sqlalchemy import create_engine
 
-from dbconfig import local_db
-
 
 # imports
 # https://www.meff.es/esp/Derivados-Commodities/Precios-Cierre
 # https://www.meff.es/esp/Derivados-Commodities/Precios-Cierre/Excel
 
 
-def update_closing_prices_day(verbose=2, dry_run=False):
+def update_closing_prices_day(engine, verbose=2, dry_run=False):
 
     request_time = datetime.datetime.now(datetime.timezone.utc)
     noms_columnes = ['dia','res','base_precio','base_dif','base_dif_per','res','punta_precio','punta_dif','punta_dif_per']
-    if not dry_run:
-        engine = create_engine(local_db['dbapi'])
 
     try:
         precios_cierre = pd.read_html('https://www.meff.es/ing/Commodities-Derivatives/Close-Prices/Excel')[0]
@@ -51,12 +47,10 @@ def update_closing_prices_day(verbose=2, dry_run=False):
 
     return 0
 
-def update_closing_prices_month(verbose=2, dry_run=False):
+def update_closing_prices_month(engine, verbose=2, dry_run=False):
 
     request_time = datetime.datetime.now(datetime.timezone.utc)
     noms_columnes = ['mes','res','base_precio','base_dif','base_dif_per','res','punta_precio','punta_dif','punta_dif_per']
-    if not dry_run:
-        engine = create_engine(local_db['dbapi'])
 
     try:
         precios_cierre = pd.read_html('https://www.meff.es/ing/Commodities-Derivatives/Close-Prices/Excel')[0]

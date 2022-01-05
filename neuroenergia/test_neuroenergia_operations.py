@@ -8,7 +8,6 @@ import pytz
 
 from sqlalchemy import create_engine
 
-from dbconfig import local_db
 from neuroenergia.neuroenergia_operations import (
     shape_neuroenergia,
     neurofile_to_date

@@ -1,20 +1,67 @@
 import sys
 import click
+from pathlib import Path
+
+from sqlalchemy import create_engine
+from dbconfig import (
+    local_db,
+    directories
+)
+
 from meff.meff_operations import (
     update_closing_prices_day,
     update_closing_prices_month
 )
 from omie.omie_operations import (
     get_historical_hour_price,
-    update_latest_hour_price
+    update_latest_hour_price,
+    update_energy_buy,
+    get_historical_energy_buy
 )
+from neuroenergia.neuroenergia_operations import (
+    update_neuroenergia
+)
+
+
 import datetime
 
+def main_update_closing_prices_month(verbose, dry_run):
+    engine = None if dry_run else create_engine(local_db['dbapi'])
+    update_closing_prices_month(engine, verbose, dry_run)
+
+def main_update_closing_prices_day(verbose, dry_run):
+    engine = None if dry_run else create_engine(local_db['dbapi'])
+    update_closing_prices_day(engine, verbose, dry_run)
+
+def main_update_omie_latest_hour_price(verbose, dry_run):
+    engine = None if dry_run else create_engine(local_db['dbapi'])
+    update_latest_hour_price(engine, verbose, dry_run)
+
+def main_get_historical_hour_price(verbose, dry_run):
+    engine = None if dry_run else create_engine(local_db['dbapi'])
+    get_historical_hour_price(engine, verbose, dry_run)
+
+# TODO Pendent de posar a prod
+def main_get_historical_energy_buy(verbose, dry_run):
+    engine = None if dry_run else create_engine(local_db['dbapi'])
+    omie_pdbc_dir = Path(directories['OMIE_HISTORICAL_PDBC'])
+    get_historical_energy_buy(engine, omie_pdbc_dir, verbose, dry_run)
+
+def main_update_energy_buy(verbose, dry_run):
+    engine = None if dry_run else create_engine(local_db['dbapi'])
+    omie_dir = Path(directories['OMIE_TEMP_PDBC'])
+    update_energy_buy(engine, omie_dir, verbose, dry_run)
+
+def main_update_neuroenergia(verbose, dry_run):
+    engine = None if dry_run else create_engine(local_db['dbapi'])
+    neuro_dir = directories['NEUROENERGIA']
+    update_neuroenergia(engine,neuro_dir,verbose,dry_run)
+
 function_list = {
-    'update_closing_prices_day': update_closing_prices_day,
-    'update_closing_prices_month': update_closing_prices_month,
-    'get_historical_hour_price': get_historical_hour_price,
-    'update_latest_hour_price': update_latest_hour_price
+    'update_closing_prices_day': main_update_closing_prices_day,
+    'update_closing_prices_month': main_update_closing_prices_month,
+    'get_historical_hour_price': main_get_historical_hour_price,
+    'update_latest_hour_price': main_update_omie_latest_hour_price
 }
 
 # TODO use logging instead of -v
