@@ -175,6 +175,9 @@ def update_energy_buy(verbose=2, dry_run=False):
 
     filetype = 'pdbc'
     hist_files = get_file_list(filetype)
+
+    raise NotImplementedError
+
     file_base_url = f'https://www.omie.es/es/file-download?parents%5B0%5D={filetype}&filename='
 
     file_name = hist_files['Nombre'][0]
