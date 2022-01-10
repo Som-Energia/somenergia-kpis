@@ -63,14 +63,14 @@ def main_update_neuroenergia(verbose, dry_run):
     update_neuroenergia(engine,neuro_dir,verbose,dry_run)
 
 function_list = {
-    'update_closing_prices_day': main_update_closing_prices_day,
-    'update_closing_prices_month': main_update_closing_prices_month,
-    'get_historical_hour_price': main_get_historical_hour_price,
-    'update_latest_hour_price': main_update_omie_latest_hour_price,
-    'update_historical_hour_price': main_update_historical_hour_price,
-    'get_historical_energy_buy' : main_get_historical_energy_buy,
-    'update_energy_buy' : main_update_energy_buy,
-    'update_neuroenergia' : main_update_neuroenergia
+    'meff_update_closing_prices_day': main_update_closing_prices_day,
+    'meff_update_closing_prices_month': main_update_closing_prices_month,
+    'omie_get_historical_hour_price': main_get_historical_hour_price,
+    'omie_updatelatest_hour_price': main_update_omie_latest_hour_price,
+    'omie_update_historical_hour_price': main_update_historical_hour_price,
+    'omie_get_historical_energy_buy' : main_get_historical_energy_buy,
+    'omie_update_energy_buy' : main_update_energy_buy,
+    'neuro_update_energy_prediction' : main_update_neuroenergia
 }
 
 # TODO use logging instead of -v
