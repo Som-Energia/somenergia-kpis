@@ -16,7 +16,8 @@ from omie.omie_operations import (
     get_historical_hour_price,
     update_latest_hour_price,
     update_energy_buy,
-    get_historical_energy_buy
+    get_historical_energy_buy,
+    update_historical_hour_price
 )
 from neuroenergia.neuroenergia_operations import (
     update_neuroenergia
@@ -40,6 +41,11 @@ def main_update_omie_latest_hour_price(verbose, dry_run):
 def main_get_historical_hour_price(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
     get_historical_hour_price(engine, verbose, dry_run)
+
+# TODO update historic with latest (requires append and change table)
+def main_update_historical_hour_price(verbose, dry_run):
+    engine = None if dry_run else create_engine(local_db['dbapi'])
+    update_historical_hour_price(engine, verbose, dry_run)
 
 # TODO Pendent de posar a prod
 def main_get_historical_energy_buy(verbose, dry_run):

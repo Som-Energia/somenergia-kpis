@@ -115,6 +115,53 @@ def update_latest_hour_price(engine, verbose=2, dry_run=False):
                 raise
     return 0
 
+def update_historical_hour_price(engine, verbose=2, dry_run=False):
+
+    request_time = datetime.datetime.now(datetime.timezone.utc)
+
+    filetype = 'marginalpdbc'
+    hist_files = get_file_list(filetype)
+    file_base_url = f'https://www.omie.es/es/file-download?parents%5B0%5D={filetype}&filename='
+
+    file_name = hist_files['Nombre'][0]
+    pathfile = file_base_url + file_name
+
+    if verbose > 1:
+        print(f'processing {file_name}')
+
+    if pathfile[-1:] == '1':
+        df = shape_omie(pathfile, request_time)
+
+        try:
+            last_day_on_db = pd.read_sql('select date from omie_price_hour order by date desc limit 1', con=engine)['date'][0]
+        except:
+            if verbose > 0:
+                print('error on fetching latest omie_price_hour')
+            # TODO handle exceptions
+            raise
+        last_day_new_request = max(df['date'])
+
+        if last_day_on_db > last_day_new_request:
+            if verbose > 1:
+                print(f'Last record on db is older than requested ({last_day_on_db} > {last_day_new_request}). Skipping.')
+            return 1
+
+        if dry_run:
+            print(df)
+        else:
+
+            if verbose > 2:
+                print(df)
+
+            try:
+                df.to_sql('omie_price_hour', engine, index = False, if_exists = 'append')
+            except:
+                if verbose > 0:
+                    print('error on insert')
+                # TODO handle exceptions
+                raise
+    return 0
+
 def download_and_unzip(pathfile, file_index=None):
     file_index = file_index or -1
 
