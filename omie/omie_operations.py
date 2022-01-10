@@ -143,7 +143,7 @@ def update_historical_hour_price(engine, verbose=2, dry_run=False):
 
         if last_day_on_db >= last_day_new_request:
             if verbose > 1:
-                print(f'Last record on db is older than requested ({last_day_on_db} > {last_day_new_request}). Skipping.')
+                print(f'Last record on db is older than requested ({last_day_on_db} >= {last_day_new_request}). Skipping.')
             return 1
 
         if dry_run:
