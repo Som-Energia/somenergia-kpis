@@ -67,7 +67,10 @@ function_list = {
     'update_closing_prices_month': main_update_closing_prices_month,
     'get_historical_hour_price': main_get_historical_hour_price,
     'update_latest_hour_price': main_update_omie_latest_hour_price,
-    'update_historical_hour_price': main_update_historical_hour_price
+    'update_historical_hour_price': main_update_historical_hour_price,
+    'get_historical_energy_buy' : main_get_historical_energy_buy,
+    'update_energy_buy' : main_update_energy_buy,
+    'update_neuroenergia' : main_update_neuroenergia
 }
 
 # TODO use logging instead of -v
