@@ -66,7 +66,7 @@ function_list = {
     'meff_update_closing_prices_day': main_update_closing_prices_day,
     'meff_update_closing_prices_month': main_update_closing_prices_month,
     'omie_get_historical_hour_price': main_get_historical_hour_price,
-    'omie_updatelatest_hour_price': main_update_omie_latest_hour_price,
+    'omie_update_latest_hour_price': main_update_omie_latest_hour_price,
     'omie_update_historical_hour_price': main_update_historical_hour_price,
     'omie_get_historical_energy_buy' : main_get_historical_energy_buy,
     'omie_update_energy_buy' : main_update_energy_buy,
