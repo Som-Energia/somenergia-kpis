@@ -28,14 +28,13 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
         expected = datetime.datetime(2021, 12, 31, 23, 0, tzinfo=datetime.timezone.utc)
         self.assertEqual(request_time, expected)
 
-    def test_shape_neuroenergia(self):
+    def test__shape_neuroenergia(self):
         create_time = datetime.datetime(2022,1,1)
         filename = 'testdata/NEUROENERGIA/20220101_prevision-neuro.xlsx'
 
-        noms_columnes = ['date','hour','base','market']
         request_time = neurofile_to_date(Path(filename))
         neuro_df = pd.read_excel(filename)
 
-        df = shape_neuroenergia(neuro_df, noms_columnes, request_time, create_time)
+        df = shape_neuroenergia(neuro_df, request_time, create_time)
 
         self.assertB2BEqual(df.to_csv(index=False))

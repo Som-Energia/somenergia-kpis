@@ -42,9 +42,8 @@ def main_get_historical_hour_price(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
     get_historical_hour_price(engine, verbose, dry_run)
 
-# TODO update historic with latest (requires append and change table)
 def main_update_historical_hour_price(verbose, dry_run):
-    engine = None if dry_run else create_engine(local_db['dbapi'])
+    engine = create_engine(local_db['dbapi'])
     update_historical_hour_price(engine, verbose, dry_run)
 
 # TODO Pendent de posar a prod
@@ -67,7 +66,8 @@ function_list = {
     'update_closing_prices_day': main_update_closing_prices_day,
     'update_closing_prices_month': main_update_closing_prices_month,
     'get_historical_hour_price': main_get_historical_hour_price,
-    'update_latest_hour_price': main_update_omie_latest_hour_price
+    'update_latest_hour_price': main_update_omie_latest_hour_price,
+    'update_historical_hour_price': main_update_historical_hour_price
 }
 
 # TODO use logging instead of -v
