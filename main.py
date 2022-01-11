@@ -48,6 +48,7 @@ def main_update_historical_hour_price(verbose, dry_run):
 
 # TODO Pendent de posar a prod
 def main_get_historical_energy_buy(verbose, dry_run):
+    raise NotImplemented
     engine = None if dry_run else create_engine(local_db['dbapi'])
     omie_pdbc_dir = Path(directories['OMIE_HISTORICAL_PDBC'])
     get_historical_energy_buy(engine, omie_pdbc_dir, verbose, dry_run)
@@ -59,7 +60,7 @@ def main_update_energy_buy(verbose, dry_run):
 
 def main_update_neuroenergia(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
-    neuro_dir = directories['NEUROENERGIA']
+    neuro_dir = directories['NEUROENERGIA_TEMP']
     update_neuroenergia(engine,neuro_dir,verbose,dry_run)
 
 function_list = {

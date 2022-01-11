@@ -129,6 +129,9 @@ dmypy.json
 .pyre/
 
 
+# vscode config
+.vsls.json
+
 # somenergia config files
 dbconfig.py
 
