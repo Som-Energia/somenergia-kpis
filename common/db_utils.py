@@ -25,7 +25,7 @@ def setup_file_table(engine):
         kpis_table = Table(kpis_file_table_name,metadata,
                 Column('id',Integer, primary_key=True),
                 Column('filename',String),
-                Column('type', String),
+                Column('filetype', String),
                 Column('insert_time',DateTime(timezone=True)))
         kpis_table.create()
         return True

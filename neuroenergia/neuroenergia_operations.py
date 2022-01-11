@@ -27,8 +27,9 @@ def shape_neuroenergia(neuro_df, request_time_dt, create_time_dt, verbose=2):
             date = lambda x: pd.to_datetime(x['date'], format='%Y-%m-%d').dt.date
         )\
         .query(f"{noms_columnes[2]} != 0 & {noms_columnes[3]} != 0")\
+        .astype({'base': float, 'market': float})\
         .reset_index(drop=True)\
-        .filter(['date','base','market'])
+        .filter(['date','base','market','request_time','create_time'])
 
     time_series = pd.date_range(
             start=df_energy_forecast['date'].iloc[0],

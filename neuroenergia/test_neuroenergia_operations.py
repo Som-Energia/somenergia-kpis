@@ -2,6 +2,7 @@ import unittest
 from unittest.case import skipIf
 
 import pandas as pd
+import numpy as np
 import datetime
 from pathlib import Path
 import pytz
@@ -38,3 +39,22 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
         df = shape_neuroenergia(neuro_df, request_time, create_time)
 
         self.assertB2BEqual(df.to_csv(index=False))
+
+    def test__shape_neuroenergia__correct_types(self):
+        create_time = datetime.datetime(2022,1,1,tzinfo=datetime.timezone.utc)
+        filename = 'testdata/NEUROENERGIA/20220101_prevision-neuro.xlsx'
+
+        request_time = neurofile_to_date(Path(filename))
+        neuro_df = pd.read_excel(filename)
+
+        df = shape_neuroenergia(neuro_df, request_time, create_time)
+
+        expected = {
+            'date': pd.DatetimeTZDtype('ns', 'Europe/Madrid'),
+            'base': np.float64,
+            'market': np.float64,
+            'request_time': pd.DatetimeTZDtype('ns', 'UTC'),
+            'create_time': pd.DatetimeTZDtype('ns', 'UTC'),
+        }
+
+        self.assertDictEqual(df.dtypes.to_dict(), expected)

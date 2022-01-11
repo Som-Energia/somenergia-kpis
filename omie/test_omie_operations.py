@@ -2,6 +2,7 @@ import unittest
 from unittest.case import skipIf
 
 import pandas as pd
+import numpy as np
 import datetime
 
 from sqlalchemy import create_engine
@@ -59,3 +60,21 @@ class OmieOperationsTest(unittest.TestCase):
         df = shape_energy_buy(df, request_time, create_time)
 
         self.assertB2BEqual(df.to_csv(index=False))
+
+    def test__shape_energy_buy__correct_types(self):
+        request_time = dateCETstr_to_tzdt('20211213')
+        create_time = datetime.datetime(2022,1,1,12, tzinfo=datetime.timezone.utc)
+        filename = 'testdata/PDBC/pdbc_SOMEN_20211213.1'
+        df = pd.read_csv(filename, sep = ';')
+
+        df = shape_energy_buy(df, request_time, create_time)
+
+        expected = {
+            'date': pd.DatetimeTZDtype('ns', 'UTC'),
+            'demand': np.float64,
+            'offer_number': np.float64,
+            'request_time': pd.DatetimeTZDtype('ns', 'UTC'),
+            'create_time': pd.DatetimeTZDtype('ns', 'UTC')
+        }
+
+        self.assertDictEqual(df.dtypes.to_dict(), expected)
