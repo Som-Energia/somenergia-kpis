@@ -15,11 +15,11 @@ from dbconfig import (
     test_directories
 )
 
-from meff.meff_operations import (
+from datasources.meff.meff_operations import (
     update_closing_prices_day,
     update_closing_prices_month
 )
-from omie.omie_operations import (
+from datasources.omie.omie_operations import (
     get_historical_hour_price,
     update_latest_hour_price,
     get_historical_energy_buy,

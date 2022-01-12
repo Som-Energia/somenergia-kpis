@@ -24,4 +24,7 @@ class UtilsTest(unittest.TestCase):
         files = list_files(directory)
 
         expected_files = [Path('testdata/MARGINALPDBC/marginalpdbc_20220103.1'),Path('testdata/MARGINALPDBC/marginalpdbc_20211213.1')]
+        
+        expected_files.sort()
+        files.sort()
         self.assertListEqual(files, expected_files)

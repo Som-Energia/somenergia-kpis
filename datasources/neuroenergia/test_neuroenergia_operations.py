@@ -9,7 +9,7 @@ import pytz
 
 from sqlalchemy import create_engine
 
-from neuroenergia.neuroenergia_operations import (
+from datasources.neuroenergia.neuroenergia_operations import (
     shape_neuroenergia,
     neurofile_to_date
 )
