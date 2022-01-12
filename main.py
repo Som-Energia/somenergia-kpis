@@ -8,18 +8,18 @@ from dbconfig import (
     directories
 )
 
-from meff.meff_operations import (
+from datasources.meff.meff_operations import (
     update_closing_prices_day,
     update_closing_prices_month
 )
-from omie.omie_operations import (
+from datasources.omie.omie_operations import (
     get_historical_hour_price,
     update_latest_hour_price,
     update_energy_buy,
     get_historical_energy_buy,
     update_historical_hour_price
 )
-from neuroenergia.neuroenergia_operations import (
+from datasources.neuroenergia.neuroenergia_operations import (
     update_neuroenergia
 )
 
