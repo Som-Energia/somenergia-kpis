@@ -10,7 +10,12 @@ from energy_budget import (
     daily_energy_budget,
     hourly_energy_budget,
     interpolated_meff_prices_by_hour,
+    pipe_hourly_energy_budget,
 )
+
+from sqlalchemy import create_engine, Table, MetaData
+
+import dbconfig
 
 class NeuroenergiaOperationsTest(unittest.TestCase):
     
@@ -18,9 +23,15 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
 
     def setUp(self):
         self.b2bdatapath='testdata/b2bdata'
+        self.engine = create_engine(dbconfig.test_db['dbapi'])
+        self.drop_test_database()
 
     def tearDown(self):
-        pass
+        self.drop_test_database()
+
+    def drop_test_database(self):
+        # TODO Drop all existing tables in test db at once
+        Table('meff_precios_cierre_dia', MetaData()).drop(self.engine)
 
     def create_datasources(self):
         # TODO create test omie buy, prices table, meff and neuro
@@ -31,7 +42,7 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
         request_time = datetime.datetime(2022,1,1)
 
         data = {
-            'dia':[datetime.date(2022,1,4),datetime.date(2022,1,5)],
+            'dia':[datetime.datetime(2022,1,4),datetime.datetime(2022,1,5)],
             'base_precio':[267.6, 290],
             'base_dif':[0,None],
             'base_dif_per':[0,0],
@@ -52,3 +63,12 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
         df = daily_energy_budget()
 
         self.assertB2BEqual(df.to_csv(index=False))
+
+    def _test__pipe_hourly_energy_budget(self):
+
+        df = pd.read_csv('testdata/inputdata/meff_precios_cierre_dia.csv')
+        df.to_sql('meff_precios_cierre_dia', con = self.engine, if_exists='replace')
+
+        meff_df = pipe_hourly_energy_budget(self.engine)
+
+        self.assertB2BEqual(meff_df.to_csv(index=False))

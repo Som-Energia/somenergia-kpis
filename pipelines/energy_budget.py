@@ -2,8 +2,6 @@ import datetime
 from pathlib import Path
 import pandas as pd
 
-from sqlalchemy import create_engine
-
 import logging
 
 from dbconfig import local_db
@@ -53,14 +51,17 @@ def hourly_energy_budget():
 
 def interpolated_meff_prices_by_hour(meff_df):
     
-    meff_df.set_index('dia')[['base_precio', 'punta_precio']].resample('h').interpolate(method='linear')
+    meff_df.set_index('dia')[['base_precio', 'punta_precio']]\
+        .resample('h')\
+        .ffill()
+        #.interpolate(method='linear')
+
     return meff_df
 
 def joined_timeseries(timeseries_df):
     pass
 
-def pipe_hourly_energy_budget():
-    engine = create_engine(local_db['dbapi'])
+def pipe_hourly_energy_budget(engine):
     
     omie_energy_buy_df = omie_energy_buy(engine)
     omie_price_hour_df = omie_price_hour(engine)
@@ -68,9 +69,9 @@ def pipe_hourly_energy_budget():
     neuro_energy_buy_df = neuro_energy_buy(engine)
     
     df = interpolated_meff_prices_by_hour(meff_prices_daily_df)
-    df = joined_timeseries([omie_energy_buy_df, omie_price_hour_df, meff_prices_daily_df, neuro_energy_buy_df])
-    df = pipe_daily_energy_budget(df)    
-    
+    #df = joined_timeseries([omie_energy_buy_df, omie_price_hour_df, meff_prices_daily_df, neuro_energy_buy_df])
+    #df = pipe_daily_energy_budget(df)    
+
 def pipe_daily_energy_budget():
     pass
 

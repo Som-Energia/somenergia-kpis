@@ -24,4 +24,11 @@ GRANT SELECT ON TABLES TO username;
 
 # test
 
-testing will require installing `b2btest` which in turn requires `lxml` to be installed manually via pip
+
+Testing will require installing `b2btest` which in turn requires `lxml` to be installed manually via pip
+
+Create an empty testing database and configure it in dbconfig.py at the `test_db` entry.
+
+
+
+

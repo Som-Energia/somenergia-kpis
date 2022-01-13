@@ -9,7 +9,8 @@ from sqlalchemy import (
     Column,
     Integer,
     String,
-    DateTime
+    DateTime,
+    create_engine
 )
 
 from pathlib import Path
@@ -72,3 +73,10 @@ def list_new_files(engine, directory, type=None, date_from=None):
 
     return flist
 
+
+def table_to_csv(engine, table_name, file_name):
+
+    query = f"select * from {table_name}"
+
+    df = pd.read_sql(query, con=engine)
+    df.to_csv(file_name)
