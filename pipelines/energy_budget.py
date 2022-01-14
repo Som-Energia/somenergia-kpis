@@ -49,13 +49,24 @@ def daily_energy_budget(omie_df):
 def hourly_energy_budget():
     pass
 
-def interpolated_meff_prices_by_hour(meff_df):
+def interpolated_last_meff_prices_by_hour(meff_df):
     
-    meff_df.set_index('dia')[['base_precio', 'punta_precio']]\
-        .resample('h')\
-        .ffill()
-        #.interpolate(method='linear')
+    meff_df = meff_df[meff_df['request_time'] == max(meff_df['request_time'])].reset_index()
 
+    next_day = pd.DataFrame({'dia':[max(meff_df['dia']) + datetime.timedelta(days=1)]})
+    meff_df = meff_df.append(next_day)
+
+    meff_df['dia'] = meff_df['dia'].dt.tz_localize('Europe/Madrid')
+
+    meff_df = meff_df\
+        .reset_index()\
+        .set_index('dia', drop = False)[['base_precio']]\
+        .resample('h')\
+        .interpolate(method='linear')\
+        .reset_index(level=0)    
+
+    meff_df = meff_df[meff_df['dia'] != max(meff_df['dia'])]
+    
     return meff_df
 
 def joined_timeseries(timeseries_df):
@@ -68,7 +79,7 @@ def pipe_hourly_energy_budget(engine):
     meff_prices_daily_df = meff_prices_daily(engine)
     neuro_energy_buy_df = neuro_energy_buy(engine)
     
-    df = interpolated_meff_prices_by_hour(meff_prices_daily_df)
+    df = interpolated_last_meff_prices_by_hour(meff_prices_daily_df)
     #df = joined_timeseries([omie_energy_buy_df, omie_price_hour_df, meff_prices_daily_df, neuro_energy_buy_df])
     #df = pipe_daily_energy_budget(df)    
 

@@ -9,7 +9,7 @@ import pytz
 from energy_budget import (
     daily_energy_budget,
     hourly_energy_budget,
-    interpolated_meff_prices_by_hour,
+    interpolated_last_meff_prices_by_hour,
     pipe_hourly_energy_budget,
 )
 
@@ -31,13 +31,13 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
 
     def drop_test_database(self):
         # TODO Drop all existing tables in test db at once
-        Table('meff_precios_cierre_dia', MetaData()).drop(self.engine)
+        Table('meff_precios_cierre_dia', MetaData()).drop(self.engine, checkfirst=True)
 
     def create_datasources(self):
         # TODO create test omie buy, prices table, meff and neuro
         pass
 
-    def _test__interpolated_meff_prices_by_hour(self):
+    def test__interpolated_last_meff_prices_by_hour(self):
 
         request_time = datetime.datetime(2022,1,1)
 
@@ -53,6 +53,11 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
         }
         meff_df = pd.DataFrame(data)
 
+        meff_df = pd.read_csv('testdata/inputdata/meff_precios_cierre_dia.csv', parse_dates=['dia','request_time'])
+        meff_df.to_sql('meff_precios_cierre_dia', con = self.engine, if_exists='replace')
+
+        meff_df = interpolated_last_meff_prices_by_hour(meff_df)
+
         self.assertB2BEqual(meff_df.to_csv(index=False))
 
 
@@ -66,8 +71,10 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
 
     def _test__pipe_hourly_energy_budget(self):
 
-        df = pd.read_csv('testdata/inputdata/meff_precios_cierre_dia.csv')
+        df = pd.read_csv('testdata/inputdata/meff_precios_cierre_dia.csv', parse_dates=['dia','request_time'])
         df.to_sql('meff_precios_cierre_dia', con = self.engine, if_exists='replace')
+
+        import pdb; pdb.set_trace()
 
         meff_df = pipe_hourly_energy_budget(self.engine)
 
