@@ -97,6 +97,7 @@ class MainIntegrationTest(unittest.TestCase):
         omie_energy_buy_df.to_sql('omie_energy_buy', con=self.engine, if_exists='replace', index=False)
 
         omie_price_hour_df = pd.read_csv('testdata/inputdata/omie_price_hour.csv', parse_dates=['date','df_current_day_dated'])
+        omie_price_hour_df['date'] = pd.to_datetime(omie_price_hour_df['date'], utc=True).dt.tz_convert('Europe/Madrid')
         omie_price_hour_df.to_sql('omie_price_hour', con=self.engine, if_exists='replace', index=False)
 
     def test__get_historical_energy_buy(self):

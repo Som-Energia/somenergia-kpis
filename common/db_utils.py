@@ -87,6 +87,6 @@ def omie_price_hour_table_to_csv(engine, table_name, file_name):
 
     df = pd.read_sql(query, con=engine)
     
-    df['date'] = pd.to_datetime(df['date'], utc=True)
+    #df['date'] = pd.to_datetime(df['date'], utc=True)
     df.to_csv(file_name, index = False)
     

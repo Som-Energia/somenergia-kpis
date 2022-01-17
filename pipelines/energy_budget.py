@@ -20,7 +20,7 @@ def omie_energy_buy(engine):
     omie_energy_buy['energy'] = -omie_energy_buy['energy']
 
     omie_energy_buy = omie_energy_buy[['date','energy']]
-
+    
     return omie_energy_buy
     
 def omie_price_hour(engine):
@@ -32,7 +32,7 @@ def omie_price_hour(engine):
         raise
     
     omie_price_hour = omie_price_hour[['date','price']]
-    
+    omie_price_hour['date'] = pd.to_datetime(omie_price_hour['date'], utc=True) 
     return omie_price_hour
     
 def last_meff_prices_daily(engine):
@@ -52,7 +52,6 @@ def last_meff_prices_daily(engine):
     last_meff_prices_daily = last_meff_prices_daily.\
         rename(columns={'request_time':'meff_request_time'})
 
-    
     return last_meff_prices_daily
 
 def last_neuro_energy_buy(engine):
