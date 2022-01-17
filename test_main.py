@@ -87,6 +87,7 @@ class MainIntegrationTest(unittest.TestCase):
     def create_datasources_tables(self):
         
         meff_df = pd.read_csv('testdata/inputdata/meff_precios_cierre_dia.csv', parse_dates=['dia','request_time'])
+        meff_df['dia'] = meff_df['dia'].dt.date
         meff_df.to_sql('meff_precios_cierre_dia', con=self.engine, if_exists='replace', index=False)
 
         energy_buy_forecast_df = pd.read_csv('testdata/inputdata/energy_buy_forecast.csv', parse_dates=['date','request_time'])

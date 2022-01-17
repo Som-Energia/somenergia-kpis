@@ -45,11 +45,14 @@ def last_meff_prices_daily(engine):
     last_meff_prices_daily = last_meff_prices_daily.\
         rename(columns={'base_precio':'price_forecast'})
 
-    last_meff_prices_daily = last_meff_prices_daily[['dia','price_forecast','request_time']]
+    last_meff_prices_daily['date'] = pd.to_datetime(last_meff_prices_daily['dia']).dt.tz_localize('Europe/Madrid').dt.tz_convert('UTC')
+
+    last_meff_prices_daily = last_meff_prices_daily[['date','price_forecast','request_time']]
 
     last_meff_prices_daily = last_meff_prices_daily.\
         rename(columns={'request_time':'meff_request_time'})
 
+    
     return last_meff_prices_daily
 
 def last_neuro_energy_buy(engine):
@@ -73,10 +76,8 @@ def last_neuro_energy_buy(engine):
 
 def interpolated_last_meff_prices_by_hour(meff_df):
     
-    next_day = pd.DataFrame({'dia':[max(meff_df['dia']) + datetime.timedelta(days=1)]})
+    next_day = pd.DataFrame({'date':[max(meff_df['date']) + datetime.timedelta(days=1)]})
     meff_df = meff_df.append(next_day)
-
-    meff_df['date'] = meff_df['dia'].dt.tz_localize('Europe/Madrid').dt.tz_convert('UTC')
     
     meff_df = meff_df\
         .reset_index()\
