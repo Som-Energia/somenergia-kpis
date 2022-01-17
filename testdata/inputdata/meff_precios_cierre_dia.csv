@@ -1,4 +1,4 @@
-dia,base_precio,base_dif,base_dif_per,punta_precio,punta_dif,punta_dif_per,request_time
+dia,price_forecast,base_dif,base_dif_per,punta_precio,punta_dif,punta_dif_per,request_time
 2022-01-04,267.66,0.0,0.0,278.74,0.0,0.0,2022-01-02 17:00:01.834816+00:00
 2022-01-05,267.66,0.0,0.0,278.74,0.0,0.0,2022-01-02 17:00:01.834816+00:00
 2022-01-06,267.66,0.0,0.0,278.74,0.0,0.0,2022-01-02 17:00:01.834816+00:00

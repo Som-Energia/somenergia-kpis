@@ -37,3 +37,8 @@ def dateCETstr_to_tzdt(date: str, format='%Y%m%d'):
     time = pytz.timezone('Europe/Madrid').localize(date)
     time = time.astimezone(datetime.timezone.utc)
     return time
+
+def dateCETstr_to_CETtzdt(date: str, format='%Y%m%d'):
+    date = datetime.datetime.strptime(date, format)
+    time = pytz.timezone('Europe/Madrid').localize(date)
+    return time

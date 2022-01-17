@@ -6,8 +6,10 @@ import datetime
 from pathlib import Path
 import pytz
 
+from common.utils import dateCETstr_to_CETtzdt
+
 from energy_budget import (
-    daily_energy_budget,
+    joined_timeseries,
     hourly_energy_budget,
     interpolated_last_meff_prices_by_hour,
     pipe_hourly_energy_budget,
@@ -43,7 +45,7 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
 
         data = {
             'dia':[datetime.datetime(2022,1,4),datetime.datetime(2022,1,5)],
-            'base_precio':[267.6, 290],
+            'price_forecast':[267.6, 290],
             'base_dif':[0,None],
             'base_dif_per':[0,0],
             'punta_precio':[278.74, 302.5],
@@ -60,12 +62,47 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
 
         self.assertB2BEqual(meff_df.to_csv(index=False))
 
-
-    def _test__daily_energy_budget(self):
+    def test__joined_timeseries(self):
         
-        self.create_datasources()
+        df_1 = pd.DataFrame({
+            'date': [
+                dateCETstr_to_CETtzdt('2022-01-04 00:00:00', '%Y-%m-%d %H:%M:%S'),
+                dateCETstr_to_CETtzdt('2022-01-04 01:00:00', '%Y-%m-%d %H:%M:%S'),
+            ],
+            'price': [289,345]
+        })
 
-        df = daily_energy_budget()
+        df_2 = pd.DataFrame({
+            'date': [
+                dateCETstr_to_CETtzdt('2022-01-04 00:00:00', '%Y-%m-%d %H:%M:%S'),
+                dateCETstr_to_CETtzdt('2022-01-04 01:00:00', '%Y-%m-%d %H:%M:%S'),
+            ],
+            'energy': [1398,1675]
+        })
+
+        dfs = [df_1, df_2]
+
+        result = joined_timeseries(dfs)
+        
+        self.assertB2BEqual(result.to_csv(index=False, na_rep='NaN'))
+
+    def _test__joined_timeseries__repeated_column_name(self):
+        pass
+
+    def test__hourly_energy_budget(self):
+        
+        df = pd.DataFrame({
+            'date': [
+                dateCETstr_to_CETtzdt('2022-01-04 00:00:00', '%Y-%m-%d %H:%M:%S'),
+                dateCETstr_to_CETtzdt('2022-01-04 01:00:00', '%Y-%m-%d %H:%M:%S'),
+            ],
+            'price': [250,350],
+            'energy': [1000,1100],
+            'price_forecast': [300,400],
+            'energy_forecast': [700,800],
+        })
+
+        df = hourly_energy_budget(df)
 
         self.assertB2BEqual(df.to_csv(index=False))
 
