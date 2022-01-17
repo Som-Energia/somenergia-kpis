@@ -8,7 +8,7 @@ import pytz
 
 from common.utils import dateCETstr_to_CETtzdt
 
-from energy_budget import (
+from pipelines.energy_budget import (
     joined_timeseries,
     hourly_energy_budget,
     interpolated_last_meff_prices_by_hour,
