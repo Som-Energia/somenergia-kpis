@@ -120,8 +120,10 @@ def pipe_hourly_energy_budget(engine):
     meff_prices_daily_df = interpolated_last_meff_prices_by_hour(meff_prices_daily_df)
     df = joined_timeseries([omie_energy_buy_df, omie_price_hour_df, meff_prices_daily_df, neuro_energy_buy_df])
     df = hourly_energy_budget(df)
-    df.to_sql('energy_budget_hourly', engine, if_exists = 'replace', index = False)
 
+    df.to_sql('energy_budget_hourly', engine, if_exists = 'replace', index = False)
+    
+    return 0
     
 
 # goal

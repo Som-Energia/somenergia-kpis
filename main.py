@@ -23,45 +23,53 @@ from datasources.neuroenergia.neuroenergia_operations import (
     update_neuroenergia
 )
 
+from pipelines.energy_budget import (
+    pipe_hourly_energy_budget
+)
 
 import datetime
 
 def main_update_closing_prices_month(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
-    update_closing_prices_month(engine, verbose, dry_run)
+    return update_closing_prices_month(engine, verbose, dry_run)
 
 def main_update_closing_prices_day(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
-    update_closing_prices_day(engine, verbose, dry_run)
+    return update_closing_prices_day(engine, verbose, dry_run)
 
 def main_update_omie_latest_hour_price(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
-    update_latest_hour_price(engine, verbose, dry_run)
+    return update_latest_hour_price(engine, verbose, dry_run)
 
 def main_get_historical_hour_price(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
-    get_historical_hour_price(engine, verbose, dry_run)
+    return get_historical_hour_price(engine, verbose, dry_run)
 
 def main_update_historical_hour_price(verbose, dry_run):
     engine = create_engine(local_db['dbapi'])
-    update_historical_hour_price(engine, verbose, dry_run)
+    return update_historical_hour_price(engine, verbose, dry_run)
 
 # TODO Pendent de posar a prod
 def main_get_historical_energy_buy(verbose, dry_run):
     raise NotImplemented
     engine = None if dry_run else create_engine(local_db['dbapi'])
     omie_pdbc_dir = Path(directories['OMIE_HISTORICAL_PDBC'])
-    get_historical_energy_buy(engine, omie_pdbc_dir, verbose, dry_run)
+    return get_historical_energy_buy(engine, omie_pdbc_dir, verbose, dry_run)
 
 def main_update_energy_buy(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
     omie_temp_dir = Path(directories['OMIE_TEMP_PDBC'])
-    update_energy_buy(engine, omie_temp_dir, verbose, dry_run)
+    return update_energy_buy(engine, omie_temp_dir, verbose, dry_run)
 
 def main_update_neuroenergia(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
     neuro_dir = directories['NEUROENERGIA_TEMP']
-    update_neuroenergia(engine,neuro_dir,verbose,dry_run)
+    return update_neuroenergia(engine,neuro_dir,verbose,dry_run)
+
+def main_pipe_hourly_energy_budget(verbose, dry_run):
+    engine = None if dry_run else create_engine(local_db['dbapi'])
+    return pipe_hourly_energy_budget(engine)
+
 
 function_list = {
     'meff_update_closing_prices_day': main_update_closing_prices_day,
