@@ -105,14 +105,3 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
         df = hourly_energy_budget(df)
 
         self.assertB2BEqual(df.to_csv(index=False))
-
-    def _test__pipe_hourly_energy_budget(self):
-
-        df = pd.read_csv('testdata/inputdata/meff_precios_cierre_dia.csv', parse_dates=['dia','request_time'])
-        df.to_sql('meff_precios_cierre_dia', con = self.engine, if_exists='replace')
-
-        import pdb; pdb.set_trace()
-
-        meff_df = pipe_hourly_energy_budget(self.engine)
-
-        self.assertB2BEqual(meff_df.to_csv(index=False))

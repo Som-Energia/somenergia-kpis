@@ -27,6 +27,10 @@ from datasources.omie.omie_operations import (
     update_historical_hour_price
 )
 
+from pipelines.energy_budget import (
+    pipe_hourly_energy_budget
+)
+
 import datetime
 
 class MainIntegrationTest(unittest.TestCase):
@@ -43,6 +47,8 @@ class MainIntegrationTest(unittest.TestCase):
 
         sql.execute('DROP TABLE IF EXISTS omie_energy_buy', self.engine)
         sql.execute('DROP TABLE IF EXISTS omie_price_hour', self.engine)
+        sql.execute('DROP TABLE IF EXISTS meff_precios_cierre_dia', self.engine)
+        sql.execute('DROP TABLE IF EXISTS energy_buy_forecast', self.engine)
 
         # metadata = MetaData(bind=self.engine)
         # # all tables defined will be dropped
@@ -78,6 +84,20 @@ class MainIntegrationTest(unittest.TestCase):
                 df_current_day_dated=dateCETstr_to_tzdt(reading_date))
             conn.execute(ins)
 
+    def create_datasources_tables(self):
+        
+        meff_df = pd.read_csv('testdata/inputdata/meff_precios_cierre_dia.csv', parse_dates=['dia','request_time'])
+        meff_df.to_sql('meff_precios_cierre_dia', con=self.engine, if_exists='replace', index=False)
+
+        energy_buy_forecast_df = pd.read_csv('testdata/inputdata/energy_buy_forecast.csv', parse_dates=['date','request_time'])
+        energy_buy_forecast_df.to_sql('energy_buy_forecast', con=self.engine, if_exists='replace', index=False)
+
+        omie_energy_buy_df = pd.read_csv('testdata/inputdata/omie_energy_buy.csv', parse_dates=['date','request_time'])
+        omie_energy_buy_df.to_sql('omie_energy_buy', con=self.engine, if_exists='replace', index=False)
+
+        omie_price_hour_df = pd.read_csv('testdata/inputdata/omie_price_hour.csv', parse_dates=['date','df_current_day_dated'])
+        omie_price_hour_df.to_sql('omie_price_hour', con=self.engine, if_exists='replace', index=False)
+
     def test__get_historical_energy_buy(self):
 
         omie_dir = Path(test_directories['OMIE_HISTORICAL_PDBC']).resolve()
@@ -94,6 +114,14 @@ class MainIntegrationTest(unittest.TestCase):
 
         # TODO move this to tearDown maybe? or catch finally ?
         restore_files(omie_dir)
+
+        self.assertEqual(result, 0)
+
+    def test__pipe_hourly_energy_budget(self):
+
+        self.create_datasources_tables()
+
+        result = pipe_hourly_energy_budget(self.engine)
 
         self.assertEqual(result, 0)
 

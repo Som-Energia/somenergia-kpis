@@ -16,8 +16,10 @@ def omie_energy_buy(engine):
         raise
 
     omie_energy_buy = omie_energy_buy.\
-        rename({'demand':'energy'})
+        rename(columns={'demand':'energy'})
     omie_energy_buy['energy'] = -omie_energy_buy['energy']
+
+    omie_energy_buy = omie_energy_buy[['date','energy']]
 
     return omie_energy_buy
     
@@ -28,6 +30,9 @@ def omie_price_hour(engine):
         logging.error('Error on fetching latest omie_price_hour')
         # TODO handle exceptions
         raise
+    
+    omie_price_hour = omie_price_hour[['date','price']]
+    
     return omie_price_hour
     
 def last_meff_prices_daily(engine):
@@ -37,9 +42,16 @@ def last_meff_prices_daily(engine):
         logging.error('Error on fetching latest meff_prices_daily')
         # TODO handle exceptions
         raise
-    return last_meff_prices_daily.\
-        rename({'base_precio':'price_forecast'})
-    
+    last_meff_prices_daily = last_meff_prices_daily.\
+        rename(columns={'base_precio':'price_forecast'})
+
+    last_meff_prices_daily = last_meff_prices_daily[['dia','price_forecast','request_time']]
+
+    last_meff_prices_daily = last_meff_prices_daily.\
+        rename(columns={'request_time':'meff_request_time'})
+
+    return last_meff_prices_daily
+
 def last_neuro_energy_buy(engine):
     try:
         last_neuro_energy_buy = pd.read_sql('select * from energy_buy_forecast where request_time IN (select request_time from energy_buy_forecast order by request_time desc limit 1)', con=engine)
@@ -47,18 +59,25 @@ def last_neuro_energy_buy(engine):
         logging.error('Error on fetching latest neuro_energy_buy')
         # TODO handle exceptions
         raise
-    return last_neuro_energy_buy.\
-        rename({'base':'energy_forecast'})
+    
+    last_neuro_energy_buy = last_neuro_energy_buy.\
+        rename(columns={'base':'energy_forecast'})
+
+    last_neuro_energy_buy = last_neuro_energy_buy[['date','energy_forecast','request_time']]
+
+    last_neuro_energy_buy = last_neuro_energy_buy.\
+        rename(columns={'request_time':'neuro_request_time'})
+
+    return last_neuro_energy_buy
+        
 
 def interpolated_last_meff_prices_by_hour(meff_df):
     
-    meff_df = meff_df[meff_df['request_time'] == max(meff_df['request_time'])].reset_index()
-
     next_day = pd.DataFrame({'dia':[max(meff_df['dia']) + datetime.timedelta(days=1)]})
     meff_df = meff_df.append(next_day)
 
-    meff_df['date'] = meff_df['dia'].dt.tz_localize('Europe/Madrid')
-
+    meff_df['date'] = meff_df['dia'].dt.tz_localize('Europe/Madrid').dt.tz_convert('UTC')
+    
     meff_df = meff_df\
         .reset_index()\
         .set_index('date', drop = False)[['price_forecast']]\
@@ -75,8 +94,8 @@ def interpolated_last_meff_prices_by_hour(meff_df):
 # otherwise throws
 def joined_timeseries(timeseries_dfs):
     
-    from_date = max([df.iloc[0]['date'] for df in timeseries_dfs])
-    to_date = min([df.iloc[-1]['date'] for df in timeseries_dfs])
+    from_date = min([df.iloc[0]['date'] for df in timeseries_dfs])
+    to_date = max([df.iloc[-1]['date'] for df in timeseries_dfs])
     
     df_timeline = pd.DataFrame(
         pd.date_range(
@@ -88,10 +107,12 @@ def joined_timeseries(timeseries_dfs):
             tz='Europe/Madrid')
         ).\
         rename(columns={0:'date'})
+    
+    df_timeline['date'] = pd.to_datetime(df_timeline['date'], utc=True)
 
     df_merged = reduce(lambda  left,right: pd.merge(left,right,on=['date'],
                                             how='left'), [df_timeline] + timeseries_dfs)
-
+    
     return df_merged
 
 def hourly_energy_budget(df):
@@ -116,13 +137,13 @@ def pipe_hourly_energy_budget(engine):
     omie_price_hour_df = omie_price_hour(engine)
     meff_prices_daily_df = last_meff_prices_daily(engine)
     neuro_energy_buy_df = last_neuro_energy_buy(engine)
-    
     meff_prices_daily_df = interpolated_last_meff_prices_by_hour(meff_prices_daily_df)
+
     df = joined_timeseries([omie_energy_buy_df, omie_price_hour_df, meff_prices_daily_df, neuro_energy_buy_df])
     df = hourly_energy_budget(df)
 
     df.to_sql('energy_budget_hourly', engine, if_exists = 'replace', index = False)
-    
+
     return 0
     
 

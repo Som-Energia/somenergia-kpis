@@ -73,10 +73,20 @@ def list_new_files(engine, directory, type=None, date_from=None):
 
     return flist
 
-
 def table_to_csv(engine, table_name, file_name):
 
     query = f"select * from {table_name}"
 
     df = pd.read_sql(query, con=engine)
-    df.to_csv(file_name)
+    
+    df.to_csv(file_name, index = False)
+
+def omie_price_hour_table_to_csv(engine, table_name, file_name):
+
+    query = f"select * from {table_name} order by date"
+
+    df = pd.read_sql(query, con=engine)
+    
+    df['date'] = pd.to_datetime(df['date'], utc=True)
+    df.to_csv(file_name, index = False)
+    
