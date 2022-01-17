@@ -79,7 +79,8 @@ function_list = {
     'omie_update_historical_hour_price': main_update_historical_hour_price,
     'omie_get_historical_energy_buy' : main_get_historical_energy_buy,
     'omie_update_energy_buy' : main_update_energy_buy,
-    'neuro_update_energy_prediction' : main_update_neuroenergia
+    'neuro_update_energy_prediction' : main_update_neuroenergia,
+    'pipe_hourly_energy_budget' : main_pipe_hourly_energy_budget,
 }
 
 # TODO use logging instead of -v
