@@ -43,20 +43,7 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
 
         request_time = datetime.datetime(2022,1,1)
 
-        data = {
-            'dia':[datetime.datetime(2022,1,4),datetime.datetime(2022,1,5)],
-            'price_forecast':[267.6, 290],
-            'base_dif':[0,None],
-            'base_dif_per':[0,0],
-            'punta_precio':[278.74, 302.5],
-            'punta_dif':[None,0],
-            'punta_dif_per':[0,0],
-            'request_time':[request_time, request_time],
-        }
-        meff_df = pd.DataFrame(data)
-
-        meff_df = pd.read_csv('testdata/inputdata/meff_precios_cierre_dia.csv', parse_dates=['dia','request_time'])
-        meff_df.to_sql('meff_precios_cierre_dia', con = self.engine, if_exists='replace')
+        meff_df = pd.read_csv('testdata/inputdata/meff_precios_cierre_dia_to_interpolate.csv', parse_dates=['date','request_time'])
 
         meff_df = interpolated_last_meff_prices_by_hour(meff_df)
 

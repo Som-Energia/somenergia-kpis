@@ -44,7 +44,7 @@ def shape_omie(pathfile, request_time):
     df = basic_shape(df, noms_columnes)
 
     df = df[["date", "price"]]
-    df['df_current_day_dated'] = request_time
+    df['request_time'] = request_time
 
     return df
 

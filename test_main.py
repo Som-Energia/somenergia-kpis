@@ -72,7 +72,7 @@ class MainIntegrationTest(unittest.TestCase):
             metadata,
             Column('date', DateTime(timezone=True)),
             Column('price', Integer),
-            Column('df_current_day_dated',DateTime(timezone=True))
+            Column('request_time',DateTime(timezone=True))
         )
         omie_price_hour.create()
 
@@ -81,7 +81,7 @@ class MainIntegrationTest(unittest.TestCase):
             ins = omie_price_hour.insert().values(
                 date=dateCETstr_to_tzdt(reading_date),
                 price=100,
-                df_current_day_dated=dateCETstr_to_tzdt(reading_date))
+                request_time=dateCETstr_to_tzdt(reading_date))
             conn.execute(ins)
 
     def create_datasources_tables(self):
@@ -96,7 +96,7 @@ class MainIntegrationTest(unittest.TestCase):
         omie_energy_buy_df = pd.read_csv('testdata/inputdata/omie_energy_buy.csv', parse_dates=['date','request_time'])
         omie_energy_buy_df.to_sql('omie_energy_buy', con=self.engine, if_exists='replace', index=False)
 
-        omie_price_hour_df = pd.read_csv('testdata/inputdata/omie_price_hour.csv', parse_dates=['date','df_current_day_dated'])
+        omie_price_hour_df = pd.read_csv('testdata/inputdata/omie_price_hour.csv', parse_dates=['date','request_time'])
         omie_price_hour_df['date'] = pd.to_datetime(omie_price_hour_df['date'], utc=True).dt.tz_convert('Europe/Madrid')
         omie_price_hour_df.to_sql('omie_price_hour', con=self.engine, if_exists='replace', index=False)
 
