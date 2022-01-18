@@ -19,7 +19,8 @@ directories = {
     'NEUROENERGIA_HISTORICAL': 'somenergia/somenergia-indicadors-kpis/realdata/NEUROENERGIA',
     'NEUROENERGIA_TEMP': 'somenergia/somenergia-indicadors-kpis/realdata/NEUROENERGIATEMP',
     'OMIE_HISTORICAL_PDBC': 'somenergia/somenergia-indicadors-kpis/realdata/OMIE/PDBC',
-    'OMIE_TEMP_PDBC': 'somenergia/somenergia-indicadors-kpis/realdata/OMIETEMP/PDBC'
+    'OMIE_TEMP_PDBC': 'somenergia/somenergia-indicadors-kpis/realdata/OMIETEMP/PDBC',
+    'OMIE_DATA': 'somenergia/somenergia-indicadors-kpis/realdata/data'
 }
 
 test_directories = {
