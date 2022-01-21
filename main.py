@@ -27,6 +27,10 @@ from pipelines.energy_budget import (
     pipe_hourly_energy_budget
 )
 
+from pipelines.omie_garantia import (
+    pipe_omie_garantia
+)
+
 import datetime
 
 def main_update_closing_prices_month(verbose, dry_run):
@@ -70,6 +74,10 @@ def main_pipe_hourly_energy_budget(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
     return pipe_hourly_energy_budget(engine)
 
+def main_pipe_omie_garantia(verbose, dry_run):
+    engine = None if dry_run else create_engine(local_db['dbapi'])
+    return pipe_omie_garantia(engine)
+
 
 function_list = {
     'meff_update_closing_prices_day': main_update_closing_prices_day,
@@ -81,6 +89,7 @@ function_list = {
     'omie_update_energy_buy' : main_update_energy_buy,
     'neuro_update_energy_prediction' : main_update_neuroenergia,
     'pipe_hourly_energy_budget' : main_pipe_hourly_energy_budget,
+    'pipe_omie_garantia' : main_pipe_omie_garantia,
 }
 
 # TODO use logging instead of -v

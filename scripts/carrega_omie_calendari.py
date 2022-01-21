@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     to_parse = ['Día','Fecha Liquidación','Fecha Reclamaciones','Fecha Facturación','Fecha Publicación Nota Agregada','Fecha Pagos','Fecha Cobros']
 
-    df = pd.read_csv('data/calendari_pagaments_omie.csv', parse_dates=to_parse)
+    df = pd.read_csv('data/calendari_pagaments_omie.csv', parse_dates=to_parse, dayfirst=True)
 
     for col in to_parse:
         df[col] = df[col].dt.tz_localize('Europe/Madrid')
@@ -24,7 +24,6 @@ if __name__ == '__main__':
     df['request_time'] = datetime.datetime.now(datetime.timezone.utc)
 
     df.to_sql('omie_payments_calendar', con=engine, if_exists='replace', index=False)
-
 
 
 # exec: python -m scripts.carrega_omie_calendari

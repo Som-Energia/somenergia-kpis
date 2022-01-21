@@ -31,6 +31,9 @@ from pipelines.energy_budget import (
     pipe_hourly_energy_budget
 )
 
+from pipelines.omie_garantia import (
+    pipe_omie_garantia
+)
 import datetime
 
 class MainIntegrationTest(unittest.TestCase):
@@ -124,6 +127,15 @@ class MainIntegrationTest(unittest.TestCase):
         self.create_datasources_tables()
 
         result = pipe_hourly_energy_budget(self.engine)
+
+        self.assertEqual(result, 0)
+
+    def _test__pipe_omie_garantia(self):
+
+        # TODO: Add dummy tables to create_datasources_tables()
+        #self.create_datasources_tables()
+
+        result = pipe_omie_garantia(self.engine)
 
         self.assertEqual(result, 0)
 
