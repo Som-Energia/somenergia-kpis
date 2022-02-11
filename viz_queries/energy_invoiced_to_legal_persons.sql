@@ -9,12 +9,16 @@ select
 	contract.contracte_telegestionat,
 	contract.consum_esperat_data,
  	contract.consum_esperat_kwh,
-	--sum(invoice.amount_total) as amount_total,
-	sum(case
+	MIN(fact.data_inici) AS data_inici,
+	MAX(fact.data_final) AS data_final,
+	DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)) AS days,
+	--SUM(invoice.amount_total) AS amount_total,
+	SUM(case
 		when invoice.type='out_refund'
-		then -amount_total
-		else amount_total
+		then -invoice.amount_total
+		else invoice.amount_total
 	END) as amount_total,
+	sum(lectura.n_estimades) as n_estimades,
 	sum(invoice.residual) as pendent,
 	sum(fact.energia_kwh) as energia_kwh
 from (
@@ -53,6 +57,30 @@ join account_invoice as invoice
 	on invoice.id = fact.invoice_id
 join account_journal as journal
 	on journal.id = invoice.journal_id
+join (
+	SELECT
+		count(lectura.origen_id IN (
+			--  1, -- Telemesura
+			--  2, -- Telemesura corregida
+			--  3, -- TPL
+			--  4, -- TPL corregida
+			  5, -- Visual
+			  6, -- Visual corregida
+			  7, -- Estimada
+			 10, -- Estimada amb l'històric
+			 11, -- Estimada amb factor d'utilització
+			  8, -- Autolectura
+			-- 12, -- Telegestió
+			  9,  -- Sense Lectura
+			666) OR NULL) as n_estimades,
+		factura_id
+	FROM giscedata_facturacio_lectures_energia as lectura
+	WHERE 
+		lectura.magnitud = 'AE' AND
+		TRUE
+	GROUP BY factura_id
+)as lectura
+	on lectura.factura_id = fact.id
 where
 	journal.name = 'Factures Energia' and
 	-- invoice.date_invoice between CURRENT_DATE - INTERVAL '13 months'  and CURRENT_DATE - INTERVAL '1 month' and
