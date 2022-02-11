@@ -1,3 +1,11 @@
+--
+
+-- TODO:
+-- Prorrateo a un año de energia_kwh i amount_total respecto a days
+-- Comprobar si las lecturas estimadas se cuentan bien
+-- Usar ids para filtrar journal para acelerar
+-- Filtrar facturas por fact.data_inici fact.data_final en vez de invoice.date_invoice (fecha de emision)
+
 select
 	contract.cnae,
 	contract.partner_vat,
@@ -12,7 +20,6 @@ select
 	MIN(fact.data_inici) AS data_inici,
 	MAX(fact.data_final) AS data_final,
 	DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)) AS days,
-	--SUM(invoice.amount_total) AS amount_total,
 	SUM(case
 		when invoice.type='out_refund'
 		then -invoice.amount_total
