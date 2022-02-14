@@ -1,37 +1,34 @@
---
+-- Find the last year consumption and invoiced amount for
+-- contracts owned by legal entities.
 
 -- TODO:
--- [ ] Prorrateo a un año de energia_kwh i amount_total respecto a days
 -- [ ] Comprobar si las lecturas estimadas se cuentan bien
--- [x] Usar ids para filtrar journal para acelerar
--- [*] Filtrar facturas por fact.data_inici fact.data_final en vez de invoice.date_invoice (fecha de emision)
--- [ ] Mirar si filtrar las lecturas por fecha tiene impacto en el tiempo de ejecucion
 
 
 
 select
-	contract.pol_name,
+	contract.pol_name as contracte,
 	contract.cnae,
-	contract.partner_vat,
+	contract.partner_vat as nif_titular,
 	contract.tariff,
 	contract.data_alta,
 	contract.data_baixa,
 	contract.data_ultima_lectura,
-	contract.titular_id = contract.soci_id as titular_soci,
+	contract.titular_id = contract.soci_id as titular_es_soci,
 	contract.contracte_telegestionat,
-	contract.consum_esperat_data,
- 	contract.consum_esperat_kwh,
-	MIN(fact.data_inici) AS data_inici,
-	MAX(fact.data_final) AS data_final,
+	MIN(fact.data_inici) AS primera_data_considerada,
+	MAX(fact.data_final) AS darrera_data_considerada,
 	DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)) AS days,
-	SUM(case
+	ROUND(SUM(case
 		when invoice.type='out_refund'
 		then -invoice.amount_total
 		else invoice.amount_total
-	END) as amount_total,
-	sum(lectura.n_estimades) as n_estimades,
-	sum(invoice.residual) as pendent,
-	sum(fact.energia_kwh) as energia_kwh
+	END) * 365 / NULLIF(DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)),0)) as facturacio_proratejada_any,
+	sum(lectura.n_estimades)>0 as te_lectures_estimades,
+	sum(invoice.residual) as pagaments_pendents,
+	ROUND(sum(fact.energia_kwh) * 365 / NULLIF(DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)),0)) as energia_kwh_prorratejada_any,
+ 	contract.consum_esperat_kwh as estimacio_gisce_kwhany,
+	contract.consum_esperat_data as estimacio_gisce_data
 from (
 	select
 		pol.id as pol_id,
