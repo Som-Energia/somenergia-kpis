@@ -1,12 +1,16 @@
 --
 
 -- TODO:
--- Prorrateo a un año de energia_kwh i amount_total respecto a days
--- Comprobar si las lecturas estimadas se cuentan bien
--- Usar ids para filtrar journal para acelerar
--- Filtrar facturas por fact.data_inici fact.data_final en vez de invoice.date_invoice (fecha de emision)
+-- [ ] Prorrateo a un año de energia_kwh i amount_total respecto a days
+-- [ ] Comprobar si las lecturas estimadas se cuentan bien
+-- [x] Usar ids para filtrar journal para acelerar
+-- [*] Filtrar facturas por fact.data_inici fact.data_final en vez de invoice.date_invoice (fecha de emision)
+-- [ ] Mirar si filtrar las lecturas por fecha tiene impacto en el tiempo de ejecucion
+
+
 
 select
+	contract.pol_name,
 	contract.cnae,
 	contract.partner_vat,
 	contract.tariff,
@@ -43,9 +47,7 @@ from (
 		cnae.name as cnae,
 		partner.vat as partner_vat,
 		tariff.name as tariff
-	from giscedata_polissa_category as cat
-	join giscedata_polissa_category_rel as cat_rel
-		on cat.id = cat_rel.category_id
+	from giscedata_polissa_category_rel as cat_rel
 	join giscedata_polissa as pol
 		on pol.id = cat_rel.polissa_id
 	join giscedata_cups_ps as cups
@@ -56,14 +58,12 @@ from (
 		on partner.id = pol.titular
 	join giscedata_polissa_tarifa as tariff
 		on tariff.id = pol.tarifa
-	where cat.name = 'Entitat o Empresa'
+	where cat_rel.category_id = 33 -- cat.name = 'Entitat o Empresa'
 ) as contract
 join giscedata_facturacio_factura as fact
 	on fact.polissa_id = pol_id
 join account_invoice as invoice
 	on invoice.id = fact.invoice_id
-join account_journal as journal
-	on journal.id = invoice.journal_id
 join (
 	SELECT
 		count(lectura.origen_id IN (
@@ -89,9 +89,10 @@ join (
 )as lectura
 	on lectura.factura_id = fact.id
 where
-	journal.name = 'Factures Energia' and
+	invoice.journal_id = 5 and -- journal.name = 'Factures Energia' and
 	-- invoice.date_invoice between CURRENT_DATE - INTERVAL '13 months'  and CURRENT_DATE - INTERVAL '1 month' and
-	invoice.date_invoice between '2020/06/01' and '2021/06/01' and
+	--invoice.date_invoice between '2020/06/01' and '2021/06/01' and
+	fact.data_final::date > contract.data_ultima_lectura::date - INTERVAL '12 months' and
 	true
 group by (
 	pol_id,
@@ -108,5 +109,8 @@ group by (
 	contract.consum_esperat_data,
  	contract.consum_esperat_kwh,
 	true
-);
+)
+order by
+	pol_name
+;
 
