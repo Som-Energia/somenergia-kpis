@@ -56,6 +56,7 @@ from (
 	join giscedata_polissa_tarifa as tariff
 		on tariff.id = pol.tarifa
 	where cat_rel.category_id = 33 -- cat.name = 'Entitat o Empresa'
+	and pol.data_baixa IS NOT NULL
 ) as contract
 join giscedata_facturacio_factura as fact
 	on fact.polissa_id = pol_id
