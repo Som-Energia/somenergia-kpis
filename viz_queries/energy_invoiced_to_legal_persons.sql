@@ -44,8 +44,8 @@ from (
 		cnae.name as cnae,
 		partner.vat as partner_vat,
 		tariff.name as tariff
-	from giscedata_polissa_category_rel as cat_rel
-	join giscedata_polissa as pol
+	from giscedata_polissa as pol
+	join giscedata_polissa_category_rel as cat_rel
 		on pol.id = cat_rel.polissa_id
 	join giscedata_cups_ps as cups
 		on cups.id = pol.cups
@@ -55,7 +55,8 @@ from (
 		on partner.id = pol.titular
 	join giscedata_polissa_tarifa as tariff
 		on tariff.id = pol.tarifa
-	where cat_rel.category_id = 33 -- cat.name = 'Entitat o Empresa'
+	where TRUE
+	and cat_rel.category_id = 33 -- cat.name = 'Entitat o Empresa'
 	and pol.data_baixa IS NULL
 	and tariff.pot_max > 15
 ) as contract
