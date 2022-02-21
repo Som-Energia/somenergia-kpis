@@ -6,60 +6,60 @@
 
 
 
-select
-	contract.pol_name as contracte,
+SELECT
+	contract.pol_name AS contracte,
 	contract.cnae,
-	contract.partner_vat as nif_titular,
+	contract.partner_vat AS nif_titular,
 	contract.tariff,
 	contract.data_alta,
 	contract.data_baixa,
 	contract.data_ultima_lectura,
-	contract.titular_id = contract.soci_id as titular_es_soci,
+	contract.titular_id = contract.soci_id AS titular_es_soci,
 	contract.contracte_telegestionat,
 	MIN(fact.data_inici) AS primera_data_considerada,
 	MAX(fact.data_final) AS darrera_data_considerada,
 	DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)) AS days,
-	ROUND(SUM(case
+	ROUND(SUM(cAS
 		when invoice.type='out_refund'
 		then -invoice.amount_total
 		else invoice.amount_total
-	END) * 365 / NULLIF(DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)),0)) as facturacio_proratejada_any,
-	sum(lectura.n_estimades)>0 as te_lectures_estimades,
-	sum(invoice.residual) as pagaments_pendents,
-	ROUND(sum(fact.energia_kwh) * 365 / NULLIF(DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)),0)) as energia_kwh_prorratejada_any,
- 	contract.consum_esperat_kwh as estimacio_gisce_kwhany,
-	contract.consum_esperat_data as estimacio_gisce_data
-from (
-	select
-		pol.id as pol_id,
-		pol.name as pol_name,
-		pol.data_alta as data_alta,
-		pol.data_baixa as data_baixa,
-		pol.titular as titular_id,
-		pol.soci as soci_id,
-		pol.data_ultima_lectura as data_ultima_lectura,
-		cups.conany_data as consum_esperat_data,
-		cups.conany_kwh as consum_esperat_kwh,
-		pol.tg <> '2' as contracte_telegestionat, 
-		cnae.name as cnae,
-		partner.vat as partner_vat,
-		tariff.name as tariff
-	from giscedata_polissa as pol
-	--join giscedata_polissa_category_rel as cat_rel
+	END) * 365 / NULLIF(DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)),0)) AS facturacio_proratejada_any,
+	sum(lectura.n_estimades)>0 AS te_lectures_estimades,
+	sum(invoice.residual) AS pagaments_pendents,
+	ROUND(sum(fact.energia_kwh) * 365 / NULLIF(DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)),0)) AS energia_kwh_prorratejada_any,
+ 	contract.consum_esperat_kwh AS estimacio_gisce_kwhany,
+	contract.consum_esperat_data AS estimacio_gisce_data
+FROM (
+	SELECT
+		pol.id AS pol_id,
+		pol.name AS pol_name,
+		pol.data_alta AS data_alta,
+		pol.data_baixa AS data_baixa,
+		pol.titular AS titular_id,
+		pol.soci AS soci_id,
+		pol.data_ultima_lectura AS data_ultima_lectura,
+		cups.conany_data AS consum_esperat_data,
+		cups.conany_kwh AS consum_esperat_kwh,
+		pol.tg <> '2' AS contracte_telegestionat, 
+		cnae.name AS cnae,
+		partner.vat AS partner_vat,
+		tariff.name AS tariff
+	from giscedata_polissa AS pol
+	--join giscedata_polissa_category_rel AS cat_rel
 	--	on pol.id = cat_rel.polissa_id
-	join giscedata_cups_ps as cups
+	join giscedata_cups_ps AS cups
 		on cups.id = pol.cups
-	join giscemisc_cnae as cnae
+	join giscemisc_cnae AS cnae
 		on cnae.id = pol.cnae
-	join res_partner as partner
+	join res_partner AS partner
 		on partner.id = pol.titular
-	join giscedata_polissa_tarifa as tariff
+	join giscedata_polissa_tarifa AS tariff
 		on tariff.id = pol.tarifa
 	where TRUE
 	--and cat_rel.category_id = 33 -- cat.name = 'Entitat o Empresa'
 	and pol.data_baixa IS NULL
 	and tariff.pot_max > 15
-) as contract
+) AS contract
 join giscedata_facturacio_factura as fact
 	on fact.polissa_id = pol_id
 join account_invoice as invoice
@@ -82,19 +82,15 @@ join (
 			666) OR NULL) as n_estimades,
 		factura_id
 	FROM giscedata_facturacio_lectures_energia as lectura
-	WHERE 
-		lectura.magnitud = 'AE' AND
-		TRUE
+	WHERE TRUE
+	AND lectura.magnitud = 'AE'
 	GROUP BY factura_id
-)as lectura
-	on lectura.factura_id = fact.id
-where
-	invoice.journal_id = 5 and -- journal.name = 'Factures Energia' and
-	-- invoice.date_invoice between CURRENT_DATE - INTERVAL '13 months'  and CURRENT_DATE - INTERVAL '1 month' and
-	--invoice.date_invoice between '2020/06/01' and '2021/06/01' and
-	fact.data_final::date > contract.data_ultima_lectura::date - INTERVAL '12 months' and
-	true
-group by (
+) AS lectura
+	ON lectura.factura_id = fact.id
+WHERE TRUE
+	AND invoice.journal_id = 5 -- journal.name = 'Factures Energia' and
+	AND fact.data_final::date > contract.data_ultima_lectura::date - INTERVAL '12 months'
+GROUP BY (
 	pol_id,
 	pol_name,
 	data_alta,
@@ -110,7 +106,7 @@ group by (
  	contract.consum_esperat_kwh,
 	true
 )
-order by
+ORDER BY
 	pol_name
 ;
 
