@@ -59,6 +59,16 @@ def omie_garantia_dipositada(engine):
 
 def diposit_esperat(calendari, budget):
 
+    budget['date'] = budget['date'].dt.tz_convert('Europe/Madrid')
+    budget = budget\
+        .set_index('date', drop = False)\
+        .resample('D', on='date')\
+        .sum()\
+        .assign(is_forecast=lambda f: f.is_forecast>0)\
+        .reset_index()\
+        .assign(dia=lambda p: p['date'].dt.date)\
+        .assign(budget_iva=lambda p: p['budget']+(p['budget']*0.21))
+
     calendari['fecha_pagos'] = calendari['fecha_pagos'].dt.tz_convert('Europe/Madrid')
 
     es_dia_de_pago = calendari[['fecha_pagos']]\
@@ -67,15 +77,7 @@ def diposit_esperat(calendari, budget):
         .reset_index(drop=True)\
         .assign(dia=lambda p: p['fecha_pagos'].dt.date)
     
-
-    budget['date'] = budget['date'].dt.tz_convert('Europe/Madrid')
-    budget = budget\
-        .set_index('date', drop = False)\
-        .resample('D', on='date')\
-        .sum()\
-        .assign(is_forecast=lambda f: f.is_forecast>0)\
-        .reset_index()\
-        .assign(dia=lambda p: p['date'].dt.date)
+    import pdb; pdb.set_trace()
     
     df = pd.merge(left=budget, right=es_dia_de_pago, how='left', on='dia')
 
