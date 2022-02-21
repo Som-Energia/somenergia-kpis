@@ -69,12 +69,12 @@ join (
 			--  2, -- Telemesura corregida
 			--  3, -- TPL
 			--  4, -- TPL corregida
-			  5, -- Visual
-			  6, -- Visual corregida
+			--  5, -- Visual
+			--  6, -- Visual corregida
 			  7, -- Estimada
 			 10, -- Estimada amb l'històric
 			 11, -- Estimada amb factor d'utilització
-			  8, -- Autolectura
+			--  8, -- Autolectura
 			-- 12, -- Telegestió
 			  9,  -- Sense Lectura
 			666) OR NULL) as n_estimades,
