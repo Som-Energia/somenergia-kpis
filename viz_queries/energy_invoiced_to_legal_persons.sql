@@ -1,10 +1,5 @@
 -- Find the last year consumption and invoiced amount for
--- contracts owned by legal entities.
-
--- TODO:
--- [ ] Comprobar si las lecturas estimadas se cuentan bien
-
-
+-- contracts with more than 15kw of power.
 
 SELECT
 	contract.pol_name AS contracte,
@@ -19,14 +14,14 @@ SELECT
 	MIN(fact.data_inici) AS primera_data_considerada,
 	MAX(fact.data_final) AS darrera_data_considerada,
 	DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)) AS days,
-	ROUND(SUM(cAS
-		when invoice.type='out_refund'
-		then -invoice.amount_total
-		else invoice.amount_total
+	ROUND(SUM(CASE
+		WHEN invoice.type='out_refund'
+		THEN -invoice.amount_total
+		ELSE invoice.amount_total
 	END) * 365 / NULLIF(DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)),0)) AS facturacio_proratejada_any,
-	sum(lectura.n_estimades)>0 AS te_lectures_estimades,
-	sum(invoice.residual) AS pagaments_pendents,
-	ROUND(sum(fact.energia_kwh) * 365 / NULLIF(DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)),0)) AS energia_kwh_prorratejada_any,
+	SUM(lectura.n_estimades)>0 AS te_lectures_estimades,
+	SUM(invoice.residual) AS pagaments_pendents,
+	ROUND(SUM(fact.energia_kwh) * 365 / NULLIF(DATE_PART('day', (MAX(data_final)::timestamp - MIN(data_inici)::timestamp)),0)) AS energia_kwh_prorratejada_any,
  	contract.consum_esperat_kwh AS estimacio_gisce_kwhany,
 	contract.consum_esperat_data AS estimacio_gisce_data
 FROM (
@@ -46,24 +41,24 @@ FROM (
 		tariff.name AS tariff
 	from giscedata_polissa AS pol
 	--join giscedata_polissa_category_rel AS cat_rel
-	--	on pol.id = cat_rel.polissa_id
+	--	ON pol.id = cat_rel.polissa_id
 	join giscedata_cups_ps AS cups
-		on cups.id = pol.cups
+		ON cups.id = pol.cups
 	join giscemisc_cnae AS cnae
-		on cnae.id = pol.cnae
+		ON cnae.id = pol.cnae
 	join res_partner AS partner
-		on partner.id = pol.titular
+		ON partner.id = pol.titular
 	join giscedata_polissa_tarifa AS tariff
-		on tariff.id = pol.tarifa
+		ON tariff.id = pol.tarifa
 	where TRUE
-	--and cat_rel.category_id = 33 -- cat.name = 'Entitat o Empresa'
-	and pol.data_baixa IS NULL
-	and tariff.pot_max > 15
+	--AND cat_rel.category_id = 33 -- cat.name = 'Entitat o Empresa'
+	AND pol.data_baixa IS NULL
+	AND tariff.pot_max > 15
 ) AS contract
-join giscedata_facturacio_factura as fact
-	on fact.polissa_id = pol_id
-join account_invoice as invoice
-	on invoice.id = fact.invoice_id
+join giscedata_facturacio_factura AS fact
+	ON fact.polissa_id = pol_id
+join account_invoice AS invoice
+	ON invoice.id = fact.invoice_id
 join (
 	SELECT
 		count(lectura.origen_id IN (
@@ -79,16 +74,16 @@ join (
 			--  8, -- Autolectura
 			-- 12, -- Telegestió
 			  9,  -- Sense Lectura
-			666) OR NULL) as n_estimades,
+			666) OR NULL) AS n_estimades,
 		factura_id
-	FROM giscedata_facturacio_lectures_energia as lectura
+	FROM giscedata_facturacio_lectures_energia AS lectura
 	WHERE TRUE
 	AND lectura.magnitud = 'AE'
 	GROUP BY factura_id
 ) AS lectura
 	ON lectura.factura_id = fact.id
 WHERE TRUE
-	AND invoice.journal_id = 5 -- journal.name = 'Factures Energia' and
+	AND invoice.journal_id = 5 -- journal.name = 'Factures Energia' AND
 	AND fact.data_final::date > contract.data_ultima_lectura::date - INTERVAL '12 months'
 GROUP BY (
 	pol_id,
@@ -108,5 +103,5 @@ GROUP BY (
 )
 ORDER BY
 	pol_name
-;
+
 
