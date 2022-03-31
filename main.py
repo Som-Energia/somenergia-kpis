@@ -5,7 +5,8 @@ from pathlib import Path
 from sqlalchemy import create_engine
 from dbconfig import (
     local_db,
-    directories
+    directories,
+    helpscout_api
 )
 
 from datasources.meff.meff_operations import (
@@ -21,6 +22,10 @@ from datasources.omie.omie_operations import (
 )
 from datasources.neuroenergia.neuroenergia_operations import (
     update_neuroenergia
+)
+
+from datasources.helpscout.hs_get_conversations import (
+    update_hs_conversations
 )
 
 from pipelines.energy_budget import (
@@ -70,6 +75,12 @@ def main_update_neuroenergia(verbose, dry_run):
     neuro_dir = directories['NEUROENERGIA_TEMP']
     return update_neuroenergia(engine,neuro_dir,verbose,dry_run)
 
+def main_update_conversations(verbose, dry_run):
+    engine = create_engine(local_db['dbapi'])
+    hs_app_id = helpscout_api['app_id']
+    hs_app_secret = helpscout_api['app_secret']
+    return update_hs_conversations(engine, hs_app_id, hs_app_secret, verbose, dry_run)
+
 def main_pipe_hourly_energy_budget(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
     return pipe_hourly_energy_budget(engine)
@@ -88,6 +99,7 @@ function_list = {
     'omie_get_historical_energy_buy' : main_get_historical_energy_buy,
     'omie_update_energy_buy' : main_update_energy_buy,
     'neuro_update_energy_prediction' : main_update_neuroenergia,
+    'hs_update_conversations' : main_update_conversations,
     'pipe_hourly_energy_budget' : main_pipe_hourly_energy_budget,
     'pipe_omie_garantia' : main_pipe_omie_garantia,
 }
