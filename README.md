@@ -12,7 +12,7 @@ There are two modules, the datasources and the pipeline:
 
 - Pipeline: from the raw data it makes the transformation and performs the most complex operations
 
-
+![Indicadors_schema](/docs/Indicadors.jpg "Schema")
 
 ## install
 
