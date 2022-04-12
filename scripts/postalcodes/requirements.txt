@@ -1,0 +1,5 @@
+typer
+svgis
+thefuzz[speedup]
+somutils>=1.8.0
+xmltodict
