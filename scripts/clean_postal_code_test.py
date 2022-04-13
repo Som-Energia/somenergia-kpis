@@ -76,7 +76,7 @@ class ExtractDataFromErp_Test(unittest.TestCase):
 
 class LoadAndTransformData_Test(unittest.TestCase):
     def test_load_data(self):
-        df = read_csv('res_partner_address_test.csv')
+        df = read_csv('scripts/res_partner_address_test.csv')
 
         name_columns = ['id', 'street', 'zip', 'id_municipi']
         self.assertListEqual(list(df.columns.values), name_columns)
@@ -129,7 +129,7 @@ class LoadAndTransformData_Test(unittest.TestCase):
 
     def test_get_id_from_id_municipi(self):
         columns = ['id', 'street', 'zip', 'id_municipi']
-        df_raw = read_csv('res_partner_address_test.csv',
+        df_raw = read_csv('scripts/res_partner_address_test.csv',
         usecols=columns)
         data_expected = {
             'id_municipi_1': ['5386','34524', '34241']
@@ -142,7 +142,7 @@ class LoadAndTransformData_Test(unittest.TestCase):
 
     def test_create_df_municipi_with_ine_code(self):
         columns = ['id', 'street', 'zip', 'id_municipi']
-        df_raw = read_csv('res_partner_address_test.csv',
+        df_raw = read_csv('scripts/res_partner_address_test.csv',
         usecols=columns)
         data_expected = {
             'id': [1,2,4],
