@@ -15,6 +15,8 @@ from clean_postal_code import (
     read_csv,
     get_df_column_is_null,
     get_df_with_null_and_false_values,
+    get_df_with_postal_code_ine_by_id_municipi,
+    get_id_from_id_municipi,
 )
 
 class ExtractDataFromErp_Test(unittest.TestCase):
@@ -125,3 +127,41 @@ class LoadAndTransformData_Test(unittest.TestCase):
         df_merged_expected.sort_values('id', inplace=True)
         self.assertTrue(df_is_null_false.equals(df_merged_expected))
 
+    def test_get_id_from_id_municipi(self):
+        columns = ['id', 'street', 'zip', 'id_municipi']
+        df_raw = read_csv('res_partner_address_test.csv',
+        usecols=columns)
+        data_expected = {
+            'id_municipi_1': ['5386','34524', '34241']
+        }
+        df_expected = pd.DataFrame(data_expected)
+        get_id_from_id_municipi(df_raw, 'id_municipi')
+        df_result = df_raw['id_municipi_1'].head(3)
+        df_result = df_result.to_frame()
+        self.assertTrue(df_result.equals(df_expected))
+
+    def test_create_df_municipi_with_ine_code(self):
+        columns = ['id', 'street', 'zip', 'id_municipi']
+        df_raw = read_csv('res_partner_address_test.csv',
+        usecols=columns)
+        data_expected = {
+            'id': [1,2,4],
+            'street': ['CL. Pic de Peguera, 11 A 2 8',
+                    'Calle los robles, 1 4ºA',
+                    'Camp de Mart, 1, 1B',
+                ],
+            'zip': ['17003','34002', '17001'],
+            'id_municipi_1': ['5386','34524', '5386'],
+        }
+        df_expected = pd.DataFrame(data_expected)
+        get_id_from_id_municipi(df_raw, 'id_municipi')
+        data_ine = {
+            'codigo_postal': ['34002','34005', '17003', '17001'],
+            'municipio_id': ['5386','34524', '5386', '5386']
+        }
+        df_ine = pd.DataFrame(data_ine)
+        df_ine_zip_municipi = get_df_with_postal_code_ine_by_id_municipi(df_raw, df_ine)
+        df_ine_zip_municipi.set_index('id', inplace=True)
+        df_expected.set_index('id', inplace=True)
+        pd.testing.assert_frame_equal(df_ine_zip_municipi, df_expected)
+# vim: ts=4 sw=4 et
