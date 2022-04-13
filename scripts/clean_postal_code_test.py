@@ -24,35 +24,35 @@ class ExtractDataFromErp_Test(unittest.TestCase):
     def test_download_data_from_erp(self):
         data = download_data_from_erp(self.client,
         model = 'res.partner.address',
-        fields = ['name', 'zip']
+        fields = ['id', 'street', 'zip', 'id_municipi']
         )
 
         self.assertIsInstance(data, list)
         self.assertIsInstance(data[0], dict)
-        self.assertIn('name', data[0])
+        self.assertIn('id', data[0])
         self.assertIn('zip', data[0])
 
     def _test_download_data_from_erp_with_limit(self):
         data = download_data_from_erp(self.client,
         model = 'res.partner.address',
-        fields = ['name', 'zip'],
+        fields = ['id', 'street', 'zip', 'id_municipi'],
         limit=5)
 
         self.assertIsInstance(data, list)
         self.assertIsInstance(data[0], dict)
-        self.assertIn('name', data[0])
+        self.assertIn('id', data[0])
         self.assertIn('zip', data[0])
         self.assertEqual(len(data), 5)
 
     def test_erp_to_pandas(self):
         data = download_data_from_erp(self.client,
         model = 'res.partner.address',
-        fields = ['name', 'zip']
+        fields = ['id', 'street', 'zip', 'id_municipi']
         )
 
         df = erp_to_pandas(data)
 
-        self.assertIn('name', df.columns)
+        self.assertIn('id', df.columns)
         self.assertIn('zip', df.columns)
         self.assertEqual(len(df), len(data))
 
@@ -76,13 +76,7 @@ class LoadAndTransformData_Test(unittest.TestCase):
     def test_load_data(self):
         df = read_csv('res_partner_address_test.csv')
 
-        name_columns = ['apartat_correus', 'aclarador', 'street', 'partner_id', 'id', 'es',
-       'city', 'zip', 'title', 'tv', 'country_id', 'type', 'email', 'nv',
-       'function', 'fax', 'pnp', 'street2', 'phone', 'bq', 'active',
-       'id_municipi', 'name', 'pt', 'ref_catastral', 'cpo', 'mobile', 'cpa',
-       'notes', 'pu', 'id_poblacio', 'birthdate', 'administrative_ids',
-       'state_id']
-
+        name_columns = ['id', 'street', 'zip', 'id_municipi']
         self.assertListEqual(list(df.columns.values), name_columns)
 
     def test_when_zip_is_null(self):

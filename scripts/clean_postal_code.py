@@ -14,8 +14,8 @@ def erp_to_pandas(erp_data):
 def df_to_csv(df, file_name):
     df.to_csv(file_name, index = False)
 
-def read_csv(file_name):
-    df = pd.read_csv(file_name)
+def read_csv(file_name, **kwargs):
+    df = pd.read_csv(file_name, **kwargs)
     return df
 
 def get_df_column_is_null(df, column_name):
