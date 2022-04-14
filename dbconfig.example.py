@@ -29,3 +29,18 @@ test_directories = {
     'OMIE_HISTORICAL_PDBC': 'testdata/OMIE/PDBC',
     'OMIE_TEMP_PDBC': 'testdata/OMIETEMP/PDBC'
 }
+
+ooop_testing = dict(
+    dbname = '',
+    user = '',
+    pwd = '',
+    uri ='',
+    port = ,
+)
+
+erppeek_testing = dict(
+    server = ooop_testing['uri']+":"+str(ooop_testing["port"]),
+    user = ooop_testing['user'],
+    password = ooop_testing['pwd'],
+    db = ooop_testing['dbname'],
+)

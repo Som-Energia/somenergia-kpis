@@ -3,7 +3,7 @@
 
 from this import d
 import unittest
-import configdb
+import dbconfig
 from erppeek import Client
 import pandas as pd
 from clean_postal_code import (
@@ -21,7 +21,7 @@ from clean_postal_code import (
 
 class ExtractDataFromErp_Test(unittest.TestCase):
     def setUp(self):
-        self.client = Client(**configdb.erppeek_testing)
+        self.client = Client(**dbconfig.erppeek_testing)
 
     def test_download_data_from_erp(self):
         data = download_data_from_erp(self.client,
