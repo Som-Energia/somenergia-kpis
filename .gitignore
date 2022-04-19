@@ -134,7 +134,6 @@ dmypy.json
 
 # somenergia config files
 dbconfig.py
-configdb.py
 
 # somenergia private data
 data/garantia.csv
