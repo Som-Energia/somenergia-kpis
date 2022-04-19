@@ -68,7 +68,7 @@ def main_update_neuroenergia(verbose, dry_run):
 
 def main_pipe_hourly_energy_budget(verbose, dry_run):
     engine = None if dry_run else create_engine(local_db['dbapi'])
-    return pipe_hourly_energy_budget(engine)
+    return pipe_hourly_energy_budget(engine, verbose)
 
 
 function_list = {
@@ -101,6 +101,7 @@ def dispatch(function, verbose, list_functions, dry_run):
     results = []
 
     for one_function in function:
+        print(f'Running {one_function}')
         operation_function = function_list.get(one_function, None)
 
         if operation_function:
