@@ -44,3 +44,7 @@ erppeek_testing = dict(
     password = ooop_testing['pwd'],
     db = ooop_testing['dbname'],
 )
+
+api_address = {
+    'cartociudad_uri' : 'https://www.cartociudad.es/geocoder/api/geocoder/candidatesJsonp?'
+}
