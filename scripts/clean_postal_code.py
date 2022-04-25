@@ -40,7 +40,10 @@ def get_data_zip_candidates_from_cartociudad(df):
         response_list = loads(response_text[startidx + 1:endidx])
         if len(response_list) > 0:
             df.loc[index, 'zip_candidate_cartociudad'] = response_list[0]['postalCode']
+        else:
+            df.loc[index, 'zip_candidate_cartociudad'] = ''
     return df
+
 
 def get_data_zip_candidates_from_ine(df, df_ine):
     df_ine, df = get_normalized_zips_from_ine_erp(df_ine,df)
