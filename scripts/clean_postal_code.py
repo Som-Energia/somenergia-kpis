@@ -44,7 +44,6 @@ def get_data_zip_candidates_from_cartociudad(df):
             df.loc[index, 'zip_candidate_cartociudad'] = ''
     return df
 
-
 def get_data_zip_candidates_from_ine(df, df_ine):
     df_ine, df = get_normalized_zips_from_ine_erp(df_ine,df)
     ine_municipio_nombre_copy = df_ine['municipio_nombre'].to_list()
