@@ -5,11 +5,14 @@ import dbconfig
 import pandas as pd
 import unittest
 from clean_postal_code import (
+    download_res_partner_data_from_erp_to_csv,
+    split_id_municipi_by_id_and_name,
     get_df_with_null_and_false_values,
     get_data_zip_candidates_from_ine,
-    download_res_partner_data_from_erp_to_csv,
     get_data_zip_candidates_from_cartociudad,
-    split_id_municipi_by_id_and_name
+    get_normalized_name_street_address,
+    get_zips_by_ine_municipio_nombre,
+    get_normalized_zips_from_ine_erp,
 )
 from erppeek import Client
 
@@ -181,33 +184,39 @@ class LoadAndTransformData_Test(unittest.TestCase):
         df_merged_expected.sort_values('id', inplace=True)
         self.assertTrue(df_is_null_false.equals(df_merged_expected))
 
-    def test__get_df_with_zip_null_and_false_with_street(self):
-
+    def test__get_normalized_name_street_address(self):
         data_raw = {
-            'zip': ['12345','False', 'False', 'False', None],
-            'id': [1,2,3,4,5],
-            'street_clean': ['Carrer de la Rambla',
-                        'Carrer de la Rambla',
-                        'Carrer de la Rambla',
-                        'Carrer de la Rambla',
-                        'Carrer de la Rambla'],
+            'id': [1,2],
+            'street': ['Carrer de la Rambla 1 5ºE', 'Pic de Peguera 15']
         }
         df_raw = pd.DataFrame(data_raw)
-
-        df_raw = df_raw.set_index('id')
-        data_merged_expected = {
-            'zip': ['False', 'False', 'False', None],
-            'id': [2,3,4,5],
-            'street_clean': ['Carrer de la Rambla',
-                        'Carrer de la Rambla',
-                        'Carrer de la Rambla',
-                        'Carrer de la Rambla'],
+        data_expected = {
+            'id': [1,2],
+            'street': ['Carrer de la Rambla 1 5ºE', 'Pic de Peguera 15'],
+            'street_clean': ['Carrer Rambla', 'Pic Peguera']
         }
-        df_merged_expected = pd.DataFrame(data_merged_expected)
-        df_merged_expected = df_merged_expected.set_index('id')
-        df_is_null_false = get_df_with_null_and_false_values(df_raw, 'zip')
-        df_is_null_false = df_is_null_false.sort_values('id')
-        df_merged_expected = df_merged_expected.sort_values('id')
-        pd.testing.assert_frame_equal(df_is_null_false, df_merged_expected)
+        df_expected = pd.DataFrame(data_expected)
+        df_result = get_normalized_name_street_address(df_raw)
+        df_expected.set_index('id', inplace=True)
+        df_result.set_index('id', inplace=True)
+        pd.testing.assert_frame_equal(df_expected, df_result)
+
+    def test__get_zip_by_ine_municipio_nombre(self):
+        data_raw = {
+            'id': [35],
+            'id_municipi_name': ["Castellbisbal"],
+            'zip':[""]
+        }
+        dat_raw = pd.DataFrame(data_raw)
+        data_ine = {
+            'codigo_postal': ["8755",],
+            'municipio_nombre': ["Castellbisbal"],
+            'municipio_id': [8054],
+        }
+        df_ine = pd.DataFrame(data_ine)
+        df_ine, df = get_normalized_zips_from_ine_erp(df_ine, dat_raw)
+        result = get_zips_by_ine_municipio_nombre(df_ine,'Castellbisbal')
+        self.assertEqual('08755', result)
+
 
 # vim: ts=4 sw=4 et

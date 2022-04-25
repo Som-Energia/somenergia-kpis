@@ -64,15 +64,6 @@ def get_df_with_null_and_false_values(df,column_name):
     df_null_false = pd.concat([df_null_values, df_false_values])
     return df_null_false
 
-def get_df_with_zip_null_and_false_with_street(df):
-    df.loc[
-        (df['zip']=='False')&
-        (df['zip'].isnull())&
-        (df['street_clean']!='False')&
-        (df['street_clean'].notnull())&
-        (df['street_clean']!=''),['zip','street_clean','street']]
-    return df
-
 def get_zips_by_ine_municipio_nombre(df_ine, row_id_municipi_name):
     df_grouped = df_ine.groupby(['municipio_nombre']).get_group(row_id_municipi_name)
     candidates = ' '.join(df_grouped['codigo_postal'].tolist())
