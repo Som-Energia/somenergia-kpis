@@ -1,9 +1,10 @@
+from datetime import timedelta
 from helpscout.client import HelpScout
-import pandas as pd
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy import Table, Column, Integer, MetaData
-import datetime
-import json
+from sqlalchemy import create_engine
+import sys
+import pendulum
 
 def create_HS_engine(engine, hs_app_id, hs_app_secret):
     hs = HelpScout(app_id=hs_app_id, app_secret=hs_app_secret, sleep_on_rate_limit_exceeded=True)
@@ -38,14 +39,34 @@ def get_conversations(hs, engine, conv_table, inici, fi, status):
 
     return True
 
-def update_hs_conversations(engine, hs_app_id, hs_app_secret, verbose=2, dry_run=False, inici=None, fi=None):
+def update_hs_conversations(verbose=2, dry_run=False, inici=None, fi=None):
+    args = sys.argv[1:]
+    data_interval_start=pendulum.parse(args[0])
+    data_interval_end=pendulum.parse(args[1])
+    #fem de la setmana anterior
+    data_interval_start = data_interval_start - timedelta(days=7)
+    data_interval_end = data_interval_end - timedelta(days=7)
+    #tornem a passar a string
+    data_interval_start =  data_interval_start.isoformat()
+    data_interval_end = data_interval_end.isoformat()
+    #passem a format per api helpscout
+    data_interval_start = data_interval_start.split('+')[0]+'Z'
+    data_interval_end = data_interval_end.split('+')[0]+'Z'
+
+    engine = create_engine(args[2])
+    hs_app_id = args[3]
+    hs_app_secret = args[4]
+
     hs, engine = create_HS_engine(engine, hs_app_id, hs_app_secret)
     conv_table = create_table(engine)
 
     params = {
-        'inici':"2022-03-14T08:00:00Z",
-        'fi':"2022-03-14T8:59:59Z",
+        'inici': data_interval_start,
+        'fi': data_interval_end,
         'status':'closed',
     }
 
     return get_conversations(hs, engine, conv_table, **params)
+
+if __name__ == '__main__':
+    update_hs_conversations()
