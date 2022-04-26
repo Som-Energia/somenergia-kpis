@@ -1,0 +1,104 @@
+{
+    "_attrs": [
+        "_embedded",
+        "_links",
+        "bcc",
+        "cc",
+        "closedAt",
+        "closedBy",
+        "closedByUser",
+        "createdAt",
+        "createdBy",
+        "customFields",
+        "customerWaitingSince",
+        "folderId",
+        "id",
+        "mailboxId",
+        "number",
+        "preview",
+        "primaryCustomer",
+        "source",
+        "state",
+        "status",
+        "subject",
+        "tags",
+        "threads",
+        "type",
+        "userUpdatedAt"
+    ],
+    "id": 1814824371,
+    "number": 11421675,
+    "threads": 1,
+    "type": "email",
+    "folderId": 1877744,
+    "status": "closed",
+    "state": "published",
+    "subject": "Addendum de acceso a contenido  [Procedimiento corte de luz (Anexo III) / Procediment tall de llum (Annex III) (EMAIL CERTIFICADO de cobraments@somenergia.coop) ]",
+    "preview": "Addendum de acceso a contenido Informaci\\u00f3n detallada del acuse de visualizaci\\u00f3n:  Referencia ID certificado emitido: E70827928-S Remitente: cobraments@somenergia.coop Destinatario: margavelarde@gmai",
+    "mailboxId": 138933,
+    "createdBy": {
+        "id": 167008173,
+        "type": "customer",
+        "first": "Registered Email",
+        "last": "Service",
+        "photoUrl": "https://d33v4339jhl8k0.cloudfront.net/customer-avatar/08.png",
+        "email": "service@mailcert.lleida.net"
+    },
+    "createdAt": "2022-03-14T08:58:37Z",
+    "closedBy": 1,
+    "closedByUser": {
+        "id": 1,
+        "type": "user",
+        "first": "Help",
+        "last": "Scout",
+        "email": "none@nowhere.com"
+    },
+    "closedAt": "2022-03-14T08:58:32Z",
+    "userUpdatedAt": "2022-03-14T08:58:32Z",
+    "customerWaitingSince": {
+        "time": "2022-03-14T08:58:37Z",
+        "friendly": "Mar 14"
+    },
+    "source": {
+        "type": "email",
+        "via": "customer"
+    },
+    "tags": [],
+    "cc": [],
+    "bcc": [],
+    "primaryCustomer": {
+        "id": 167008173,
+        "type": "customer",
+        "first": "Registered Email",
+        "last": "Service",
+        "photoUrl": "https://d33v4339jhl8k0.cloudfront.net/customer-avatar/08.png",
+        "email": "service@mailcert.lleida.net"
+    },
+    "customFields": [],
+    "_embedded": {
+        "threads": []
+    },
+    "_links": {
+        "self": {
+            "href": "https://api.helpscout.net/v2/conversations/1814824371"
+        },
+        "mailbox": {
+            "href": "https://api.helpscout.net/v2/mailboxes/138933"
+        },
+        "primaryCustomer": {
+            "href": "https://api.helpscout.net/v2/customers/167008173"
+        },
+        "createdByCustomer": {
+            "href": "https://api.helpscout.net/v2/customers/167008173"
+        },
+        "closedBy": {
+            "href": "https://api.helpscout.net/v2/users/1"
+        },
+        "threads": {
+            "href": "https://api.helpscout.net/v2/conversations/1814824371/threads/"
+        },
+        "web": {
+            "href": "https://secure.helpscout.net/conversation/1814824371/11421675"
+        }
+    }
+}
