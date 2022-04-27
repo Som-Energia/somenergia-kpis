@@ -20,9 +20,9 @@ def omie_energy_buy(engine):
     omie_energy_buy['energy'] = -omie_energy_buy['energy']
 
     omie_energy_buy = omie_energy_buy[['date','energy']]
-    
+
     return omie_energy_buy
-    
+
 def omie_price_hour(engine):
     try:
         omie_price_hour = pd.read_sql('select * from omie_price_hour', con=engine)
@@ -71,32 +71,33 @@ def last_neuro_energy_buy(engine):
         rename(columns={'request_time':'neuro_request_time'})
 
     return last_neuro_energy_buy
-        
+
 
 def interpolated_last_meff_prices_by_hour(meff_df):
-    
+
     next_day = pd.DataFrame({'date':[max(meff_df['date']) + datetime.timedelta(days=1)]})
     meff_df = meff_df.append(next_day)
-    
+
     meff_df = meff_df\
         .reset_index()\
         .set_index('date', drop = False)[['price_forecast']]\
         .resample('h')\
         .interpolate(method='linear')\
-        .reset_index(level=0)    
+        .reset_index(level=0)
 
     meff_df = meff_df[meff_df['date'] != max(meff_df['date'])]
-    
+
     return meff_df
 
 # TODO Improve this?
-# assumes input dataframes have a timezone-aware date column and that the timezone is 'Europe/Madrid'
+# assumes input dataframes have a timezone-aware date column and that the timezone is 'UTC'
+# but the from_date datetime is 'Europe/Madrid' based
 # otherwise throws
 def joined_timeseries(timeseries_dfs):
-    
+
     from_date = min([df.iloc[0]['date'] for df in timeseries_dfs])
     to_date = max([df.iloc[-1]['date'] for df in timeseries_dfs])
-    
+
     df_timeline = pd.DataFrame(
         pd.date_range(
             from_date.astimezone('Europe/Madrid'),
@@ -107,12 +108,13 @@ def joined_timeseries(timeseries_dfs):
             tz='Europe/Madrid')
         ).\
         rename(columns={0:'date'})
-    
+
+    # convert to utc to merge without mixing timezones
     df_timeline['date'] = pd.to_datetime(df_timeline['date'], utc=True)
 
     df_merged = reduce(lambda  left,right: pd.merge(left,right,on=['date'],
                                             how='left'), [df_timeline] + timeseries_dfs)
-    
+
     return df_merged
 
 def hourly_energy_budget(df):
@@ -131,8 +133,8 @@ def hourly_energy_budget(df):
 
     return df
 
-def pipe_hourly_energy_budget(engine):
-    
+def pipe_hourly_energy_budget(engine, verbose=2):
+
     omie_energy_buy_df = omie_energy_buy(engine)
     omie_price_hour_df = omie_price_hour(engine)
     meff_prices_daily_df = last_meff_prices_daily(engine)
@@ -144,8 +146,12 @@ def pipe_hourly_energy_budget(engine):
 
     df.to_sql('energy_budget_hourly', engine, if_exists = 'replace', index = False)
 
+    if verbose>1:
+        print('Energy budget:')
+        print(df)
+
     return 0
-    
+
 
 # goal
 # date;price;energy;source;is_forecast;budget

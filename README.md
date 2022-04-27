@@ -1,7 +1,20 @@
 # somenergia-indicadors-KPIs
-Repositori per a l'obtenció i manteniment de taules necessàries per a indicadors i KPIs.
 
-# install
+## Context 
+
+Currently it is necessary to centralize data from different sources to consult with a data visualization application, also to have them in a standardized format.
+
+This tool is used to obtain data from different data sources, store it in a raw format and then load the data for transformation.
+
+There are two modules, the datasources and the pipeline:
+
+- Datasources: extracts through crawlers and saves raw data in a database.
+
+- Pipeline: from the raw data it makes the transformation and performs the most complex operations
+
+![Indicadors_schema](/docs/Indicadors.jpg "Schema")
+
+## install
 
 ```
 mkvirtualenv dades
@@ -18,11 +31,11 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public
 GRANT SELECT ON TABLES TO username;
 ```
 
-# run
+## run
 
 `python main.py --help` or `python main.py --list-functions`
 
-# test
+## test
 
 
 Testing will require installing `b2btest` which in turn requires `lxml` to be installed manually via pip

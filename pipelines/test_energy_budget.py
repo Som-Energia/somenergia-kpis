@@ -6,7 +6,7 @@ import datetime
 from pathlib import Path
 import pytz
 
-from common.utils import dateCETstr_to_CETtzdt
+from common.utils import dateCETstr_to_CETtzdt, dateCETstr_to_tzdt
 
 from pipelines.energy_budget import (
     joined_timeseries,
@@ -50,19 +50,19 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
         self.assertB2BEqual(meff_df.to_csv(index=False))
 
     def test__joined_timeseries(self):
-        
+
         df_1 = pd.DataFrame({
             'date': [
-                dateCETstr_to_CETtzdt('2022-01-04 00:00:00', '%Y-%m-%d %H:%M:%S'),
-                dateCETstr_to_CETtzdt('2022-01-04 01:00:00', '%Y-%m-%d %H:%M:%S'),
+                dateCETstr_to_tzdt('2022-01-04 00:00:00', '%Y-%m-%d %H:%M:%S'),
+                dateCETstr_to_tzdt('2022-01-04 01:00:00', '%Y-%m-%d %H:%M:%S'),
             ],
             'price': [289,345]
         })
 
         df_2 = pd.DataFrame({
             'date': [
-                dateCETstr_to_CETtzdt('2022-01-04 00:00:00', '%Y-%m-%d %H:%M:%S'),
-                dateCETstr_to_CETtzdt('2022-01-04 01:00:00', '%Y-%m-%d %H:%M:%S'),
+                dateCETstr_to_tzdt('2022-01-04 00:00:00', '%Y-%m-%d %H:%M:%S'),
+                dateCETstr_to_tzdt('2022-01-04 01:00:00', '%Y-%m-%d %H:%M:%S'),
             ],
             'energy': [1398,1675]
         })
