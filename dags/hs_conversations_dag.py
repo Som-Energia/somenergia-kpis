@@ -11,7 +11,7 @@ def hs_conversations_dag():
     get_conversations_task = DockerSwarmOperator(
         api_version='auto',
         task_id='hs_conversations',
-        image='somenergia-indicadors-KPIs:latest',
+        image='python3.8:somenergia-kpis',
         command='python3 datasources/helpscout/hs_get_conversations.py "{{ data_interval_start }}" "{{ data_interval_end }}" \
                 "{{ var.value.puppis_prod_db}}" "{{ var.value.helpscout_api_id}}" "{{ var.value.helpscout_api_secret}}"',
         docker_url='tcp://moll1.somenergia.lan:2375',
