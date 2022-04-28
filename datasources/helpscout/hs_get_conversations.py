@@ -17,7 +17,9 @@ def create_table(engine):
         table_name,
         meta,
         Column('id', Integer, primary_key=True),
-        Column('data', JSONB)
+        Column('data', JSONB),
+        Column('task_data_interval_start', DateTime),
+        Column('task_data_interval_end', DateTime)
     )
     conv_table.create(engine, checkfirst=True)
 
@@ -34,7 +36,7 @@ def get_conversations(hs, engine, conv_table, inici, fi, status):
     print(f"Let's insert conversations")
 
     for c in conversations:
-        statement = conv_table.insert().values(data=c.__dict__)
+        statement = conv_table.insert().values(data=c.__dict__,task_data_interval_start=pendulum.parse(inici), task_data_interval_end=pendulum.parse(fi))
         engine.execute(statement)
 
     return True
