@@ -22,10 +22,9 @@ directories = {
     'OMIE_TEMP_PDBC': 'somenergia/somenergia-indicadors-kpis/realdata/OMIETEMP/PDBC',
     'OMIE_DATA': 'somenergia/somenergia-indicadors-kpis/realdata/data'
 }
-
 test_directories = {
     'NEUROENERGIA_HISTORICAL': 'testdata/NEUROENERGIA',
-    'NEUROENERGIA_TEMP': 'testdata/NEUROENERGIATEMP',
-    'OMIE_HISTORICAL_PDBC': 'testdata/OMIE/PDBC',
-    'OMIE_TEMP_PDBC': 'testdata/OMIETEMP/PDBC'
+    'NEUROENERGIA_TEMP': 'testdata/TEMP/NEUROENERGIA',
+    'OMIE_HISTORICAL_PDBC': 'testdata/PDBC',
+    'OMIE_TEMP_PDBC': 'testdata/TEMP/PDBC'
 }
