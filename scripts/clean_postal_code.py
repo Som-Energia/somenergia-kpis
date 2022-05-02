@@ -25,13 +25,13 @@ def get_data_zip_candidates_from_cartociudad(df):
             'countrycode':'es',
             'autocancel':'true',
         }
+    cartociu_adapter = HTTPAdapter(max_retries=5)
+    session = requests.Session()
     for index, row in df.iterrows():
-        cartociu_adapter = HTTPAdapter(max_retries=5)
-        session = requests.Session()
         data['q'] = row['street'] +' '+ row['city']
         session.mount(url, cartociu_adapter)
         try:
-            rq = session.get(url, params=data, verify=False)
+            rq = session.get(url, params=data, verify=False, timeout=2)
         except ConnectionError as e:
             print(e)
         rq.raise_for_status()
