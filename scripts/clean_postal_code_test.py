@@ -21,14 +21,13 @@ class ExtractDataFromErp_Test(unittest.TestCase):
     def setUp(self):
         self.client = Client(**dbconfig.erppeek_testing)
 
-    def test__download_res_partner_data_from_erp_to_csv(self):
+    def _test__download_res_partner_data_from_erp_to_csv(self):
         download_res_partner_data_from_erp_to_csv(self.client,
-        model = 'res.partner.address',
-        filename='res_partner_address.csv',)
+        filename='res_partner_address.csv')
         df = pd.read_csv('res_partner_address.csv')
         df_columns_list = list(df.columns)
         fields = ['street2', 'city', 'id_municipi', 'street', 'id', 'zip']
-        self.assertListEqual(
+        self.assertCountEqual(
                 df_columns_list,
                 fields
             )

@@ -8,8 +8,9 @@ from json import loads
 from requests.adapters import HTTPAdapter
 from requests.exceptions import ConnectionError
 
-def download_res_partner_data_from_erp_to_csv(client, filename,
-                            model='res.partner.address', fields=[]):
+def download_res_partner_data_from_erp_to_csv(client, filename):
+    model='res.partner.address'
+    fields = ['street2', 'city', 'id_municipi', 'street', 'id', 'zip']
     data = client.model(model).search([])
     data = client.model(model).read(data, fields)
     df = pd.DataFrame(data)
