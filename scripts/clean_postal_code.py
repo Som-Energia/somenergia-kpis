@@ -112,7 +112,24 @@ def split_id_municipi_by_id_and_name(df):
     df['id_municipi_name'] = df['id_municipi_copy'] \
         .str.translate(transtab).str.split(r"\d\,", expand=True)[1].str.strip()
     df['id_municipi_id'] = df['id_municipi_copy'] \
-        .str.translate(transtab).str.split(r"\,\s[A-Z]{1}", expand=True)[0].str.strip()
+        .str.translate(transtab).str.split(r"\,(\s)+(\'|\")", expand=True)[0].str.strip()
+    # TODO mejorar este regex para que no afecte a nombres con apostrofe
+    df['id_municipi_name'] = df['id_municipi_name'].str.replace(r'\'', '', regex=True)
     return df
+
+def normalize_street_address(engine, client):
+    query = '''
+        SELECT id FROM res_partner_address ORDER BY id DESC LIMIT 1;
+    '''
+    try:
+        last_id = pd.read_sql(query, con=engine)
+    except Exception as e:
+        print(e)
+        logging.error('No rows in table')
+        # raise
+    df_address = download_res_partner_address_from_erp(client, last_id)
+    df_municipi = download_res_municipi_from_erp(client)
+
+    pass
 
 # vim: ts=4 sw=4 et
