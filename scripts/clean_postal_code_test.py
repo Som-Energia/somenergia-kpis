@@ -15,22 +15,31 @@ from clean_postal_code import (
     get_normalized_zips_from_ine_erp,
 )
 from erppeek import Client
+from sqlalchemy import create_engine
 
 class ExtractDataFromErp_Test(unittest.TestCase):
 
     def setUp(self):
         self.client = Client(**dbconfig.erppeek_testing)
+        self.engine = create_engine(dbconfig.test_db['dbapi'])
 
-    def _test__download_res_partner_data_from_erp_to_csv(self):
-        download_res_partner_data_from_erp_to_csv(self.client,
-        filename='res_partner_address.csv')
-        df = pd.read_csv('res_partner_address.csv')
+    def tearDown(self):
+        #self.drop_test_database()
+        pass
+
+    def download_res_partner_address_from_erp(self):
+        df = download_res_partner_address_from_erp(self.client)
         df_columns_list = list(df.columns)
         fields = ['street2', 'city', 'id_municipi', 'street', 'id', 'zip']
-        self.assertCountEqual(
-                df_columns_list,
-                fields
-            )
+        self.assertCountEqual(df_columns_list,fields)
+
+    def test__download_res_municipi_from_erp(self):
+        df = download_res_municipi_from_erp(self.client)
+        df_columns_list = list(df.columns)
+        fields = ['id', 'imu_diputacio', 'ine',
+            'subsistema_id', 'comarca', 'state', 'presentar_informe',
+            'dc', 'name', 'climatic_zone']
+        self.assertCountEqual(df_columns_list, fields)
 
 class LoadAndTransformData_Test(unittest.TestCase):
 
