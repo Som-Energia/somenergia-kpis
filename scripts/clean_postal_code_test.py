@@ -71,7 +71,7 @@ class LoadAndTransformData_Test(unittest.TestCase):
     def test__split_id_municipi_by_id_and_name(self):
         data = {
             'id': [1],
-            'id_municipi': ["[5237, Sant Quirze del Vallès]"],
+            'id_municipi': ["[5237, 'Sant Quirze del Vallès']"],
         }
         df = pd.DataFrame(data)
         df = split_id_municipi_by_id_and_name(df)
