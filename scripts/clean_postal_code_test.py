@@ -5,7 +5,8 @@ import dbconfig
 import pandas as pd
 import unittest
 from clean_postal_code import (
-    download_res_partner_data_from_erp_to_csv,
+    download_res_municipi_from_erp,
+    download_res_partner_address_from_erp,
     split_id_municipi_by_id_and_name,
     get_df_with_null_and_false_values,
     get_data_zip_candidates_from_ine,
