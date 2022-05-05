@@ -5,16 +5,28 @@ import dbconfig
 import pandas as pd
 import requests
 from json import loads
+import logging
 from requests.adapters import HTTPAdapter
 from requests.exceptions import ConnectionError
 
-def download_res_partner_data_from_erp_to_csv(client, filename):
+def download_res_partner_address_from_erp(client, id=None):
     model='res.partner.address'
+    if id:
+        data = client.model(model).search([('id','>',id)])
+    else:
+        data = client.model(model).search([])
     fields = ['street2', 'city', 'id_municipi', 'street', 'id', 'zip']
-    data = client.model(model).search([])
     data = client.model(model).read(data, fields)
     df = pd.DataFrame(data)
-    df.to_csv(filename, index = False)
+    #df.to_csv('res_partner_address.csv', index = False)
+    return df
+
+def download_res_municipi_from_erp(client):
+    model='res.municipi'
+    data = client.model(model).search([])
+    data = client.model(model).read(data)
+    df = pd.DataFrame(data)
+    #df.to_csv('res_municipi.csv', index = False)
     return df
 
 def get_data_zip_candidates_from_cartociudad(df):
