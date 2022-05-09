@@ -29,7 +29,7 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
         expected = datetime.datetime(2021, 12, 31, 23, 0, tzinfo=datetime.timezone.utc)
         self.assertEqual(request_time, expected)
 
-    def test__shape_neuroenergia(self):
+    def test__shape_neuroenergia__base(self):
         create_time = datetime.datetime(2022,1,1)
         filename = 'testdata/NEUROENERGIA/20220101_prevision-neuro.xlsx'
 
@@ -58,3 +58,14 @@ class NeuroenergiaOperationsTest(unittest.TestCase):
         }
 
         self.assertDictEqual(df.dtypes.to_dict(), expected)
+
+    def test__shape_neuroenergia__error_debug(self):
+        create_time = datetime.datetime(2022,1,1)
+        filename = 'testdata/NEUROENERGIA/20220321_prevision-neuro.xlsx'
+
+        request_time = neurofile_to_date(Path(filename))
+        neuro_df = pd.read_excel(filename)
+
+        df = shape_neuroenergia(neuro_df, request_time, create_time)
+
+        self.assertB2BEqual(df.to_csv(index=False))

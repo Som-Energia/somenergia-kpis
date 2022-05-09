@@ -39,6 +39,7 @@ def shape_neuroenergia(neuro_df, request_time_dt, create_time_dt, verbose=2):
             freq='H'
     )
 
+    import pdb; pdb.set_trace()
     try:
         df_energy_forecast['date'] = time_series
     except ValueError:
@@ -54,6 +55,9 @@ def neurofile_to_date(neurofile):
     return request_time
 
 def update_one_neuroenergia(engine, neurofile, create_time, verbose=2, dry_run=False):
+
+    if verbose > 1:
+        print(f"Processing {neurofile}")
 
     request_time = neurofile_to_date(neurofile)
 
