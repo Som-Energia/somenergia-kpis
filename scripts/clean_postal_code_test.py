@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from cmath import nan
 import dbconfig
 import pandas as pd
 import unittest
@@ -193,7 +194,7 @@ class LoadAndTransformData_Test(unittest.TestCase):
         df_merged_expected.sort_values('id', inplace=True)
         self.assertTrue(df_is_null_false.equals(df_merged_expected))
 
-    def test__get_normalized_name_street_address(self):
+    def test__get_normalized_street_address(self):
         data_raw = {
             'id': [1,2],
             'street': ['Carrer de la Rambla 1 5ºE', 'Pic de Peguera 15']
@@ -202,10 +203,12 @@ class LoadAndTransformData_Test(unittest.TestCase):
         data_expected = {
             'id': [1,2],
             'street': ['Carrer de la Rambla 1 5ºE', 'Pic de Peguera 15'],
-            'street_clean': ['Carrer Rambla', 'Pic Peguera']
+            'street_type': ['CL', nan],
+            'street_name': ['RAMBLA', 'PIC PEGUERA'],
+            'street_number': ['1 5ºE', '15'],
         }
         df_expected = pd.DataFrame(data_expected)
-        df_result = get_normalized_name_street_address(df_raw)
+        df_result = get_normalized_street_address(df_raw)
         df_expected.set_index('id', inplace=True)
         df_result.set_index('id', inplace=True)
         pd.testing.assert_frame_equal(df_expected, df_result)
@@ -226,6 +229,30 @@ class LoadAndTransformData_Test(unittest.TestCase):
         df_ine, df = get_normalized_zips_from_ine_erp(df_ine, dat_raw)
         result = get_zips_by_ine_municipio_nombre(df_ine,'Castellbisbal')
         self.assertEqual('08755', result)
+
+    def test__normalize_street_address(self):
+        client = self.client
+        engine = self.engine
+        normalize_street_address(engine, client)
+        query = '''
+            SELECT * FROM normalized_street_address where id = 1;
+        '''
+        df_result = pd.read_sql_query(query, engine)
+        data_expected = {
+            'city':['Girona'],
+            'zip':['17003'],
+            'street2':['false'],
+            'street': ['CL. Pic de Peguera, 11 A 2 8'],
+            'id': [1],
+            'id_municipi_name': ['Girona'],
+            'id_municipi_id': ['5386'],
+            'street_type': ['CL'],
+            'street_name': ['PIC PEGUERA'],
+            'street_number': ['11 A 2 8'],
+        }
+        df_expected = pd.DataFrame(data_expected)
+        pd.testing.assert_frame_equal(df_expected, df_result)
+
 
 
 # vim: ts=4 sw=4 et

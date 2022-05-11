@@ -9,12 +9,9 @@ import logging
 from requests.adapters import HTTPAdapter
 from requests.exceptions import ConnectionError
 
-def download_res_partner_address_from_erp(client, id=None):
+def download_res_partner_address_from_erp(client):
     model='res.partner.address'
-    if id:
-        data = client.model(model).search([('id','>',id)])
-    else:
-        data = client.model(model).search([])
+    data = client.model(model).search([])
     fields = ['street2', 'city', 'id_municipi', 'street', 'id', 'zip']
     data = client.model(model).read(data, fields)
     df = pd.DataFrame(data)
@@ -94,42 +91,86 @@ def get_normalized_zips_from_ine_erp(df_ine,df):
         (df['zip'].str.len()==4)] = '0' + df['zip'].astype(str)
     return df_ine, df
 
-def get_normalized_name_street_address(df):
-    spec_chars = ["!",'"',"#","%","&","'","(",")",
-                    "*","+",",","-",".","/",":",";","<",
-                    "=",">","?","@","[","\\","]","^","_",
-                    "`","{","|","}","~","-"]
-    transtab = str.maketrans(dict.fromkeys(spec_chars, ''))
-    df['street_clean'] = df['street'].str.replace(r'\d+', '', regex=True)
-    df['street_clean'] = df['street_clean'].str.translate(transtab)
-    df['street_clean'] = df['street_clean'].str.findall(r'\w{3,}').str.join(' ')
+def get_normalized_street_address(df):
+    type_street = "(?P<type_street>^CALLE\s|CARRER\s|C\/|CL\s|C\\|C|\
+                            PLAZA\s|PLAÇA\s|PÇA\s|PZ|PL|\
+                            AVENIDA\s|AVINGUDA\s|AVDA\s|AV\s|AVDA\s|AVD|AVD|AV\/|AV\s|AVGDA|\
+                            PASSEIG\s|PASSATGE\s|PS|PG\s|PASEO\s|\
+                            CRTA\s|CR\s|CARRETERA\s|\
+                            RONDA\s|RDA\s)"
+    street_case = "(?P<street_case>^CALLE\s|CARRER\s|C\/|CL\s|C\\|C)"
+    square_case = "(?P<square_case>^PLAZA\s|PLAÇA\s|PÇA\s|PZ|PL)"
+    avenue_case = "(?P<avenue_case>^AVENIDA\s|AVINGUDA\s|AVDA\s|AV\s|AVDA\s|AVD|AVD|AV\/|AV\s|AVGDA)"
+    passage_case = "(?P<passage_case>^PASSEIG\s|PASSATGE\s|PS|PG\s|PASEO\s)"
+    road_case = "(?P<road_case>^CRTA\s|CR\s|CARRETERA\s)"
+    round_case = "(?P<round_case>^RONDA\s|RDA\s)"
+
+    trans_dict = {
+        'À': 'A','Â': 'A','Á': 'A','Ä': 'A',
+        'È': 'E','Ê': 'E','É': 'E','Ë': 'E',
+        'Ì': 'I','Î': 'I','Í': 'I','Ï': 'I',
+        'Ò': 'O','Ô': 'O','Ó': 'O','Ö': 'O',
+        'Ù': 'U','Û': 'U','Ú': 'U','Ü': 'U',
+        'Ñ': 'N',
+        'Ç': 'C',
+        ',': ' ',
+        '.': ' ',
+        '-': ' ',}
+    common_words = {
+        "DE", "LA", "EL", "L'", "D'", "DEL","D'EN",'I','Y',"PO",
+        "LOS", "LES", "LAS"
+    }
+    pattern = '|'.join(r"\b{}(\b|\s)".format(x) for x in common_words)
+    trans_table  = str.maketrans(trans_dict)
+
+    df['street_clean'] = df.street.str.upper()
+    df['street_clean'] = df['street_clean'].str.translate(trans_table)
+    df['street_clean'] = df['street_clean'].str.replace(pattern,'',)
+
+    df['street_type_raw'] = df['street_clean'].str.extract(type_street)
+
+    df['street_type'] = df['street_type_raw'].str.replace(street_case, 'CL', regex=True)
+    df['street_type'] = df['street_type'].str.replace(square_case, 'PZ', regex=True)
+    df['street_type'] = df['street_type'].str.replace(avenue_case, 'AV', regex=True)
+    df['street_type'] = df['street_type'].str.replace(passage_case, 'PS', regex=True)
+    df['street_type'] = df['street_type'].str.replace(road_case, 'CR', regex=True)
+    df['street_type'] = df['street_type'].str.replace(round_case, 'RD', regex=True)
+    df['street_type'] = df['street_type'].str.strip()
+
+    df['street_clean'] = df['street_clean'].str.replace(type_street, '', regex=True)
+    df['street_clean'] = df['street_clean'].str.replace(r'\s+', ' ', regex=True)
+    df['street_clean'] = df['street_clean'].str.strip()
+
+    street_name = "(?P<street_name>^.*?(?:(?!\D)|$))"
+    df['street_name'] = df['street_clean'].str.extract(street_name)
+    df['street_name'] = df['street_name'].str.strip()
+    df['street_clean'] = df['street_clean'].str.replace(street_name, '', regex=True)
+    df['street_clean'] = df['street_clean'].str.strip()
+
+    df['street_number'] = df['street_clean']
+    df.drop(columns=['street_clean','street_type_raw'], inplace=True)
+
     return df
 
 def split_id_municipi_by_id_and_name(df):
     spec_chars = ["[","]"]
     transtab = str.maketrans(dict.fromkeys(spec_chars, ''))
-    df['id_municipi_copy'] = df['id_municipi']
+    df['id_municipi_copy'] = df['id_municipi'].astype(str)
     df['id_municipi_name'] = df['id_municipi_copy'] \
         .str.translate(transtab).str.split(r"\d\,", expand=True)[1].str.strip()
     df['id_municipi_id'] = df['id_municipi_copy'] \
         .str.translate(transtab).str.split(r"\,(\s)+(\'|\")", expand=True)[0].str.strip()
     # TODO mejorar este regex para que no afecte a nombres con apostrofe
     df['id_municipi_name'] = df['id_municipi_name'].str.replace(r'\'', '', regex=True)
+    df.drop(columns=['id_municipi_copy','id_municipi'], inplace=True)
     return df
 
 def normalize_street_address(engine, client):
-    query = '''
-        SELECT id FROM res_partner_address ORDER BY id DESC LIMIT 1;
-    '''
-    try:
-        last_id = pd.read_sql(query, con=engine)
-    except Exception as e:
-        print(e)
-        logging.error('No rows in table')
-        # raise
-    df_address = download_res_partner_address_from_erp(client, last_id)
-    df_municipi = download_res_municipi_from_erp(client)
-
-    pass
+    df_address = download_res_partner_address_from_erp(client)
+    df_municipi_normalized = split_id_municipi_by_id_and_name(df_address)
+    df_address_normalized = get_normalized_street_address(df_municipi_normalized)
+    with engine.begin() as connection:
+        df_address_normalized.to_sql('normalized_street_address', connection, if_exists='replace', index=False)
+    return df_address_normalized
 
 # vim: ts=4 sw=4 et
