@@ -36,11 +36,11 @@ def get_data_zip_candidates_from_cartociudad(df):
         }
     cartociu_adapter = HTTPAdapter(max_retries=5)
     session = requests.Session()
+    session.mount(url, cartociu_adapter)
     for index, row in df.iterrows():
         data['q'] = row['street'] +' '+ row['city']
-        session.mount(url, cartociu_adapter)
         try:
-            rq = session.get(url, params=data, verify=False, timeout=2)
+            rq = session.get(url, params=data, verify=False, timeout=5)
         except ConnectionError as e:
             print(e)
         rq.raise_for_status()
@@ -51,7 +51,7 @@ def get_data_zip_candidates_from_cartociudad(df):
         if len(response_list) > 0:
             df.loc[index, 'zip_candidate_cartociudad'] = response_list[0]['postalCode']
         else:
-            df.loc[index, 'zip_candidate_cartociudad'] = ''
+            df.loc[index, 'zip_candidate_cartociudad']
     return df
 
 def get_data_zip_candidates_from_ine(df, df_ine):

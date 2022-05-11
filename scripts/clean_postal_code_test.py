@@ -12,24 +12,26 @@ from clean_postal_code import (
     get_df_with_null_and_false_values,
     get_data_zip_candidates_from_ine,
     get_data_zip_candidates_from_cartociudad,
-    get_normalized_name_street_address,
+    get_normalized_street_address,
     get_zips_by_ine_municipio_nombre,
     get_normalized_zips_from_ine_erp,
+    normalize_street_address,
 )
 from erppeek import Client
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData, Table
 
-class ExtractDataFromErp_Test(unittest.TestCase):
+class NormalizedStreetAddress_Test(unittest.TestCase):
 
     def setUp(self):
         self.client = Client(**dbconfig.erppeek_testing)
         self.engine = create_engine(dbconfig.test_db['dbapi'])
 
-    def tearDown(self):
-        #self.drop_test_database()
-        pass
+    def _tearDown(self):
+        metadata = MetaData(bind=self.engine)
+        normalized_table = Table('normalized_street_address', metadata, autoload_with=self.engine)
+        normalized_table.drop()
 
-    def download_res_partner_address_from_erp(self):
+    def test__download_res_partner_address_from_erp(self):
         df = download_res_partner_address_from_erp(self.client)
         df_columns_list = list(df.columns)
         fields = ['street2', 'city', 'id_municipi', 'street', 'id', 'zip']
@@ -43,9 +45,7 @@ class ExtractDataFromErp_Test(unittest.TestCase):
             'dc', 'name', 'climatic_zone']
         self.assertCountEqual(df_columns_list, fields)
 
-class LoadAndTransformData_Test(unittest.TestCase):
-
-    def test__get_data_zip_candidates_from_cartociudad__from_dataframe_multiple_requests(self):
+    def _test__get_data_zip_candidates_from_cartociudad__from_dataframe_multiple_requests(self):
         data = {
             'id': [1,2,3],
             'street': ['Pic Peguera',
