@@ -239,16 +239,17 @@ class NormalizedStreetAddress_Test(unittest.TestCase):
         '''
         df_result = pd.read_sql_query(query, engine)
         data_expected = {
-            'city':['Girona'],
-            'zip':['17003'],
-            'street2':['false'],
-            'street': ['CL. Pic de Peguera, 11 A 2 8'],
             'id': [1],
-            'id_municipi_name': ['Girona'],
-            'id_municipi_id': ['5386'],
+            'municipality': ['Girona'],
+            'state_name': ['Girona'],
+            'city':['Girona'],
+            'ine': ['17079'],
+            'dc': ['2'],
+            'street': ['CL. Pic de Peguera, 11 A 2 8'],
             'street_type': ['CL'],
             'street_name': ['PIC PEGUERA'],
             'street_number': ['11 A 2 8'],
+            'zip':['17003'],
         }
         df_expected = pd.DataFrame(data_expected)
         pd.testing.assert_frame_equal(df_expected, df_result)

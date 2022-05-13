@@ -1,29 +1,31 @@
 #!usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from asyncio.log import logging
 import dbconfig
+import numpy as np
 import pandas as pd
 import requests
 from json import loads
 import logging
+logging.basicConfig(level=logging.DEBUG)
 from requests.adapters import HTTPAdapter
 from requests.exceptions import ConnectionError
 
 def download_res_partner_address_from_erp(client):
     model='res.partner.address'
     data = client.model(model).search([])
-    fields = ['street2', 'city', 'id_municipi', 'street', 'id', 'zip']
+    fields = ['city', 'id_municipi', 'street', 'id', 'zip']
     data = client.model(model).read(data, fields)
     df = pd.DataFrame(data)
-    #df.to_csv('res_partner_address.csv', index = False)
     return df
 
 def download_res_municipi_from_erp(client):
     model='res.municipi'
     data = client.model(model).search([])
-    data = client.model(model).read(data)
+    fields = ['ine','dc','name','state','id']
+    data = client.model(model).read(data, fields)
     df = pd.DataFrame(data)
-    #df.to_csv('res_municipi.csv', index = False)
     return df
 
 def get_data_zip_candidates_from_cartociudad(df):
@@ -149,28 +151,52 @@ def get_normalized_street_address(df):
 
     df['street_number'] = df['street_clean']
     df.drop(columns=['street_clean','street_type_raw'], inplace=True)
-
     return df
 
-def split_id_municipi_by_id_and_name(df):
+def split_by_id_and_name(df, name_col):
     spec_chars = ["[","]"]
     transtab = str.maketrans(dict.fromkeys(spec_chars, ''))
-    df['id_municipi_copy'] = df['id_municipi'].astype(str)
-    df['id_municipi_name'] = df['id_municipi_copy'] \
+    df['id_copy'] = df[name_col].astype(str)
+    df[name_col+'_name'] = df['id_copy'] \
         .str.translate(transtab).str.split(r"\d\,", expand=True)[1].str.strip()
-    df['id_municipi_id'] = df['id_municipi_copy'] \
+    df[name_col+'_id'] = df['id_copy'] \
         .str.translate(transtab).str.split(r"\,(\s)+(\'|\")", expand=True)[0].str.strip()
     # TODO mejorar este regex para que no afecte a nombres con apostrofe
-    df['id_municipi_name'] = df['id_municipi_name'].str.replace(r'\'', '', regex=True)
-    df.drop(columns=['id_municipi_copy','id_municipi'], inplace=True)
+    df[name_col+'_name'] = df[name_col+'_name'].str.replace(r'\'', '', regex=True)
+    df.drop(columns=['id_copy',name_col], inplace=True)
+    df[name_col+'_id'] = pd.to_numeric(df[name_col+'_id'], errors='coerce').fillna(0).astype(np.int64)
     return df
 
 def normalize_street_address(engine, client):
+    logging.info("Normalizing street address")
+    logging.info("Download res_partner_address from erp")
     df_address = download_res_partner_address_from_erp(client)
-    df_municipi_normalized = split_id_municipi_by_id_and_name(df_address)
-    df_address_normalized = get_normalized_street_address(df_municipi_normalized)
+    logging.info("Download res_municipi from erp")
+    df_municipi = download_res_municipi_from_erp(client)
+    logging.info("Split by id and name in res_partner_address")
+    df_address = split_by_id_and_name(df_address, 'id_municipi')
+    logging.info("normalize street address")
+    df_address = get_normalized_street_address(df_address)
+    logging.info("Split bye id and name in res_municipi")
+    df_municipi = split_by_id_and_name(df_municipi, 'state')
+    logging.info("Merge res_partner_address with res_municipi")
+    df_address_municipi = pd.merge(
+        df_address,
+        df_municipi[['ine','dc','name','state_name','id']],
+        left_on='id_municipi_id', right_on='id', how='left')
+    df_address_municipi.drop(columns=['id_municipi_id','id_municipi_name','id_y'], inplace=True)
+    df_address_municipi.rename(columns={'id_x':'id'}, inplace=True)
+
+    df_address_normalized = df_address_municipi[[
+        'id',
+        'name','state_name','city','ine','dc',
+        'street','street_type','street_name','street_number','zip',
+        ]]
+    df_address_normalized.rename(columns={'name':'municipality'}, inplace=True)
+    logging.info("Inserting normalized_street_address in database")
     with engine.begin() as connection:
-        df_address_normalized.to_sql('normalized_street_address', connection, if_exists='replace', index=False)
+        df_address_normalized.to_sql('normalized_street_address', connection,
+                if_exists='replace', index=False)
     return df_address_normalized
 
 # vim: ts=4 sw=4 et
