@@ -94,18 +94,18 @@ def get_normalized_zips_from_ine_erp(df_ine,df):
     return df_ine, df
 
 def get_normalized_street_address(df):
-    type_street = "(?P<type_street>^CALLE\s|CARRER\s|C\/|CL\s|C\\|C|\
-                            PLAZA\s|PLAÇA\s|PÇA\s|PZ|PL|\
-                            AVENIDA\s|AVINGUDA\s|AVDA\s|AV\s|AVDA\s|AVD|AVD|AV\/|AV\s|AVGDA|\
-                            PASSEIG\s|PASSATGE\s|PS|PG\s|PASEO\s|\
+    type_street = r"(?P<type_street>^CALLE\s|CARRER\s|C\/|CL\s|C\\|\
+                            PLAZA\s|PLAÇA\s|PÇA\s|PZ\s|PL\s|\
+                            AVENIDA\s|AVINGUDA\s|AVDA\s|AV\s|AVDA\s|AVD\s|AV\/|AV\s|AVGDA\s|\
+                            PASSEIG\s|PASSATGE\s|PS\s|PG\s|PASEO\s|\
                             CRTA\s|CR\s|CARRETERA\s|\
                             RONDA\s|RDA\s)"
-    street_case = "(?P<street_case>^CALLE\s|CARRER\s|C\/|CL\s|C\\|C)"
-    square_case = "(?P<square_case>^PLAZA\s|PLAÇA\s|PÇA\s|PZ|PL)"
-    avenue_case = "(?P<avenue_case>^AVENIDA\s|AVINGUDA\s|AVDA\s|AV\s|AVDA\s|AVD|AVD|AV\/|AV\s|AVGDA)"
-    passage_case = "(?P<passage_case>^PASSEIG\s|PASSATGE\s|PS|PG\s|PASEO\s)"
-    road_case = "(?P<road_case>^CRTA\s|CR\s|CARRETERA\s)"
-    round_case = "(?P<round_case>^RONDA\s|RDA\s)"
+    street_case = r"(?P<street_case>^CALLE\s|CARRER\s|C\/|CL\s|C\\)"
+    square_case = r"(?P<square_case>^PLAZA\s|PLAÇA\s|PÇA\s|PZ\s|PL\s)"
+    avenue_case = r"(?P<avenue_case>^AVENIDA\s|AVINGUDA\s|AVDA\s|AV\s|AVDA\s|AVD\s|AV\/|AV\s|AVGDA\s)"
+    passage_case = r"(?P<passage_case>^PASSEIG\s|PASSATGE\s|PS\s|PG\s|PASEO\s)"
+    road_case = r"(?P<road_case>^CRTA\s|CR\s|CARRETERA\s)"
+    round_case = r"(?P<round_case>^RONDA\s|RDA\s)"
 
     trans_dict = {
         'À': 'A','Â': 'A','Á': 'A','Ä': 'A',
@@ -127,7 +127,7 @@ def get_normalized_street_address(df):
 
     df['street_clean'] = df.street.str.upper()
     df['street_clean'] = df['street_clean'].str.translate(trans_table)
-    df['street_clean'] = df['street_clean'].str.replace(pattern,'',)
+    df['street_clean'] = df['street_clean'].str.replace(pattern,'', regex=True)
 
     df['street_type_raw'] = df['street_clean'].str.extract(type_street)
 
@@ -143,7 +143,7 @@ def get_normalized_street_address(df):
     df['street_clean'] = df['street_clean'].str.replace(r'\s+', ' ', regex=True)
     df['street_clean'] = df['street_clean'].str.strip()
 
-    street_name = "(?P<street_name>^.*?(?:(?!\D)|$))"
+    street_name = r"(?P<street_name>^.*?(?:(?!\D)|$))"
     df['street_name'] = df['street_clean'].str.extract(street_name)
     df['street_name'] = df['street_name'].str.strip()
     df['street_clean'] = df['street_clean'].str.replace(street_name, '', regex=True)
