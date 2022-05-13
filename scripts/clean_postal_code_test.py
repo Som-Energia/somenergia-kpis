@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from cmath import nan
 import dbconfig
+import numpy as np
 import pandas as pd
 import unittest
 from clean_postal_code import (
     download_res_municipi_from_erp,
     download_res_partner_address_from_erp,
-    split_id_municipi_by_id_and_name,
+    split_by_id_and_name,
     get_df_with_null_and_false_values,
     get_data_zip_candidates_from_ine,
     get_data_zip_candidates_from_cartociudad,
@@ -34,15 +34,13 @@ class NormalizedStreetAddress_Test(unittest.TestCase):
     def test__download_res_partner_address_from_erp(self):
         df = download_res_partner_address_from_erp(self.client)
         df_columns_list = list(df.columns)
-        fields = ['street2', 'city', 'id_municipi', 'street', 'id', 'zip']
+        fields = ['city', 'id_municipi', 'street', 'id', 'zip']
         self.assertCountEqual(df_columns_list,fields)
 
     def test__download_res_municipi_from_erp(self):
         df = download_res_municipi_from_erp(self.client)
         df_columns_list = list(df.columns)
-        fields = ['id', 'imu_diputacio', 'ine',
-            'subsistema_id', 'comarca', 'state', 'presentar_informe',
-            'dc', 'name', 'climatic_zone']
+        fields = ['ine','dc','name','state','id']
         self.assertCountEqual(df_columns_list, fields)
 
     def _test__get_data_zip_candidates_from_cartociudad__from_dataframe_multiple_requests(self):
@@ -70,16 +68,27 @@ class NormalizedStreetAddress_Test(unittest.TestCase):
         df_result = pd.DataFrame(responseq)
         pd.testing.assert_frame_equal(df_expect, df_result)
 
-    def test__split_id_municipi_by_id_and_name(self):
+    def test__split_by_id_and_name__when_id_municipi(self):
         data = {
             'id': [1],
             'id_municipi': ["[5237, 'Sant Quirze del Vallès']"],
         }
         df = pd.DataFrame(data)
-        df = split_id_municipi_by_id_and_name(df)
+        df = split_by_id_and_name(df, 'id_municipi')
         result = df.iloc[0]
-        self.assertEqual(result['id_municipi_id'], '5237')
+        self.assertEqual(result['id_municipi_id'], 5237)
         self.assertEqual(result['id_municipi_name'], 'Sant Quirze del Vallès')
+
+    def test__split_by_id_and_name__when_state(self):
+        data = {
+            'id': [1],
+            'state': ["[5, 'Barcelona']"],
+        }
+        df = pd.DataFrame(data)
+        df = split_by_id_and_name(df, 'state')
+        result = df.iloc[0]
+        self.assertEqual(result['state_id'], 5)
+        self.assertEqual(result['state_name'], 'Barcelona')
 
     def test__get_df_zip_candidates_from_ine__when_zip_exist(self):
         data_raw = {
@@ -203,7 +212,7 @@ class NormalizedStreetAddress_Test(unittest.TestCase):
         data_expected = {
             'id': [1,2],
             'street': ['Carrer de la Rambla 1 5ºE', 'Pic de Peguera 15'],
-            'street_type': ['CL', nan],
+            'street_type': ['CL', np.nan],
             'street_name': ['RAMBLA', 'PIC PEGUERA'],
             'street_number': ['1 5ºE', '15'],
         }
