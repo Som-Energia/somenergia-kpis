@@ -7,7 +7,7 @@ from tasks.t_image_build import build_image_build_task
 from docker.types import Mount
 from datetime import datetime
 
-with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2022,4,20), schedule_interval='@hourly', catchup=True) as dag:
+with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2022,4,20), schedule_interval='@hourly', catchup=True, tags=["Helpscout"]) as dag:
 
     task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag)
     task_git_clone = build_git_clone_ssh_task(dag=dag)
