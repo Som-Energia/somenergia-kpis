@@ -5,8 +5,6 @@ from tasks.t_git_clone_ssh import build_git_clone_ssh_task
 from tasks.t_check_repo import build_check_repo_task
 from tasks.t_image_build import build_image_build_task
 from docker.types import Mount
-
-
 from datetime import datetime
 
 with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2022,4,20), schedule_interval='@hourly', catchup=True) as dag:
@@ -18,7 +16,7 @@ with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2022,4,20), sche
 
     get_conversations_task = DockerOperator(
         api_version='auto',
-        task_id='hs_get_conversations_dag',
+        task_id='hs_get_conversations',
         image='somenergia-kpis-requirements:latest',
         command='python3 /repos/somenergia-kpis/datasources/helpscout/hs_get_conversations.py "{{ data_interval_start }}" "{{ data_interval_end }}" \
                 "{{ var.value.puppis_prod_db}}" "{{ var.value.helpscout_api_id}}" "{{ var.value.helpscout_api_secret}}"',
