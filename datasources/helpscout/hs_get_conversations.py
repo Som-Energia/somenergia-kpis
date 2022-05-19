@@ -1,7 +1,7 @@
 from datetime import timedelta
 from helpscout.client import HelpScout
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy import Table, Column, Integer, MetaData
+from sqlalchemy import Table, Column, Integer, MetaData, DateTime
 from sqlalchemy import create_engine
 import sys
 import pendulum
