@@ -5,9 +5,14 @@ from kpis_tasks.t_git_clone_ssh import build_git_clone_ssh_task
 from kpis_tasks.t_check_repo import build_check_repo_task
 from kpis_tasks.t_image_build import build_image_build_task
 from docker.types import Mount
-from datetime import datetime
+from datetime import datetime, timedelta
 
-with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2022,4,20), schedule_interval='@hourly', catchup=True, tags=["Helpscout"]) as dag:
+args= {
+  'retries': 5,
+  'retry_delay': timedelta(minutes=5),
+}
+
+with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2022,3,20), schedule_interval='@hourly', catchup=True, tags=["Helpscout"], default_args=args) as dag:
 
     task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag)
     task_git_clone = build_git_clone_ssh_task(dag=dag)

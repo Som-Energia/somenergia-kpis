@@ -13,6 +13,7 @@ def pull_repo_ssh(repo_server_url,repo_server_key):
     stdin, stdout, stderr = p.exec_command("git -C /opt/airflow/repos/somenergia-kpis pull")
     txt_stderr = stderr.readlines()
     txt_stderr = "".join(txt_stderr)
+    print (f"Stderr de git pull ha retornat {txt_stderr}")
     # si stderr té més de 0 \n és que hi ha canvis al fer pull
     return "image_build" if txt_stderr.count('\n')>0 else "hs_get_conversations"
 
