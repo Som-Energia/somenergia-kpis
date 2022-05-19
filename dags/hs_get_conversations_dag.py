@@ -1,9 +1,9 @@
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
-from tasks.t_branch_pull_ssh import build_branch_pull_ssh_task
-from tasks.t_git_clone_ssh import build_git_clone_ssh_task
-from tasks.t_check_repo import build_check_repo_task
-from tasks.t_image_build import build_image_build_task
+from kpis_tasks.t_branch_pull_ssh import build_branch_pull_ssh_task
+from kpis_tasks.t_git_clone_ssh import build_git_clone_ssh_task
+from kpis_tasks.t_check_repo import build_check_repo_task
+from kpis_tasks.t_image_build import build_image_build_task
 from docker.types import Mount
 from datetime import datetime
 
