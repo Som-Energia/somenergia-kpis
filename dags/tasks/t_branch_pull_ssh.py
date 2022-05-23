@@ -4,7 +4,7 @@ import paramiko
 import io
 
 
-def pull_repo_ssh(repo_server_url,repo_server_key):
+def pull_repo_ssh(repo_server_url,repo_server_key, task_name):
     p = paramiko.SSHClient()
     p.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     keyfile = io.StringIO(repo_server_key)
@@ -15,14 +15,15 @@ def pull_repo_ssh(repo_server_url,repo_server_key):
     txt_stderr = "".join(txt_stderr)
     print (f"Stderr de git pull ha retornat {txt_stderr}")
     # si stderr té més de 0 \n és que hi ha canvis al fer pull
-    return "image_build" if txt_stderr.count('\n')>0 else "hs_get_conversations"
+    return "image_build" if txt_stderr.count('\n')>0 else task_name
 
-def build_branch_pull_ssh_task(dag: DAG) -> BranchPythonOperator:
+def build_branch_pull_ssh_task(dag: DAG, task_name) -> BranchPythonOperator:
     branch_pull_ssh_task = BranchPythonOperator(
         task_id='git_pull_task',
         python_callable=pull_repo_ssh,
         op_kwargs={ "repo_server_url" : "{{ var.value.repo_server_url }}",
-                    "repo_server_key": "{{ var.value.repo_server_key }}" },
+                    "repo_server_key": "{{ var.value.repo_server_key }}",
+                    "task_name": task_name},
         do_xcom_push=False,
         dag=dag,
     )
