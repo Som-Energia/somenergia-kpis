@@ -38,7 +38,7 @@ class OdooEmployeesTest(unittest.TestCase):
                 create_date=lambda x: pd.to_datetime(x.create_date, utc=False),
                 write_date=lambda x: pd.to_datetime(x.write_date, utc=False),
                 theoretical_hours_start_date=lambda x: pd.to_datetime(x.theoretical_hours_start_date, utc=False),
-                execute_datetime=lambda x: pd.to_datetime(x.execute_datetime, utc=False)
+                execute_datetime=lambda x: pd.to_datetime(x.execute_datetime, utc=True)
                 )
 
         Employees_summary.validate(df)
@@ -65,7 +65,7 @@ class OdooEmployeesTest(unittest.TestCase):
                 create_date=lambda x: pd.to_datetime(x.create_date, utc=False),
                 write_date=lambda x: pd.to_datetime(x.write_date, utc=False),
                 theoretical_hours_start_date=lambda x: pd.to_datetime(x.theoretical_hours_start_date, utc=False),
-                execute_datetime=lambda x: pd.to_datetime(x.execute_datetime, utc=False)
+                execute_datetime=lambda x: pd.to_datetime(x.execute_datetime, utc=True)
                 )
 
         try:
