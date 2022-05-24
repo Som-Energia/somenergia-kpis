@@ -7,10 +7,14 @@ from kpis_tasks.t_image_build import build_image_build_task
 from kpis_tasks.t_remove_image import build_remove_image_task
 from docker.types import Mount
 from datetime import datetime, timedelta
+from airflow.models import Variable
+
+my_email = Variable.get("fail_email")
 
 args= {
-  'email': ['equip.dades@somenergia.coop'],
+  'email': my_email,
   'email_on_failure': True,
+  'email_on_retry': False,
   'retries': 5,
   'retry_delay': timedelta(minutes=5),
 }
@@ -29,7 +33,7 @@ with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2020,3,20), sche
         image='somenergia-kpis-requirements:latest',
         command='python3 /repos/somenergia-kpis/datasources/helpscout/hs_get_conversations.py "{{ data_interval_start }}" "{{ data_interval_end }}" \
                 "{{ var.value.puppis_prod_db}}" "{{ var.value.helpscout_api_id}}" "{{ var.value.helpscout_api_secret}}"',
-        docker_url='tcp://moll2.somenergia.lan:2375',
+        docker_url=Variable.get("moll_url"),
         mounts=[
           Mount(source="somenergia_repositoris", target="/repos", type="volume")
         ],
