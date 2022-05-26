@@ -45,6 +45,7 @@ with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2020,3,20), sche
                 "{{ var.value.puppis_prod_db}}" "{{ var.value.helpscout_api_id}}" "{{ var.value.helpscout_api_secret}}"',
         docker_url=Variable.get("moll_url"),
         mounts=[mount_nfs],
+        mount_tmp_dir=False,
         auto_remove=True,
         retrieve_output=True,
         trigger_rule='none_failed',

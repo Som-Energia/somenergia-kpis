@@ -44,6 +44,7 @@ with DAG(dag_id='odoo_get_hr_employee_dag', start_date=datetime(2022,5,23), sche
         command='python3 /repos/somenergia-kpis/datasources/odoo/odoo_get_hr_employee.py "{{ var.value.odoo_dbapi}}" "{{ var.value.puppis_prod_db}}" "{{ data_interval_start }}"',
         docker_url=Variable.get("moll_url"),
         mounts=[mount_nfs],
+        mount_tmp_dir=False,
         auto_remove=True,
         retrieve_output=True,
         trigger_rule='none_failed',
