@@ -39,7 +39,7 @@ with DAG(dag_id='odoo_get_hr_employee_dag', start_date=datetime(2022,5,23), sche
 
     get_hr_employee_task = DockerOperator(
         api_version='auto',
-        task_id='odoo_update_hr_employee',
+        task_id='odoo_get_hr_employee',
         image='somenergia-kpis-requirements:latest',
         command='python3 /repos/somenergia-kpis/datasources/odoo/hr_employees.py "{{ var.value.odoo_dbapi}}" "{{ var.value.puppis_prod_db}}" "{{ data_interval_start }}"',
         docker_url=Variable.get("moll_url"),
