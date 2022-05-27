@@ -56,7 +56,7 @@ def get_raw_hr_employees(engine):
     )
 
 
-def update_odoo_hr_employees(dbapi_source,dbapi_target, execute_datetime):
+def update_odoo_hr_employees(dbapi_source, dbapi_target, execute_datetime):
     engine_odoo = create_engine(dbapi_source).connect()
     engine_puppis = create_engine(dbapi_target).connect()
     df = get_raw_hr_employees(engine_odoo)
@@ -68,7 +68,7 @@ def update_odoo_hr_employees(dbapi_source,dbapi_target, execute_datetime):
 if __name__ == '__main__':
     args = sys.argv[1:]
     dbapi_source = args[0]
-    #dbapi_source = 'postgresql://somarmota:ail%40ei8eiDiethoh@10.1.1.199:5432/odoo'
+    #dbapi_source = 'postgresql://somarmota:password_url_encoded@10.1.1.199:5432/odoo'
     dbapi_target = args[1]
     execute_datetime=pd.to_datetime(args[2], utc=True)
     update_odoo_hr_employees(dbapi_source, dbapi_target, execute_datetime)
