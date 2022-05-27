@@ -10,7 +10,7 @@ from sqlalchemy import create_engine
 
 import pandera as pa
 
-from datasources.odoo.employees import (
+from datasources.odoo.hr_employees import (
     Employees_summary
 )
 
