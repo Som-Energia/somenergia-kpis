@@ -62,6 +62,7 @@ def update_odoo_hr_employees(dbapi_source, dbapi_target, execute_datetime):
     df = get_raw_hr_employees(engine_odoo)
     df['execute_datetime'] = pd.to_datetime(execute_datetime, utc=False)
     df_validated = Employees_summary.validate(df)
+    print(f"Inserting {len(df_validated)} records on {execute_datetime}")
     df_validated.to_sql('odoo_hr_employee',con=engine_puppis, if_exists='append', index=False)
 
 
