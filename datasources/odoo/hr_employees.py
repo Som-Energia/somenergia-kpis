@@ -71,6 +71,9 @@ def update_odoo_hr_employees(dbapi_source, dbapi_target, execute_datetime):
 
 
 if __name__ == '__main__':
+    logger = logging.getLogger("airflow.task")
+    logger.info(f"Running {' '.join(sys.argv)}")
+
     args = sys.argv[1:]
     dbapi_source = args[0]
     #dbapi_source = 'postgresql://somarmota:password_url_encoded@10.1.1.199:5432/odoo'
