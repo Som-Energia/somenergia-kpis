@@ -1,6 +1,7 @@
 from helpscout.client import HelpScout
 import pandas as pd
 from sqlalchemy import create_engine
+from classes.alchemyClasses import HS_tag
 
 from dbconfig import helpscout_api, local_db
 
@@ -16,14 +17,18 @@ def update_tags():
     ## Importem totes les tags de Som Energia a HelpScout
     tags = hs.tags.get()
 
-    tags_df = pd.DataFrame(
-        [[t.id, t.createdAt, t.name, t.ticketCount] for t in tags],
-        columns=['id','created_at', 'name', 'ticket_count']
-    )
+    [[HS_tag(id=t.id, createdAt=t.createdAt, name=t.name, ticketCount=t.ticketCount)] for t in tags]
 
-    tags_df['created_at'] = pd.to_datetime(tags_df['created_at'])
+    #mirar on duplicate key update
 
-    tags_df.to_sql('hs_tag', engine, if_exists = 'replace', index = False)
+    # tags_df = pd.DataFrame(
+    #     [[t.id, t.createdAt, t.name, t.ticketCount] for t in tags],
+    #     columns=['id','created_at', 'name', 'ticket_count']
+    # )
+
+    # tags_df['created_at'] = pd.to_datetime(tags_df['created_at'])
+
+    # tags_df.to_sql('hs_tag', engine, if_exists = 'replace', index = False)
 
 if __name__ == '__main__':
     update_tags()
