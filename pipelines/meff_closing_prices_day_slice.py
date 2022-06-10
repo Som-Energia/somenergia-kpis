@@ -26,14 +26,15 @@ def transform(closing_prices: pd.DataFrame):
             create_time = create_time,
             price_date = lambda x: pd.to_datetime(x['price_date'], format='Day %d-%b-%Y').dt.date,
             emission_date = lambda x: pd.to_datetime(x['emission_date'], format='%A, %d %B, %Y').dt.date,
-        )
+        )\
+        .reset_index(drop=True)
 
     return closing_prices_transformed
 
 def load(engine, closing_prices_shaped: pd.DataFrame, dry_run=False):
 
     if dry_run:
-        return logging.info(meff_closing_prices)
+        return logging.info(closing_prices_shaped)
 
     closing_prices_shaped.to_sql('meff_closing_prices_day', engine, index = False, if_exists = 'append')
 
