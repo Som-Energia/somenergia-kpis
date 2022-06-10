@@ -51,9 +51,23 @@ with DAG(dag_id='meff_update_closing_prices_dag', start_date=datetime(2022,6,9),
         trigger_rule='none_failed',
     )
 
+    meff_slice_day_closing_prices_task = DockerOperator(
+        api_version='auto',
+        task_id='meff_update_closing_prices',
+        image='somenergia-kpis-requirements:latest',
+        command='python3 /repos/somenergia-kpis/pipelines/meff_closing_prices_day_slice.py "{{ var.value.puppis_prod_db}}"',
+        docker_url=Variable.get("moll_url"),
+        mounts=[mount_nfs],
+        mount_tmp_dir=False,
+        auto_remove=True,
+        retrieve_output=True,
+        trigger_rule='none_failed',
+    )
+
     task_check_repo >> task_git_clone
     task_check_repo >> task_branch_pull_ssh
     task_git_clone >> task_image_build
     task_branch_pull_ssh >> meff_update_closing_prices_task
     task_branch_pull_ssh >> task_remove_image
     task_remove_image >> task_image_build >> meff_update_closing_prices_task
+    meff_update_closing_prices_task >> meff_slice_day_closing_prices_task
