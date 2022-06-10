@@ -36,7 +36,7 @@ def load(engine, closing_prices_shaped: pd.DataFrame, dry_run=False):
     if dry_run:
         return logging.info(closing_prices_shaped)
 
-    closing_prices_shaped.to_sql('meff_closing_prices_month', engine, index = False, if_exists = 'append')
+    closing_prices_shaped.to_sql('meff_closing_prices_month', engine, index = False, if_exists = 'replace')
 
 def slice_closing_prices(dbapi, dry_run=False):
 
