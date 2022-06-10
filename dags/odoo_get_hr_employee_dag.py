@@ -29,7 +29,7 @@ nfs_config = {
 driver_config = DriverConfig(name='local', options=nfs_config)
 mount_nfs = Mount(source="local", target="/repos", type="volume", driver_config=driver_config)
 
-with DAG(dag_id='odoo_get_hr_employee_dag', start_date=datetime(2022,5,23), schedule_interval='@weekly', catchup=True, tags=["Odoo"], default_args=args) as dag:
+with DAG(dag_id='odoo_get_hr_employee_dag_v2', start_date=datetime(2022,5,23), schedule_interval='@weekly', catchup=True, tags=["Odoo"], default_args=args) as dag:
 
     task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='odoo_get_hr_employee')
     task_git_clone = build_git_clone_ssh_task(dag=dag)
@@ -41,7 +41,7 @@ with DAG(dag_id='odoo_get_hr_employee_dag', start_date=datetime(2022,5,23), sche
         api_version='auto',
         task_id='odoo_get_hr_employee',
         image='somenergia-kpis-requirements:latest',
-        command='python3 /repos/somenergia-kpis/datasources/odoo/hr_employees.py "{{ var.value.odoo_dbapi}}" "{{ var.value.puppis_prod_db}}" "{{ dag_run.logical_date }}"',
+        command='python3 /repos/somenergia-kpis/datasources/odoo/hr_employees.py "{{ var.value.odoo_dbapi}}" "{{ var.value.puppis_prod_db}}" "{{ dag_run.start_date }}"',
         docker_url=Variable.get("moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
