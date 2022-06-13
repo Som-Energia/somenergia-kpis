@@ -23,13 +23,19 @@ def transform(closing_prices: pd.DataFrame):
         .set_index('price_date', drop=False)\
         .filter(regex='^Month', axis=0)\
         .assign(
-            create_time = create_time,
             price_date = lambda x: pd.to_datetime(x['price_date'], format='Month %b-%Y').dt.date,
             emission_date = lambda x: pd.to_datetime(x['emission_date'], format='%A, %d %B, %Y').dt.date,
         )\
         .reset_index(drop=True)
 
-    return closing_prices_transformed
+    closing_prices_transformed_latest = closing_prices_transformed\
+        .sort_values('create_time', ascending = False)\
+        .drop_duplicates(['emission_date','price_date'])\
+        .sort_values('price_date')\
+        .reset_index(drop=True)\
+        .assign(create_time = create_time)
+
+    return closing_prices_transformed_latest
 
 def load(engine, closing_prices_shaped: pd.DataFrame, dry_run=False):
 
