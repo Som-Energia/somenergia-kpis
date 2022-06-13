@@ -59,13 +59,13 @@ with DAG(dag_id='meff_update_closing_prices_dag', start_date=datetime(2022,6,9),
     task_remove_image >> task_image_build >> meff_update_closing_prices_task
 
 
-with DAG(dag_id='meff_slice_closing_prices_dag', start_date=datetime(2022,6,9), schedule_interval='0 16 * * *', catchup=False, tags=["Meff","Transform"], default_args=args) as dag:
+with DAG(dag_id='meff_slice_closing_prices_dag', start_date=datetime(2022,6,9), schedule_interval='0 16 * * *', catchup=False, tags=["Meff","Transform"], default_args=args) as dag_slicer:
 
-    task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='meff_slice_day_closing_prices')
-    task_git_clone = build_git_clone_ssh_task(dag=dag)
-    task_check_repo = build_check_repo_task(dag=dag)
-    task_image_build = build_image_build_task(dag=dag)
-    task_remove_image= build_remove_image_task(dag=dag)
+    task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag_slicer, task_name='meff_slice_day_closing_prices')
+    task_git_clone = build_git_clone_ssh_task(dag=dag_slicer)
+    task_check_repo = build_check_repo_task(dag=dag_slicer)
+    task_image_build = build_image_build_task(dag=dag_slicer)
+    task_remove_image= build_remove_image_task(dag=dag_slicer)
 
     meff_slice_day_closing_prices_task = DockerOperator(
         api_version='auto',
