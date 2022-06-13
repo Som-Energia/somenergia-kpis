@@ -62,7 +62,7 @@ with DAG(dag_id='meff_update_closing_prices_dag', start_date=datetime(2022,6,9),
 
 with DAG(dag_id='meff_slice_closing_prices_dag', start_date=datetime(2022,6,9), schedule_interval='0 16 * * *', catchup=False, tags=["Meff","Transform"], default_args=args) as dag_slice:
 
-    task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag_slice, task_name='meff_slice_day_closing_prices')
+    task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag_slice, task_name=['meff_slice_day_closing_prices','meff_slice_month_closing_prices'])
     task_git_clone = build_git_clone_ssh_task(dag=dag_slice)
     task_check_repo = build_check_repo_task(dag=dag_slice)
     task_image_build = build_image_build_task(dag=dag_slice)
