@@ -8,13 +8,13 @@ import pandas as pd
 
 from sqlalchemy import create_engine
 
-from common.df_common import basic_shape
+#from common.df_common import basic_shape
 
-from common.utils import (
-    graveyard_files,
-    list_files,
-    dateCETstr_to_tzdt
-)
+# from common.utils import (
+#     graveyard_files,
+#     list_files,
+#     dateCETstr_to_tzdt
+# )
 
 def get_file_list(filetype, verbose=2):
 
@@ -32,6 +32,8 @@ def get_file_list(filetype, verbose=2):
 
     return hist_files
 
+# TODO everything below will be deprecated soon by specific tasks for omie
+
 def shape_omie(pathfile, request_time):
 
     try:
@@ -41,6 +43,7 @@ def shape_omie(pathfile, request_time):
         raise
 
     noms_columnes = ['year','month','day','hour','price_pt','price']
+
     df = basic_shape(df, noms_columnes)
 
     df = df[["date", "price"]]
