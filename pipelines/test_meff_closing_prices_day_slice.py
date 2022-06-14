@@ -85,3 +85,19 @@ class MeffOperationsSliceTest(unittest.TestCase):
                 )
 
         assert_frame_equal(meff_df.drop(columns='create_time', axis=1), goal_prices.drop(columns='create_time', axis=1))
+
+    def test__slice_closing_prices_month__emissions_as_null(self):
+
+        raw_prices = pd.read_csv('testdata/inputdata/closing_prices_lake_duplicated_emissions.csv', sep=';', parse_dates=['create_time'], date_parser=lambda col: pd.to_datetime(col, utc=True))
+
+        raw_prices['emission_date'][228:300] = None
+
+        meff_df = meff_closing_prices_month_slice.transform(raw_prices)
+
+        goal_prices = pd.read_csv('testdata/inputdata/closing_prices_transformed_month_null_emissions.csv', sep = ';')\
+            .assign(
+                price_date = lambda x: pd.to_datetime(x.price_date).dt.date,
+                emission_date = lambda x: pd.to_datetime(x.emission_date).dt.date,
+                )
+
+        assert_frame_equal(meff_df.drop(columns='create_time', axis=1), goal_prices.drop(columns='create_time', axis=1))
