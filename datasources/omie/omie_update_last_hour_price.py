@@ -27,7 +27,7 @@ def get_files(engine, filetype, potential_missing):
 
     present = pd.read_sql_query('select distinct(file_name) from omie_historical_price_hour', engine)['file_name']
 
-    missing = set(potential_missing[1:5]) - set(present)
+    missing = set(potential_missing) - set(present)
 
     base_url = f'https://www.omie.es/es/file-download?parents%5B0%5D={filetype}&filename='
 
@@ -63,7 +63,8 @@ def shape(df: pd.DataFrame):
         .dropna()\
         .astype({'year': 'int64', 'month': 'int64', 'day': 'int64'})\
         .assign(date = lambda x: pd.to_datetime(x[['year', 'month', 'day']]))\
-        .sort_values(by="date")
+        .sort_values(by=["year","month",'day','hour'])\
+        .reset_index()
 
     first_hour = df_dated['date'].dt.tz_localize('Europe/Madrid').dt.tz_convert('UTC')[0]
     last_hour = df_dated['date'].dt.tz_localize('Europe/Madrid').dt.tz_convert('UTC')[0] + pd.Timedelta(hours=len(df_dated))
