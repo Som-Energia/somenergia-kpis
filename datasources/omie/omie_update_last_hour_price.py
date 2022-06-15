@@ -12,14 +12,14 @@ from pathlib import Path
 
 from sqlalchemy import create_engine
 
-from omie_operations import (
+from omie_utils import (
     get_file_list,
 )
 
 def get_files(engine, filetype, potential_missing):
 
     pd.DataFrame({
-        'date':pd.Series(dtype='datetime64[ns]'),
+        'date':pd.Series(dtype='datetime64[ns, UTC]'),
         'price':pd.Series(dtype='float'),
         'create_time':pd.Series(dtype='datetime64[ns, UTC]'),
         'file_name':pd.Series(dtype='string'),}
@@ -28,6 +28,10 @@ def get_files(engine, filetype, potential_missing):
     present = pd.read_sql_query('select distinct(file_name) from omie_historical_price_hour', engine)['file_name']
 
     missing = set(potential_missing) - set(present)
+
+    if len(missing) < 1:
+        print(f'No {filetype} new files available.')
+        exit()
 
     base_url = f'https://www.omie.es/es/file-download?parents%5B0%5D={filetype}&filename='
 
@@ -72,7 +76,7 @@ def shape(df: pd.DataFrame):
     df_dated['date'] = pd.Series(pd.date_range(first_hour,last_hour,freq='H'))
 
     df = df_dated[["date", "price", "file_name", "create_time"]]
-
+    import ipdb; ipdb.set_trace()
     return df
 
 def save_to_db(engine, df: pd.DataFrame):

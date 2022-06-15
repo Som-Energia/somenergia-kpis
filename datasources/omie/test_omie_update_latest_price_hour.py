@@ -32,11 +32,10 @@ class OmieUpdateTest(unittest.TestCase):
 
     def test__shape_omie__base(self):
 
-        filepath = 'testdata/MARGINALPDBC/marginalpdbc_20211213.1'
-        filename = 'marginalpdbc_20220615.1'
+        filepath = 'testdata/MARGINALPDBC/marginalpdbc_20211213.1_to_shape'
         omie_df = pd.read_csv(filepath, sep = ';')
 
-        df = shape(omie_df, filename)
+        df = shape(omie_df)
 
         expected = pd.read_csv('testdata/inputdata/omie.test_omie_operations.OmieOperationsTest.test__shape_omie-expected.csv', sep = ';', parse_dates=['date', 'create_time'], date_parser=lambda col: pd.to_datetime(col, utc=True))
 
@@ -63,7 +62,7 @@ class OmieUpdateDBTest(unittest.TestCase):
     def tearDown(self):
         self.db_con.close()
 
-    # @skipIf(True, "downloads from website, maybe don't abuse it")
+    @skipIf(True, "downloads from website, maybe don't abuse it")
     def test__omie_get_files(self):
         file_list_df =  pd.DataFrame({'file_name':[]}) 
         file_list_df.to_sql('omie_historical_price', self.db_con)
