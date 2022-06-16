@@ -33,6 +33,7 @@ class OmieOperationsTest(unittest.TestCase):
         self.assertTrue(len(hist_files) > 0)
         self.assertEqual(hist_files['Nombre'][0][-1:],'1')
 
+    @skipIf(True, "Deprecated: Updated to omie_update_last_hour_price")
     def test__shape_omie(self):
 
         request_time = datetime.datetime(2022,1,1)
@@ -42,6 +43,7 @@ class OmieOperationsTest(unittest.TestCase):
 
         self.assertB2BEqual(df.to_csv(index=False))
 
+    @skipIf(True, "Deprecated: Updated to omie_update_last_hour_price")
     def test__shape_omie__leading_zero(self):
 
         request_time = datetime.datetime(2022,1,1, tzinfo=datetime.timezone.utc)

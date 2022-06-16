@@ -33,7 +33,9 @@ class OmieUpdateTest(unittest.TestCase):
     def test__shape_omie__base(self):
 
         filepath = 'testdata/MARGINALPDBC/marginalpdbc_20211213.1_to_shape'
-        omie_df = pd.read_csv(filepath, sep = ';')
+
+        omie_df = pd.read_csv(filepath, sep = ';')\
+            .set_index(['level_0','level_1','level_2','level_3','level_4'])
 
         df = shape(omie_df)
 
@@ -41,17 +43,6 @@ class OmieUpdateTest(unittest.TestCase):
 
         assert_frame_equal(df.drop(columns='create_time', axis=1), expected.drop(columns='create_time', axis=1))
 
-    def test__shape_omie__leading_zero(self):
-
-        filename = 'testdata/MARGINALPDBC/marginalpdbc_20220103.1'
-
-        omie_df = pd.read_csv(filename, sep = ';')
-
-        df = shape(omie_df)
-
-        expected = pd.read_csv('testdata/inputdata/omie.test_omie_operations.OmieOperationsTest.test__shape_omie__leading_zero-expected.csv', sep = ';', parse_dates=['date', 'create_time'], date_parser=lambda col: pd.to_datetime(col, utc=True))
-
-        assert_frame_equal(df.drop(columns='create_time', axis=1), expected.drop(columns='create_time', axis=1))
 
 class OmieUpdateDBTest(unittest.TestCase):
 
@@ -64,7 +55,7 @@ class OmieUpdateDBTest(unittest.TestCase):
 
     @skipIf(True, "downloads from website, maybe don't abuse it")
     def test__omie_get_files(self):
-        file_list_df =  pd.DataFrame({'file_name':[]}) 
+        file_list_df =  pd.DataFrame({'file_name':[]})
         file_list_df.to_sql('omie_historical_price', self.db_con)
 
         potential_missing = ['marginalpdbc_20220615.1', 'marginalpdbc_20220614.1']

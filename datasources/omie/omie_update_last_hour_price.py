@@ -27,6 +27,7 @@ def get_files(engine, filetype, potential_missing):
 
     present = pd.read_sql_query('select distinct(file_name) from omie_historical_price_hour', engine)['file_name']
 
+    potential_missing = [filename for filename in potential_missing if Path(filename).suffix != '.zip']
     missing = set(potential_missing) - set(present)
 
     if len(missing) < 1:
@@ -38,7 +39,7 @@ def get_files(engine, filetype, potential_missing):
     try:
         dfs = [
             pd.read_csv(base_url+filename, sep = ';').assign(file_name = filename)
-            for filename in missing if Path(filename).suffix != '.zip'
+            for filename in missing if Path(filename)
         ]
     except:
         # TODO handle exceptions
@@ -76,7 +77,7 @@ def shape(df: pd.DataFrame):
     df_dated['date'] = pd.Series(pd.date_range(first_hour,last_hour,freq='H'))
 
     df = df_dated[["date", "price", "file_name", "create_time"]]
-    import ipdb; ipdb.set_trace()
+
     return df
 
 def save_to_db(engine, df: pd.DataFrame):
