@@ -29,7 +29,7 @@ nfs_config = {
 driver_config = DriverConfig(name='local', options=nfs_config)
 mount_nfs = Mount(source="local", target="/repos", type="volume", driver_config=driver_config)
 
-with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2020,3,20), schedule_interval='@hourly', catchup=True, tags=["Helpscout"], default_args=args) as dag:
+with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2020,3,20), schedule_interval='@hourly', catchup=True, tags=["Helpscout", "Extract"], default_args=args) as dag:
 
     task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='hs_get_conversations')
     task_git_clone = build_git_clone_ssh_task(dag=dag)

@@ -29,7 +29,7 @@ nfs_config = {
 driver_config = DriverConfig(name='local', options=nfs_config)
 mount_nfs = Mount(source="local", target="/repos", type="volume", driver_config=driver_config)
 
-with DAG(dag_id='omie_get_price_hour_dag', start_date=datetime(2022,6,16), schedule_interval='0 14 * * *', catchup=False, tags=["Omie, Extract"], default_args=args) as dag:
+with DAG(dag_id='omie_get_price_hour_dag', start_date=datetime(2022,6,16), schedule_interval='0 14 * * *', catchup=False, tags=["Omie", "Extract"], default_args=args) as dag:
 
     task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='omie_get_price_hour')
     task_git_clone = build_git_clone_ssh_task(dag=dag)
