@@ -2,10 +2,22 @@ from datetime import timedelta
 from sqlalchemy import create_engine, text
 import sys
 import pendulum
-from classes.alchemyClasses import  HS_tag, HS_clean_conversation
+#from ...models import  HS_tag, HS_clean_conversation
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
+
+import sys
+try:
+    # The insertion index should be 1 because index 0 is this file
+    sys.path.insert(1, './repos/somenergia-kpis/classes')  # the type of path is string #perque sempre
+    # because the system path already have the absolute path to folder a
+    # so it can recognize file_a.py while searching
+    from models import  HS_tag, HS_clean_conversation
+except (ModuleNotFoundError, ImportError) as e:
+    print("{} faileure".format(type(e)))
+else:
+    print("Import succeeded")
 
 
 
@@ -44,11 +56,9 @@ def transform_hs_conversations(verbose=2, dry_run=False, inici=None, fi=None):
     data_interval_start = data_interval_start - timedelta(days=7)
     data_interval_end = data_interval_end - timedelta(days=7)
     #tornem a passar a string
-    data_interval_start =  data_interval_start.isoformat()
-    data_interval_end = data_interval_end.isoformat()
-    #passem a format per api helpscout
-    data_interval_start = data_interval_start.split('+')[0]+'Z'
-    data_interval_end = data_interval_end.split('+')[0]+'Z'
+    data_interval_start = data_interval_start.strftime("%Y-%m-%dT%H:%M:%SZ")
+    data_interval_end = data_interval_end.strftime("%Y-%m-%dT%H:%M:%SZ")
+    import pudb; pu.db
 
     engine = create_engine(args[2])
 

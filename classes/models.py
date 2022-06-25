@@ -46,6 +46,6 @@ class Conversation_tag(Base):
     clean_conversation_id = Column(Integer, ForeignKey('hs_clean_conversation.id'), primary_key = True)
     tag_id = Column(Integer, ForeignKey('hs_tag.id'), primary_key = True)
 
-#Per crear les classes
+#Per crear les taules
 #engine = create_engine()
 #Base.metadata.create_all(engine)
