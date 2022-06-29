@@ -1,12 +1,5 @@
 import unittest
 
-# from pipelines.hs_transform_conversations import (
-#     joined_timeseries,
-#     hourly_energy_budget,
-#     interpolated_last_meff_prices_by_hour,
-#     pipe_hourly_energy_budget,
-# )
-
 from sqlalchemy_utils import (
     assert_nullable,
     assert_non_nullable,
@@ -15,7 +8,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 from sqlalchemy import Column, Integer, DateTime, String, ForeignKey, create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 class HS_clean_conversation(Base):
