@@ -58,7 +58,6 @@ def transform_hs_conversations(verbose=2, dry_run=False, inici=None, fi=None):
     #tornem a passar a string
     data_interval_start = data_interval_start.strftime("%Y-%m-%dT%H:%M:%SZ")
     data_interval_end = data_interval_end.strftime("%Y-%m-%dT%H:%M:%SZ")
-    import pudb; pu.db
 
     engine = create_engine(args[2])
 
