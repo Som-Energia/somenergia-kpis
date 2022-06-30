@@ -49,11 +49,8 @@ def update_hs_conversations(verbose=2, dry_run=False, inici=None, fi=None):
     data_interval_start = data_interval_start - timedelta(days=7)
     data_interval_end = data_interval_end - timedelta(days=7)
     #tornem a passar a string
-    data_interval_start =  data_interval_start.isoformat()
-    data_interval_end = data_interval_end.isoformat()
-    #passem a format per api helpscout
-    data_interval_start = data_interval_start.split('+')[0]+'Z'
-    data_interval_end = data_interval_end.split('+')[0]+'Z'
+    data_interval_start = data_interval_start.strftime("%Y-%m-%dT%H:%M:%SZ")
+    data_interval_end = data_interval_end.strftime("%Y-%m-%dT%H:%M:%SZ")
 
     engine = create_engine(args[2])
     hs_app_id = args[3]
