@@ -10,7 +10,7 @@ Base = declarative_base()
 import sys
 try:
     # The insertion index should be 1 because index 0 is this file
-    sys.path.insert(1, './repos/somenergia-kpis/classes')  # the type of path is string #perque sempre
+    sys.path.insert(1, '/repos/somenergia-kpis/classes')  # the type of path is string #perque sempre
     # because the system path already have the absolute path to folder a
     # so it can recognize file_a.py while searching
     from models import  HS_tag, HS_clean_conversation
