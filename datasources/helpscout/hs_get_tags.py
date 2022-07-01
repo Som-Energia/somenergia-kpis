@@ -28,7 +28,6 @@ def create_HS_engine(engine, hs_app_id, hs_app_secret):
 def update_tags(engine, hs_app_id, hs_app_secret, dis, die):
 
     hs, engine = create_HS_engine(engine, hs_app_id, hs_app_secret)
-
     #Importem totes les tags de Som Energia a HelpScout
     tags = hs.tags.get()
 

@@ -40,7 +40,7 @@ with DAG(dag_id='hs_transform_conversations_dag', start_date=datetime(2020,3,20)
         api_version='auto',
         task_id='hs_transform_conversations',
         image='somenergia-kpis-requirements:latest',
-        command='python3 /repos/somenergia-kpis/datasources/helpscout/hs_get_conversations.py "{{ data_interval_start }}" "{{ data_interval_end }}" \
+        command='python3 /repos/somenergia-kpis/pipelines/hs_transform_conversations.py "{{ data_interval_start }}" "{{ data_interval_end }}" \
                 "{{ var.value.puppis_prod_db}}"',
         docker_url=Variable.get("moll_url"),
         mounts=[mount_nfs],
