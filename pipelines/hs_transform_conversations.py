@@ -2,10 +2,7 @@ from datetime import timedelta
 from sqlalchemy import create_engine, text
 import sys
 import pendulum
-#from ...models import  HS_tag, HS_clean_conversation
 from sqlalchemy.orm import Session
-from sqlalchemy.ext.declarative import declarative_base
-Base = declarative_base()
 
 import sys
 try:
@@ -40,7 +37,7 @@ def move_conversations(engine, inici, fi):
                                                 status=e.data['status'], state=e.data['state'], subject=e.data.get('subject',''), mailboxId=e.data['mailboxId'], createdAt=pendulum.parse(e.data['createdAt']) ,
                                                 closedBy=e.data['closedBy'], closedAt=pendulum.parse(e.data['closedAt']), userUpdatedAt=pendulum.parse(e.data['userUpdatedAt']),
                                                 cc=e.data['cc'], bcc=e.data['bcc'], createdBy_id=e.data['createdBy']['id'], createdBy_email=e.data['createdBy']['email'], closedByUser_email=e.data['closedByUser']['email'],
-                                                customerWaitingSince_time=e.data['customerWaitingSince']['time'], source_type=e.data['source']['type'], source_via=e.data['source']['via'], primaryCustomer_id=e.data['primaryCustomer']['id'],
+                                                customerWaitingSince_time=e.data['customerWaitingSince'].get('time','1970-01-01T00:00:00Z'), source_type=e.data['source']['type'], source_via=e.data['source']['via'], primaryCustomer_id=e.data['primaryCustomer']['id'],
                                                 primaryCustomer_email=e.data['primaryCustomer'].get('email',''), assignee_id=e.data.get('assignee',{'id':0})['id'], assignee_email=e.data.get('assignee',{'email':''})['email'],
                                                 tags=[dict_tags[t['id']] for t in e.data['tags']],
                                                 task_data_interval_start=pendulum.parse(inici), task_data_interval_end=pendulum.parse(fi)) for e in result]

@@ -4,8 +4,6 @@ from sqlalchemy import create_engine
 import sys
 import pendulum
 from sqlalchemy.orm import Session
-from sqlalchemy.ext.declarative import declarative_base
-Base = declarative_base()
 
 import sys
 try:
