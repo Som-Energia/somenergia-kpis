@@ -65,7 +65,7 @@ class HelpscoutTransformTest(unittest.TestCase):
         Base.metadata.create_all(engine)
         self.tag = HS_tag(id=1, name='test_tag')
         self.session.add(self.tag)
-        self.conv = HS_clean_conversation(id=1, number=2, id_helpscout=3, tags=[self.tag])
+        self.conv = HS_clean_conversation(id=1, number=2, id_helpscout=3, customerWaitingSince_time=None, tags=[self.tag])
         self.session.add(self.conv)
 
         self.session.commit()
