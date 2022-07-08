@@ -12,11 +12,27 @@ try:
     # so it can recognize file_a.py while searching
     from models import  HS_tag, HS_clean_conversation
 except (ModuleNotFoundError, ImportError) as e:
-    print("{} faileure".format(type(e)))
+    print(f"{type(e)} failure")
 else:
     print("Import succeeded")
 
+# from classes.models import HS_tag, HS_clean_conversation
 
+
+def hs_clean_conversation_from_dict(data, dict_tags, start, end):
+    # TODO this method could be a model's classmethod
+    tags = [dict_tags[t['id']] for t in data['tags']]
+    customerWaitingSince_time = pendulum.parse(data['customerWaitingSince']['time']) if 'time' in data['customerWaitingSince'] else None
+    return HS_clean_conversation(
+        number=data['number'], id_helpscout=data['id'], threads=data['threads'], type=data['type'], folderId=data['folderId'],
+        status=data['status'], state=data['state'], subject=data.get('subject',''), mailboxId=data['mailboxId'], createdAt=pendulum.parse(data['createdAt']) ,
+        closedBy=data['closedBy'], closedAt=pendulum.parse(data['closedAt']), userUpdatedAt=pendulum.parse(data['userUpdatedAt']),
+        cc=data['cc'], bcc=data['bcc'], createdBy_id=data['createdBy']['id'], createdBy_email=data['createdBy']['email'], closedByUser_email=data['closedByUser']['email'],
+        customerWaitingSince_time=customerWaitingSince_time, source_type=data['source']['type'], source_via=data['source']['via'], primaryCustomer_id=data['primaryCustomer']['id'],
+        primaryCustomer_email=data['primaryCustomer'].get('email',''), assignee_id=data.get('assignee',{'id':0})['id'], assignee_email=data.get('assignee',{'email':''})['email'],
+        tags=tags,
+        task_data_interval_start=pendulum.parse(start), task_data_interval_end=pendulum.parse(end)
+    )
 
 def move_conversations(engine, inici, fi):
 
@@ -33,14 +49,7 @@ def move_conversations(engine, inici, fi):
         with session.begin():
             tags = session.query(HS_tag)
             dict_tags = {t.id: t for t in tags}
-            conversations_insert = [HS_clean_conversation(number=e.data['number'], id_helpscout=e.data['id'], threads=e.data['threads'], type=e.data['type'], folderId=e.data['folderId'],
-                                                status=e.data['status'], state=e.data['state'], subject=e.data.get('subject',''), mailboxId=e.data['mailboxId'], createdAt=pendulum.parse(e.data['createdAt']) ,
-                                                closedBy=e.data['closedBy'], closedAt=pendulum.parse(e.data['closedAt']), userUpdatedAt=pendulum.parse(e.data['userUpdatedAt']),
-                                                cc=e.data['cc'], bcc=e.data['bcc'], createdBy_id=e.data['createdBy']['id'], createdBy_email=e.data['createdBy']['email'], closedByUser_email=e.data['closedByUser']['email'],
-                                                customerWaitingSince_time=e.data['customerWaitingSince'].get('time', None), source_type=e.data['source']['type'], source_via=e.data['source']['via'], primaryCustomer_id=e.data['primaryCustomer']['id'],
-                                                primaryCustomer_email=e.data['primaryCustomer'].get('email',''), assignee_id=e.data.get('assignee',{'id':0})['id'], assignee_email=e.data.get('assignee',{'email':''})['email'],
-                                                tags=[dict_tags[t['id']] for t in e.data['tags']],
-                                                task_data_interval_start=pendulum.parse(inici), task_data_interval_end=pendulum.parse(fi)) for e in result]
+            conversations_insert = [hs_clean_conversation_from_dict(e.data, dict_tags, inici, fi) for e in result]
             session.add_all(conversations_insert)
 
     return True
