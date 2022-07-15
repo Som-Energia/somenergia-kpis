@@ -12,29 +12,13 @@ import pendulum
 
 from .hs_transform_conversations import hs_clean_conversation_from_dict
 
-import sys
-try:
-    # The insertion index should be 1 because index 0 is this file
-    sys.path.insert(1, './classes')  # the type of path is string #perque sempre
-    # because the system path already have the absolute path to folder a
-    # so it can recognize file_a.py while searching
-    from models import (
-        Base,
-        HS_clean_conversation,
-        HS_tag,
-        Conversation_tag
-    )
-except (ModuleNotFoundError, ImportError) as e:
-    print(f"{type(e)} failure")
-else:
-    print("Import succeeded")
 
-# from classes.models import (
-#     Base,
-#     HS_clean_conversation,
-#     HS_tag,
-#     Conversation_tag
-# )
+from classes.models import (
+    Base,
+    HS_clean_conversation,
+    HS_tag,
+    Conversation_tag
+)
 
 
 class HelpscoutTransformTest(unittest.TestCase):

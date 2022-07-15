@@ -4,19 +4,7 @@ import sys
 import pendulum
 from sqlalchemy.orm import Session
 
-import sys
-try:
-    # The insertion index should be 1 because index 0 is this file
-    sys.path.insert(1, '/repos/somenergia-kpis/classes')  # the type of path is string #perque sempre
-    # because the system path already have the absolute path to folder a
-    # so it can recognize file_a.py while searching
-    from models import  HS_tag, HS_clean_conversation
-except (ModuleNotFoundError, ImportError) as e:
-    print(f"{type(e)} failure")
-else:
-    print("Import succeeded")
-
-# from classes.models import HS_tag, HS_clean_conversation
+from classes.models import HS_tag, HS_clean_conversation
 
 
 def hs_clean_conversation_from_dict(data, dict_tags, start, end):
