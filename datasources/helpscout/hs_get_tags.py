@@ -4,22 +4,8 @@ from sqlalchemy import create_engine
 import sys
 import pendulum
 from sqlalchemy.orm import Session
-from sqlalchemy.ext.declarative import declarative_base
-Base = declarative_base()
 
-import sys
-try:
-    # The insertion index should be 1 because index 0 is this file
-    sys.path.insert(1, '/repos/somenergia-kpis/classes')  # the type of path is string
-    # because the system path already have the absolute path to folder a
-    # so it can recognize file_a.py while searching
-    from models import  HS_tag
-except (ModuleNotFoundError, ImportError) as e:
-    print("{} faileure".format(type(e)))
-else:
-    print("Import succeeded")
-
-#from dbconfig import helpscout_api, local_db
+from classes.models import HS_tag
 
 def create_HS_engine(engine, hs_app_id, hs_app_secret):
     hs = HelpScout(app_id=hs_app_id, app_secret=hs_app_secret, sleep_on_rate_limit_exceeded=True)
