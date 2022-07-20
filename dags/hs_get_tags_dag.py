@@ -41,7 +41,8 @@ with DAG(dag_id='hs_get_tags_dag', start_date=datetime(2022,6, 15), schedule_int
         api_version='auto',
         task_id='hs_get_tags',
         image='somenergia-kpis-requirements:latest',
-        command='python3 /repos/somenergia-kpis/datasources/helpscout/hs_get_tags.py "{{ data_interval_start }}" "{{ data_interval_end }}" \
+        working_dir='/repos/somenergia-kpis',
+        command='python3 python3 -m datasources.helpscout.hs_get_tags "{{ data_interval_start }}" "{{ data_interval_end }}" \
                 "{{ var.value.puppis_prod_db}}" "{{ var.value.helpscout_api_id}}" "{{ var.value.helpscout_api_secret}}"',
         docker_url=Variable.get("moll_url"),
         mounts=[mount_nfs],

@@ -42,7 +42,7 @@ with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2020,3,20), sche
         task_id='hs_get_conversations',
         image='somenergia-kpis-requirements:latest',
         working_dir='/repos/somenergia-kpis',
-        command='python3 -m datasources.helpscout.hs_get_tags "{{ data_interval_start }}" "{{ data_interval_end }}" \
+        command='python3 -m datasources.helpscout.hs_get_conversations "{{ data_interval_start }}" "{{ data_interval_end }}" \
                 "{{ var.value.puppis_prod_db }}" "{{ var.value.helpscout_api_id }}" "{{ var.value.helpscout_api_secret }}"',
         docker_url=Variable.get("moll_url"),
         mounts=[mount_nfs],
