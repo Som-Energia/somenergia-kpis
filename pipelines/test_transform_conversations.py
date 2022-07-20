@@ -31,7 +31,7 @@ class HelpscoutTransformTest(unittest.TestCase):
         Base.metadata.create_all(self.engine)
         self.tag = HS_tag(id=1, name='test_tag')
         self.session.add(self.tag)
-        self.conv = HS_clean_conversation(id=1, number=2, id_helpscout=3, customerWaitingSince_time=None, tags=[self.tag])
+        self.conv = HS_clean_conversation(id=1, number=2, id_helpscout=3, customer_waiting_since_time=None, tags=[self.tag])
         self.session.add(self.conv)
 
         self.session.commit()
@@ -119,6 +119,38 @@ class HelpscoutTransformTest(unittest.TestCase):
             'task_data_interval_end': sample_time
         }
 
+    def base_hs_conv_transformed(self):
+        sample_time = '1970-01-01T00:00:00+00:00'
+        return {
+            'number': 1000,
+            'id_helpscout': 1000,
+            'threads': 1000,
+            'type': 'lolo',
+            'folder_id': 1000,
+            'status': 'blabla',
+            'state': 'blabla',
+            'subject': 'blabla',
+            'mailbox_id': 1,
+            'created_at': sample_time,
+            'closed_by': 'blabla',
+            'closed_at': sample_time,
+            'user_updated_at': sample_time,
+            'cc': '',
+            'bcc': '',
+            'created_by_id': 1000,
+            'created_by_email': 'blabla@example.com',
+            'closed_by_user_email': 'blabla@example.com',
+            'customer_waiting_since_time': sample_time,
+            'source_type': 'blabla',
+            'source_via': 'blabla',
+            'primary_customer_id': 1000,
+            'primary_customer_email': 'blabla@example.com',
+            'assignee_id': 1000,
+            'assignee_email': '',
+            'task_data_interval_start': sample_time,
+            'task_data_interval_end': sample_time
+        }
+
     def object_to_dict(self, obj):
         return {
             c.name: getattr(obj, c.name).isoformat()
@@ -160,7 +192,7 @@ class HelpscoutTransformTest(unittest.TestCase):
         end = '2022-01-01'
         hsconv = hs_clean_conversation_from_dict(data, dict_tags, start, end)
 
-        expected = self.base_hs_conv()
+        expected = self.base_hs_conv_transformed()
         expected['task_data_interval_start'] = pendulum.parse(start).isoformat()
         expected['task_data_interval_end'] = pendulum.parse(end).isoformat()
         expected['id'] = None
@@ -174,9 +206,9 @@ class HelpscoutTransformTest(unittest.TestCase):
         end = '2022-01-01'
         hsconv = hs_clean_conversation_from_dict(data, dict_tags, start, end)
 
-        expected = self.base_hs_conv()
+        expected = self.base_hs_conv_transformed()
         expected['task_data_interval_start'] = pendulum.parse(start).isoformat()
         expected['task_data_interval_end'] = pendulum.parse(end).isoformat()
         expected['id'] = None
-        expected['customerWaitingSince_time'] = None
+        expected['customer_waiting_since_time'] = None
         self.assertDictEqual(self.object_to_dict(hsconv), expected)

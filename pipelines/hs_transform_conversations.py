@@ -12,12 +12,12 @@ def hs_clean_conversation_from_dict(data, dict_tags, start, end):
     tags = [dict_tags[t['id']] for t in data['tags']]
     customerWaitingSince_time = pendulum.parse(data['customerWaitingSince']['time']) if 'time' in data['customerWaitingSince'] else None
     return HS_clean_conversation(
-        number=data['number'], id_helpscout=data['id'], threads=data['threads'], type=data['type'], folderId=data['folderId'],
-        status=data['status'], state=data['state'], subject=data.get('subject',''), mailboxId=data['mailboxId'], createdAt=pendulum.parse(data['createdAt']) ,
-        closedBy=data['closedBy'], closedAt=pendulum.parse(data['closedAt']), userUpdatedAt=pendulum.parse(data['userUpdatedAt']),
-        cc=data['cc'], bcc=data['bcc'], createdBy_id=data['createdBy']['id'], createdBy_email=data['createdBy']['email'], closedByUser_email=data['closedByUser']['email'],
-        customerWaitingSince_time=customerWaitingSince_time, source_type=data['source']['type'], source_via=data['source']['via'], primaryCustomer_id=data['primaryCustomer']['id'],
-        primaryCustomer_email=data['primaryCustomer'].get('email',''), assignee_id=data.get('assignee',{'id':0})['id'], assignee_email=data.get('assignee',{'email':''})['email'],
+        number=data['number'], id_helpscout=data['id'], threads=data['threads'], type=data['type'], folder_id=data['folderId'],
+        status=data['status'], state=data['state'], subject=data.get('subject',''), mailbox_id=data['mailboxId'], created_at=pendulum.parse(data['createdAt']) ,
+        closed_by=data['closedBy'], closed_at=pendulum.parse(data['closedAt']), user_updated_at=pendulum.parse(data['userUpdatedAt']),
+        cc=data['cc'], bcc=data['bcc'], created_by_id=data['createdBy']['id'], created_by_email=data['createdBy']['email'], closed_by_user_email=data['closedByUser']['email'],
+        customer_waiting_since_time=customerWaitingSince_time, source_type=data['source']['type'], source_via=data['source']['via'], primary_customer_id=data['primaryCustomer']['id'],
+        primary_customer_email=data['primaryCustomer'].get('email',''), assignee_id=data.get('assignee',{'id':0})['id'], assignee_email=data.get('assignee',{'email':''})['email'],
         tags=tags,
         task_data_interval_start=pendulum.parse(start), task_data_interval_end=pendulum.parse(end)
     )
