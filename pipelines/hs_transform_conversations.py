@@ -8,7 +8,6 @@ from classes.models import HS_tag, HS_clean_conversation
 
 
 def hs_clean_conversation_from_dict(data, dict_tags, start, end):
-    # TODO this method could be a model's classmethod
     tags = [dict_tags[t['id']] for t in data['tags']]
     customerWaitingSince_time = pendulum.parse(data['customerWaitingSince']['time']) if 'time' in data['customerWaitingSince'] else None
     return HS_clean_conversation(
