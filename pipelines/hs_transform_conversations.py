@@ -5,7 +5,7 @@ import pendulum
 from sqlalchemy.orm import Session
 
 from classes.models import HS_tag, HS_clean_conversation
-
+from langdetect import detect
 
 def hs_clean_conversation_from_dict(data, dict_tags, start, end):
     tags = [dict_tags[t['id']] for t in data['tags']]
@@ -17,6 +17,7 @@ def hs_clean_conversation_from_dict(data, dict_tags, start, end):
         cc=data['cc'], bcc=data['bcc'], created_by_id=data['createdBy']['id'], created_by_email=data['createdBy']['email'], closed_by_user_email=data['closedByUser']['email'],
         customer_waiting_since_time=customerWaitingSince_time, source_type=data['source']['type'], source_via=data['source']['via'], primary_customer_id=data['primaryCustomer']['id'],
         primary_customer_email=data['primaryCustomer'].get('email',''), assignee_id=data.get('assignee',{'id':0})['id'], assignee_email=data.get('assignee',{'email':''})['email'],
+        lang = detect(data['preview']),
         tags=tags,
         task_data_interval_start=pendulum.parse(start), task_data_interval_end=pendulum.parse(end)
     )

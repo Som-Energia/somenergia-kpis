@@ -50,6 +50,7 @@ class HelpscoutTransformTest(unittest.TestCase):
             'status': 'blabla',
             'state': 'blabla',
             'subject': 'blabla',
+            'preview' : 'Això és català',
             'mailboxId': 1,
             'createdAt': sample_time,
             'closedBy': 'blabla',
@@ -98,6 +99,7 @@ class HelpscoutTransformTest(unittest.TestCase):
             'status': 'blabla',
             'state': 'blabla',
             'subject': 'blabla',
+            'preview': 'Això és català',
             'mailboxId': 1,
             'createdAt': sample_time,
             'closedBy': 'blabla',
@@ -147,6 +149,7 @@ class HelpscoutTransformTest(unittest.TestCase):
             'primary_customer_email': 'blabla@example.com',
             'assignee_id': 1000,
             'assignee_email': '',
+            'lang':'',
             'task_data_interval_start': sample_time,
             'task_data_interval_end': sample_time
         }
@@ -196,6 +199,7 @@ class HelpscoutTransformTest(unittest.TestCase):
         expected['task_data_interval_start'] = pendulum.parse(start).isoformat()
         expected['task_data_interval_end'] = pendulum.parse(end).isoformat()
         expected['id'] = None
+        expected['lang'] = 'ca'
         self.assertDictEqual(self.object_to_dict(hsconv), expected)
 
     def test__hs_clean_conversation_from_dict__customerWaitingSince_NoneTime(self):
@@ -211,4 +215,5 @@ class HelpscoutTransformTest(unittest.TestCase):
         expected['task_data_interval_end'] = pendulum.parse(end).isoformat()
         expected['id'] = None
         expected['customer_waiting_since_time'] = None
+        expected['lang'] = 'ca'
         self.assertDictEqual(self.object_to_dict(hsconv), expected)

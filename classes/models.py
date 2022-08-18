@@ -31,6 +31,7 @@ class HS_clean_conversation(Base):
     primary_customer_email = Column(String)
     assignee_id = Column(Integer)
     assignee_email = Column(String)
+    lang = Column(String)
     task_data_interval_start = Column(DateTime, index=True)
     task_data_interval_end = Column(DateTime, index=True)
     tags = relationship('HS_tag', secondary='hs_conversation_tag')
