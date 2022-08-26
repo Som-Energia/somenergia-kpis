@@ -81,8 +81,5 @@ if __name__ == '__main__':
     )
 
     erp_client = Client(**erppeek) # fix this, is not unique paramater
-    
+
     update_kpis(dbapi, erp_client, freq)
-
-    # python datasources/erppeek/filtered_models_single_kpis.py 'postgresql://luciagd:sql2022@localhost:5432/sandbox' 'daily' 'http://terp01.somenergia.lan:18069' 'somenergia' 'Oriol' 'shah9Nu+'
-
