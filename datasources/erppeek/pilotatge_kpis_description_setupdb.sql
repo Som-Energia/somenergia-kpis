@@ -31,11 +31,6 @@ CREATE TABLE IF NOT EXISTS pilotatge_float_kpis (
             REFERENCES pilotatge_kpis_description(id)
 );
 
-INSERT INTO pilotatge_kpis_description(
-	id, name, description, filter, erp_model, context, field, function, freq, type_value, teams, create_date)
-	VALUES
-        (15, 'Indic Procés - Pòlisses amb incidència (7 dies o més)', 'Polisses en lot de facturació actiu, que tenen "state" = "facturat_incident i que la data demissió de la factura (data factura) es dels últims 7 dies', '[("state", "=", "facturat_incident"),("date_invoice","<","__7_days_ago__")]', 'giscedata.facturacio.contracte_lot', '{"active_test": False}', '', 'count', 'daily', 'int', 'Factura', NOW())
-;
 
 INSERT INTO pilotatge_kpis_description(
 	id, name, description, filter, erp_model, context, field, function, freq, type_value, teams, create_date)
@@ -53,28 +48,9 @@ INSERT INTO pilotatge_kpis_description(
         (11, 'Fraccionament: Import_b', 'Import de les factures que estan en estat pendent "fracció"', '[("type", "=", "out_invoice"), ("invoice_id.pending_state.weight", ">", 0), ("pending_state", "ilike", "%fraccio")]', 'giscedata.facturacio.factura', '{"type":"out_invoice"}', 'residual', 'sum', 'daily', 'int', 'Cobraments', NOW()),
         (12, 'Fraccionament: Número de factures_b', 'Num de factures que estan en pobresa energètica amb data venciment avui', '[("type", "=", "out_invoice"), ("invoice_id.pending_state.weight", ">", 0), ("pending_state", "ilike", "%fraccio")]', 'giscedata.facturacio.factura', '{"type":"out_invoice"}', '', 'count', 'daily', 'int', 'Cobraments', NOW()),
         (13, 'Indic Procés - Total F1s amb error', 'F1s amb error dimportació', '[("state", "=", "erroni")]', 'giscedata.facturacio.importacio.linia', '{}', '', 'count', 'daily', 'int', 'Factura', NOW()),
-        (14, 'Indic Procés - Total pòlisses amb incidència', 'Polisses en lot de facturació actiu, que tenen "state" = "facturat_incident', '[("state", "=", "facturat_incident")]', 'giscedata.facturacio.contracte_lot', '{"active_test": False}', '', 'count', 'daily', 'int', 'Factura', NOW())
+        (14, 'Indic Procés - Total pòlisses amb incidència', 'Polisses en lot de facturació actiu, que tenen "state" = "facturat_incident', '[("state", "=", "facturat_incident")]', 'giscedata.facturacio.contracte_lot', '{"active_test": False}', '', 'count', 'daily', 'int', 'Factura', NOW()),
+        (15, 'Indic Procés - Pòlisses amb incidència (7 dies o més)', 'Polisses en lot de facturació actiu, que tenen "state" = "facturat_incident i que la data demissió de la factura (data factura) es dels últims 7 dies', '[("state", "=", "facturat_incident"),("date_invoice","<","__7_days_ago__")]', 'giscedata.facturacio.contracte_lot', '{"active_test": False}', '', 'count', 'daily', 'int', 'Factura', NOW()),
+        (16, 'Indic Procés - Factures emeses (dia anterior)', 'Factures emeses el dia anterior a avui (ahir)', '[("type", "in", ["out_invoice", "out_refund"]),("date_invoice","=","__yesterday__"),("state","!=","draft")]', 'giscedata.facturacio.factura', '{"type":"out_invoice"}', '', 'count', 'daily', 'int', 'Factura', NOW()),
+        (17, 'Indic Procés - Import facturat (dia anterior)*', 'Importo total de les factures emeses el dia anterior a avui (ahir)', '[("type", "in", ["out_invoice", "out_refund"]),("date_invoice","=","__yesterday__"),("state","!=","draft")]', 'giscedata.facturacio.factura', '{"type":"out_invoice"}', 'amount_total', 'sum', 'daily', 'int', 'Factura', NOW()),
+        (18, 'Indic CACs - Total CACs oberts/pendents', 'Total CACs oberts/pendents', '[("type", "in", ["out_invoice", "out_refund"]),("date_invoice","=","__yesterday__"),("state","!=","draft")]', 'giscedata.facturacio.factura', '{"type":"out_invoice"}', 'amount_total', 'sum', 'daily', 'int', 'Factura', NOW())
 ;
-
-
-
--- A Factures Client amb deute (giscedata.facturacio.factura)
-    -- 'Pendent' = 'signed_residual' o 'residual'
-    -- 'Total' = 'amount_total' o 'signed_amount_total' o 'saldo'
-
-
-TRUNCATE TABLE pilotatge_int_kpis, pilotatge_float_kpis, pilotatge_kpis_description;
-
--- Taula de KPIs Pilotatge
-SELECT pkd.id, pkd.name, pkd.description, pfk.value, pfk.create_date
-FROM pilotatge_kpis_description as pkd
-LEFT JOIN pilotatge_float_kpis as pfk
-ON pkd.id = pfk.kpi_id
-where type_value = 'float'
-UNION
-SELECT pkd.id, pkd.name, pkd.description, pik.value, pik.create_date
-FROM pilotatge_kpis_description as pkd
-LEFT JOIN pilotatge_int_kpis as pik
-ON pkd.id = pik.kpi_id
-where type_value = 'int'
-order by id
