@@ -31,11 +31,9 @@ def filter_string_to_list(filter):
 
 def calculate_kpi(erp_client, kpi):
     obj = erp_client.model(kpi['erp_model'])
-    import ipdb; ipdb.set_trace()
     filter = filter_string_to_list(kpi['filter'])
     cxt = ast.literal_eval(kpi['context'])
     filtered = obj.search(filter, context = cxt)
-
 
     if kpi['function'] == 'sum':
         raw_values = obj.read(filtered, kpi['field'])

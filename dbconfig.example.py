@@ -28,3 +28,35 @@ test_directories = {
     'OMIE_HISTORICAL_PDBC': 'testdata/PDBC',
     'OMIE_TEMP_PDBC': 'testdata/TEMP/PDBC'
 }
+
+TARGET = 'prod'
+if TARGET == 'test':
+    # Testing
+    ooop = dict(
+       dbname = 'somedb',
+       port = 18000,
+       user = 'chaplin',
+       uri = 'http://lerp.somenergia.lan',
+       pwd =  'werenotmachines',
+    )
+
+if TARGET == 'prod':
+    # Productiu
+    ooop = dict(
+       dbname = 'somedb',
+       port = 19000,
+       user = 'groucho',
+       uri = 'https://brothers.somenergia.coop',
+       pwd =  'laprimeraparte',
+    )
+
+erppeek = dict(
+   server='{uri}:{port}'.format(**ooop),
+   db=ooop['dbname'],
+   user=ooop['user'],
+   password=ooop['pwd'],
+)
+
+puppis_test_db = dict(
+    dbapi = 'postgresql://groucho:delasegundaparte@camarot.somenergia.coop:5432/somedb'
+)
