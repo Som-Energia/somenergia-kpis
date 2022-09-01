@@ -55,5 +55,4 @@ INSERT INTO pilotatge_kpis_description(
         (18, 'Indic CACs - Total CACs oberts/pendents_a', 'Total CACs oberts o pendents', '[("section_id","ilike","%factura"),("state","in",["pending","open"])]', 'giscedata.atc', '{}', '', 'count', 'daily', 'int', 'Factura', NOW()),
         (19, 'Rebuts retornats: número', 'Número de rebut retornats ahir', '[("account_id.name","=","DIARI DEVOLUCIONS REBUTS"),("ref","ilike","FE%"),("date","=","__yesterday__")]', 'account.move.line', '{}', '', 'count', 'daily', 'int', 'Cobrament', NOW()),
         (20, 'Rebuts retornats: import', 'Import dels rebuts retornats ahir', '[("account_id.name","=","DIARI DEVOLUCIONS REBUTS"),("ref","ilike","FE%"),("date","=","__yesterday__")]', 'account.move.line', '{}', 'amount_to_pay', 'sum', 'daily', 'float', 'Cobrament', NOW())
-
 ;
