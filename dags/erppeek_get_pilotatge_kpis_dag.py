@@ -43,7 +43,7 @@ with DAG(dag_id='erppeek_get_pilotatge_kpis_daily_dag', start_date=datetime(2020
         image='somenergia-kpis-requirements:latest',
         working_dir='/repos/somenergia-kpis',
         command='python3 /repos/somenergia-kpis/datasources/erppeek/filtered_models_single_kpis.py "{{ var.value.puppis_prod_db }}" "daily" \
-                "{{ var.value.erp_server_prod_ro }}" "{{ var.value.erp_database }}" "{{ var.value.erp_user_airflow }}" "{{ var.value.erp_pass_airflow }}"',
+                "{{ var.value.erp_server_prod_ro }}" "{{ var.value.erp_database }}" "{{ var.value.erp_user_airflow }}" "{{ var.value.erp_pass_airflow_secret }}"',
         docker_url=Variable.get("moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
