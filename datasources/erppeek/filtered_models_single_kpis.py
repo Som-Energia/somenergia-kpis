@@ -51,7 +51,8 @@ def get_kpis(erp_client, kpis_todo):
         kpis_values.append(calculate_kpi(erp_client, kpi))
 
     df = pd.DataFrame.from_records(kpis_values, columns =['kpi_id', 'value', 'type_value'])
-    df['create_date'] = pd.Timestamp.now().tz_localize(tz='Europe/Madrid')
+    df['create_date'] = datetime.datetime.utcnow()
+    df['create_date'] = df['create_date'].dt.tz_localize(tz='UTC')
 
     return df
 
