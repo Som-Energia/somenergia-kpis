@@ -29,21 +29,21 @@ nfs_config = {
 driver_config = DriverConfig(name='local', options=nfs_config)
 mount_nfs = Mount(source="local", target="/repos", type="volume", driver_config=driver_config)
 
-with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2020,3,20), schedule_interval='@hourly', catchup=True, tags=["Helpscout", "Extract"], default_args=args) as dag:
+with DAG(dag_id='hs_get_tags_dag', start_date=datetime(2022,6, 15), schedule_interval='@hourly', catchup=True, tags=["Helpscout", "Extract"], default_args=args) as dag:
 
-    task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='hs_get_conversations')
+    task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='hs_get_tags')
     task_git_clone = build_git_clone_ssh_task(dag=dag)
     task_check_repo = build_check_repo_task(dag=dag)
     task_image_build = build_image_build_task(dag=dag)
     task_remove_image= build_remove_image_task(dag=dag)
 
-    get_conversations_task = DockerOperator(
+    get_tags_task = DockerOperator(
         api_version='auto',
-        task_id='hs_get_conversations',
+        task_id='hs_get_tags',
         image='somenergia-kpis-requirements:latest',
         working_dir='/repos/somenergia-kpis',
-        command='python3 -m datasources.helpscout.hs_get_conversations "{{ data_interval_start }}" "{{ data_interval_end }}" \
-                "{{ var.value.puppis_prod_db }}" "{{ var.value.helpscout_api_id }}" "{{ var.value.helpscout_api_secret }}"',
+        command='python3 -m datasources.helpscout.hs_get_tags "{{ data_interval_start }}" "{{ data_interval_end }}" \
+                "{{ var.value.puppis_prod_db}}" "{{ var.value.helpscout_api_id}}" "{{ var.value.helpscout_api_secret}}"',
         docker_url=Variable.get("moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
@@ -55,6 +55,6 @@ with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2020,3,20), sche
     task_check_repo >> task_git_clone
     task_check_repo >> task_branch_pull_ssh
     task_git_clone >> task_image_build
-    task_branch_pull_ssh >> get_conversations_task
+    task_branch_pull_ssh >> get_tags_task
     task_branch_pull_ssh >> task_remove_image
-    task_remove_image >> task_image_build >> get_conversations_task
+    task_remove_image >> task_image_build >> get_tags_task
