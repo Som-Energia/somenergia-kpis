@@ -1,0 +1,34 @@
+dbt_kpis:
+  outputs:
+
+    dev:
+      type: postgres
+      threads: [1 or more]
+      host: [host]
+      port: [port]
+      user: [dev_username]
+      pass: [dev_password]
+      dbname: [dbname]
+      schema: [dev_schema]
+
+    testing:
+      type: postgres
+      threads: 1
+      host: puppis.somenergia.lan
+      port: 5432
+      user: someone
+      pass: something
+      dbname: sandbox
+      schema: dbt_username
+
+    prod:
+      type: postgres
+      threads: [1 or more]
+      host: [host]
+      port: [port]
+      user: [prod_username]
+      pass: [prod_password]
+      dbname: [dbname]
+      schema: [prod_schema]
+
+  target: dev

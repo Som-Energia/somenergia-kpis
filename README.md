@@ -1,6 +1,6 @@
 # somenergia-indicadors-KPIs
 
-## Context 
+## Context
 
 Currently it is necessary to centralize data from different sources to consult with a data visualization application, also to have them in a standardized format.
 
@@ -31,16 +31,30 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public
 GRANT SELECT ON TABLES TO username;
 ```
 
+### dbt
+
+```
+$ pip install dbt-postgres
+$ dbt init
+```
+Edit the ~/.dbt/profiles.yml with your connection details. You can use dbt_profile.exemple.yml as an example.
+Set the schema to your user as `dbt_<name>`
+
 ## run
 
 `python main.py --help` or `python main.py --list-functions`
 
-## test
+### dbt
 
+`$ dbt run --target testing --project-dir dbt_kpis`
+
+## test
 
 Testing will require installing `b2btest` which in turn requires `lxml` to be installed manually via pip
 
 Create an empty testing database and configure it in dbconfig.py at the `test_db` entry.
+
+`$ dbt test --target testing --project-dir dbt_kpis`
 
 
 
