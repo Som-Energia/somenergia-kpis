@@ -1,21 +1,21 @@
 
 version: 2
 
-models:
-  - name: my_first_dbt_model
-    description: "A starter dbt model"
-    columns:
-      - name: id
-        description: "The primary key for this table"
-        tests:
-          - unique
-          - not_null
+sources:
+  - name: public
+    tables:
+      - name: pilotatge_kpis_description
+      - name: pilotatge_int_kpis
+      - name: pilotatge_float_kpis
 
-  - name: my_second_dbt_model
-    description: "A starter dbt model"
+
+models:
+
+  - name: pilotatge_numeric_kpis_model
+    description: "Cleaned pilotatge numeric KPIs for the people"
+    enabled: false
     columns:
-      - name: id
-        description: "The primary key for this table"
+      - name: value
+        description: "The value of KPI"
         tests:
-          - unique
           - not_null
