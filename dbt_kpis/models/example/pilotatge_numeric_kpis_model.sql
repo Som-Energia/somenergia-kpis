@@ -27,9 +27,7 @@ kpisvaluesrecoded as (
 		END as clean_name
 	from kpisvalues
 )
-select clean_name, sum(value), string_agg(description, ' , '), create_date
+select clean_name as name, sum(value) as value, string_agg(description, ' , ') as description, create_date
 from kpisvaluesrecoded
 group by clean_name, create_date
 
-
--- where id is not null
