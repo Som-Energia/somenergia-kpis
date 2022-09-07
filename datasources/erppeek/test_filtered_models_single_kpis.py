@@ -38,7 +38,7 @@ class FilteredModelsERPTest(unittest.TestCase):
         #    con.execute(query)
         pass
 
-    def _test__update_kpis(self):
+    def test__update_kpis(self):
 
         result = update_kpis(self.puppis_test, self.erp_client, self.freq)
 
@@ -55,10 +55,13 @@ class FilteredModelsERPToDieTest(unittest.TestCase):
 
         self.engine = create_engine(self.puppis_test, echo=True)
 
-    def _test__clean_kpis_db(self):
+    def test__clean_kpis_db(self):
 
         query = 'TRUNCATE TABLE pilotatge_int_kpis, pilotatge_float_kpis, pilotatge_kpis_description;'
         with self.engine.connect() as con:
             con.execute(query)
+
+
+
 
 

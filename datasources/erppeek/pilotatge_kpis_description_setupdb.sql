@@ -53,6 +53,9 @@ INSERT INTO pilotatge_kpis_description(
         (16, 'Indic Procés - Factures emeses (dia anterior)', 'Factures emeses el dia anterior a avui (ahir)', '[("type", "in", ["out_invoice", "out_refund"]),("date_invoice","=","__yesterday__"),("state","!=","draft")]', 'giscedata.facturacio.factura', '{"type":"out_invoice"}', '', 'count', 'daily', 'int', 'Factura', NOW()),
         (17, 'Indic Procés - Import facturat (dia anterior)*', 'Importo total de les factures emeses el dia anterior a avui (ahir)', '[("type", "in", ["out_invoice", "out_refund"]),("date_invoice","=","__yesterday__"),("state","!=","draft")]', 'giscedata.facturacio.factura', '{"type":"out_invoice"}', 'amount_total', 'sum', 'daily', 'int', 'Factura', NOW()),
         (18, 'Indic CACs - Total CACs oberts/pendents', 'Total CACs oberts o pendents', '[("section_id","ilike","%factura"),("state","in",["pending","open"])]', 'giscedata.atc', '{}', '', 'count', 'daily', 'int', 'Factura', NOW()),
-        (19, 'Rebuts retornats: número', 'Número de rebut retornats ahir', '[("account_id.name","=","DIARI DEVOLUCIONS REBUTS"),("ref","ilike","FE%"),("date","=","__yesterday__")]', 'account.move.line', '{}', '', 'count', 'daily', 'int', 'Cobrament', NOW()),
-        (20, 'Rebuts retornats: import', 'Import dels rebuts retornats ahir', '[("account_id.name","=","DIARI DEVOLUCIONS REBUTS"),("ref","ilike","FE%"),("date","=","__yesterday__")]', 'account.move.line', '{}', 'amount_to_pay', 'sum', 'daily', 'float', 'Cobrament', NOW())
+        (19, 'Rebuts retornats: número', 'Número de rebut retornats ahir', '["&", ("account_id.name","=","DIARI DEVOLUCIONS REBUTS"), "&", ("date","=","__yesterday__"), "|", ("ref","ilike","FE%"), "|", ("ref","ilike","RE%"), ("ref","ilike","AB%")]', 'account.move.line', '{}', '', 'count', 'daily', 'int', 'Cobrament', NOW()),
+        (20, 'Rebuts retornats: import', 'Import dels rebuts retornats ahir', '["&", ("account_id.name","=","DIARI DEVOLUCIONS REBUTS"), "&", ("date","=","__yesterday__"), "|", ("ref","ilike","FE%"), "|", ("ref","ilike","RE%"), ("ref","ilike","AB%")]', 'account.move.line', '{}', 'amount_to_pay', 'sum', 'daily', 'float', 'Cobrament', NOW())
 ;
+
+
+

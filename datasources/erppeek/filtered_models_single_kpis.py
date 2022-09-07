@@ -42,7 +42,7 @@ def calculate_kpi(erp_client, kpi):
         value = len(filtered)
     else:
         raise ValueError(f"kpi: {kpi['name']} id: {kpi['id']} Unknown function {kpi['function']}")
-    print(f"Kpi calculated: {kpi['name']}")
+    print(f"Kpi calculated: {kpi['id']}: {kpi['name']}")
     return kpi['id'], value, kpi['type_value']
 
 def get_kpis(erp_client, kpis_todo):
