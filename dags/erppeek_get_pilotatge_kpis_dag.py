@@ -29,7 +29,7 @@ nfs_config = {
 driver_config = DriverConfig(name='local', options=nfs_config)
 mount_nfs = Mount(source="local", target="/repos", type="volume", driver_config=driver_config)
 
-with DAG(dag_id='erppeek_get_pilotatge_kpis_daily_dag', start_date=datetime(2020,9,1), schedule_interval='0 3 * * *', catchup=True, tags=["ERPPeek", "Extract"], default_args=args) as dag:
+with DAG(dag_id='erppeek_get_pilotatge_kpis_daily_dag', start_date=datetime(2022,9,1), schedule_interval='0 3 * * *', catchup=True, tags=["ERPPeek", "Extract"], default_args=args) as dag:
 
     task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='erppeek_get_pilotatge_kpis_daily')
     task_git_clone = build_git_clone_ssh_task(dag=dag)
