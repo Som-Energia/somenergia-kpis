@@ -8,7 +8,6 @@ sources:
       - name: pilotatge_int_kpis
       - name: pilotatge_float_kpis
 
-
 models:
 
   - name: pilotatge_numeric_kpis_model

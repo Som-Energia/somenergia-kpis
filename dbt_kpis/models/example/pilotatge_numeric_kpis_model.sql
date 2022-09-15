@@ -18,7 +18,7 @@ with kpisvalues as (
 ),
 kpisvaluesrecoded as (
 
-	select 
+	select
 		*,
 		CASE
 			WHEN name IN ('Saldo pendent_a', 'Saldo pendent_b') THEN 'Saldo pendent'
