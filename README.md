@@ -2,9 +2,19 @@
 
 ## Context
 
-Currently it is necessary to centralize data from different sources to consult with a data visualization application, also to have them in a standardized format.
+This repository aims to establish a data-driven pipeline for coooperatives of the Solidarity Economy Network of Catalonia (Xarxa d’Economia Solidària de Catalunya - XES)
 
-This tool is used to obtain data from different data sources, store it in a raw format and then load the data for transformation.
+### Data pipeline and warehouse schema
+
+The general schema proposal to date
+
+![Data Warehouse](docs/data_architecture.png)
+
+### Extractors and Loaders (EL)
+
+Currently it is necessary to centralize data from different sources to consult with a data visualization application, also to have them in a standardized format. Some of the sources are non-standard and particular to the energy sector.
+
+The extractor part of is tool is used to obtain data from different data sources, store it in a raw format and then load the data for transformation.
 
 There are two modules, the datasources and the pipeline:
 
