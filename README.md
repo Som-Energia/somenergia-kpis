@@ -31,7 +31,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public
 GRANT SELECT ON TABLES TO username;
 ```
 
-### dbt
+### transformations using dbt
 
 ```
 $ pip install dbt-postgres
