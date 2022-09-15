@@ -1,11 +1,6 @@
 
 version: 2
 
-sources:
-  - name: datalake_erp
-    tables:
-      - name: somenergia_soci
-
 models:
 
   - name: widetable_socies
