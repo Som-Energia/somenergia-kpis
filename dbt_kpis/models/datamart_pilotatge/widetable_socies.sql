@@ -1,11 +1,9 @@
-{{ config(materialized='table') }}
+{{ config(materialized='view') }}
 
-with somenergia_soci as (
+SELECT
+    es_baixa,
+    data_baixa,
+    data_alta
+FROM {{ref('erp_somenergia_soci')}}
 
-    SELECT es_baixa, data_baixa
-    FROM {{ref('erp_somenergia_soci')}}
-
-)
-select *
-from somenergia_soci
 

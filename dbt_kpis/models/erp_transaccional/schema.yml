@@ -10,9 +10,3 @@ models:
 
   - name: erp_somenergia_soci
     description: "Taules somenergia socis"
-    enabled: true
-    columns:
-      - name: id
-        description: "id del soci"
-        tests:
-          - not_null

@@ -5,9 +5,13 @@ models:
 
   - name: widetable_socies
     description: "Wide table de persones sòcies"
-    enabled: true
+
+  - name: baixes_socies
+    description: "Baixes de persones sòcies"
     columns:
-      - name: id
-        description: "id de la persona sòcia"
+      - name: data_baixa
         tests:
           - not_null
+
+  - name: altes_socies
+    description: "Altes de persones sòcies"
