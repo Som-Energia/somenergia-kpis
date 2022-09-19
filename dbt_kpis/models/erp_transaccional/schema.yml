@@ -10,3 +10,11 @@ models:
 
   - name: erp_somenergia_soci
     description: "Taules somenergia socis"
+    columns:
+      - name: data_alta
+        tests:
+          - not_null
+      - name: es_baixa
+        tests:
+          - not_null
+
