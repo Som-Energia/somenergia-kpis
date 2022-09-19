@@ -13,3 +13,4 @@ pandera>=0.11.0
 ERPpeek>=1.7.1
 SQLAlchemy-Utils>=0.38.2
 dbt-postgres
+fal
