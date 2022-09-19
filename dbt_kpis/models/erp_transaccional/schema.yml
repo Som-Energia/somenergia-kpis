@@ -8,6 +8,9 @@ sources:
 
 models:
 
+  - name: erp_somenergia_soci_dirty
+    description: "Taules somenergia socis amb columnes de coherència"
+
   - name: erp_somenergia_soci
     description: "Taules somenergia socis"
     columns:
@@ -17,4 +20,5 @@ models:
       - name: es_baixa
         tests:
           - not_null
+
 
