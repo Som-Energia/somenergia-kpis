@@ -20,3 +20,9 @@ models:
         description: "The value of KPI"
         tests:
           - not_null
+
+  - name: combined_pilotatge_kpis_model
+    description: "Kpis combining other kpis"
+    config:
+      schema: warehouse
+      enabled: true
