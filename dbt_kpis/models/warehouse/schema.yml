@@ -2,7 +2,8 @@
 version: 2
 
 sources:
-  - name: public
+  - name: erp_operational
+    schema: prod_operational
     tables:
       - name: pilotatge_kpis_description
       - name: pilotatge_int_kpis
@@ -10,8 +11,10 @@ sources:
 
 models:
 
-  - name: pilotatge_numeric_kpis_model
+  - name: pilotatge_kpis_model
     description: "Cleaned pilotatge numeric KPIs for the people"
+    config:
+      schema: warehouse
     columns:
       - name: value
         description: "The value of KPI"

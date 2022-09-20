@@ -15,3 +15,7 @@ models:
 
   - name: altes_socies
     description: "Altes de persones sòcies"
+
+  - name: pilotatge_kpis
+    config:
+      schema: pilotatge
