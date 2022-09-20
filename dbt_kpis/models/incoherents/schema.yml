@@ -1,0 +1,8 @@
+
+version: 2
+
+models:
+
+  - name: erp_somenergia_soci_incoherent
+    description: "Llista de socis incoherents"
+

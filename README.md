@@ -1,10 +1,20 @@
 # somenergia-indicadors-KPIs
 
-## Context 
+## Context
 
-Currently it is necessary to centralize data from different sources to consult with a data visualization application, also to have them in a standardized format.
+This repository aims to establish a data-driven pipeline for coooperatives of the Solidarity Economy Network of Catalonia (Xarxa d’Economia Solidària de Catalunya - XES)
 
-This tool is used to obtain data from different data sources, store it in a raw format and then load the data for transformation.
+### Data pipeline and warehouse schema
+
+The general schema proposal to date
+
+![Data Warehouse](docs/data_architecture.png)
+
+### Extractors and Loaders (EL)
+
+Currently it is necessary to centralize data from different sources to consult with a data visualization application, also to have them in a standardized format. Some of the sources are non-standard and particular to the energy sector.
+
+The extractor part of is tool is used to obtain data from different data sources, store it in a raw format and then load the data for transformation.
 
 There are two modules, the datasources and the pipeline:
 
@@ -31,16 +41,30 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public
 GRANT SELECT ON TABLES TO username;
 ```
 
+### transformations using dbt
+
+```
+$ pip install dbt-postgres
+$ dbt init
+```
+Edit the ~/.dbt/profiles.yml with your connection details. You can use dbt_profile.exemple.yml as an example.
+Set the schema to your user as `dbt_<name>`
+
 ## run
 
 `python main.py --help` or `python main.py --list-functions`
 
-## test
+### dbt
 
+`$ dbt run --target testing --project-dir dbt_kpis`
+
+## test
 
 Testing will require installing `b2btest` which in turn requires `lxml` to be installed manually via pip
 
 Create an empty testing database and configure it in dbconfig.py at the `test_db` entry.
+
+`$ dbt test --target testing --project-dir dbt_kpis`
 
 
 

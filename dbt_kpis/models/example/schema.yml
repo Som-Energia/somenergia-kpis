@@ -1,0 +1,19 @@
+
+version: 2
+
+sources:
+  - name: public
+    tables:
+      - name: pilotatge_kpis_description
+      - name: pilotatge_int_kpis
+      - name: pilotatge_float_kpis
+
+models:
+
+  - name: pilotatge_numeric_kpis_model
+    description: "Cleaned pilotatge numeric KPIs for the people"
+    columns:
+      - name: value
+        description: "The value of KPI"
+        tests:
+          - not_null
