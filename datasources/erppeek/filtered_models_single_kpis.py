@@ -20,8 +20,9 @@ def get_kpis_todo(dbapi, freq):
 def filter_string_to_list(filter):
 
     filter = filter.replace('__today__', str(datetime.datetime.today().date()))
-    filter = filter.replace('__7_days_ago__', str(datetime.datetime.today().date()  - datetime.timedelta(days=7)))
-    filter = filter.replace('__yesterday__', str(datetime.datetime.today().date()  - datetime.timedelta(days=1)))
+    filter = filter.replace('__7_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=7)))
+    filter = filter.replace('__3_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=3)))
+    filter = filter.replace('__yesterday__', str(datetime.datetime.today().date() - datetime.timedelta(days=1)))
 
     #if 'lot_actual' in filter:
     #    id = erp_client.model(lot).search(obert)
