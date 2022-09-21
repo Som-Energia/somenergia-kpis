@@ -35,7 +35,12 @@ kpisvaluesrecoded as (
 		END as clean_name
 	from kpisvalues
 )
-select clean_name as name, sum(value) as value, string_agg(description, ' , ') as description, create_date - day_offset as kpi_date, create_date
+select
+    clean_name as name,
+    sum(value) as value,
+    string_agg(description, ' , ') as description,
+    min(create_date - day_offset) as kpi_date, -- we should be able to group by kpi_date, but offsets are different on summed kpis
+    create_date
 from kpisvaluesrecoded
-group by clean_name, kpi_date, create_date
+group by clean_name, create_date
 
