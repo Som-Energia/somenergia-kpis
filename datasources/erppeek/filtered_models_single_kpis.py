@@ -12,8 +12,8 @@ import datetime
 # pilotatge_numeric_kpis: kpi_id, value, create_date
 # 1, 80, '2022-08-24 02:00:00'
 
-def get_kpis_todo(dbapi, freq):
-    query = f"SELECT id, name, filter, erp_model, context, field, function, freq, type_value FROM pilotatge_kpis_description where freq = '{freq}'"
+def get_kpis_todo(dbapi, freq, schema = "public"):
+    query = f"SELECT id, name, filter, erp_model, context, field, function, freq, type_value FROM {schema}.pilotatge_kpis_description where freq = '{freq}'"
     df = pd.read_sql(query, dbapi)
     return df
 
@@ -57,22 +57,22 @@ def get_kpis(erp_client, kpis_todo):
 
     return df
 
-def update_kpis(dbapi, erp_client, freq):
+def update_kpis(dbapi, erp_client, freq, schema= "public"):
 
-    todo = get_kpis_todo(dbapi, freq)
+    todo = get_kpis_todo(dbapi, freq, schema)
     kpis = get_kpis(erp_client, todo)
 
     kpis\
         .query("type_value == 'float'")\
         .drop(columns=['type_value'])\
-        .to_sql('pilotatge_float_kpis', dbapi, if_exists = 'append', index = False)
+        .to_sql('pilotatge_float_kpis', dbapi, schema=schema, if_exists='append', index=False)
 
     print(f"Float Kpis inserted {str(len(kpis[kpis['type_value']=='float']))} rows")
 
     kpis\
         .query("type_value == 'int'")\
         .drop(columns=['type_value'])\
-        .to_sql('pilotatge_int_kpis', dbapi, if_exists = 'append', index = False)
+        .to_sql('pilotatge_int_kpis', dbapi, schema=schema, if_exists='append', index=False)
 
     print(f"Integer Kpis inserted {str(len(kpis[kpis['type_value']=='int']))} rows")
 
@@ -84,6 +84,7 @@ if __name__ == '__main__':
     erp_db = sys.argv[4]
     erp_user = sys.argv[5]
     erp_password = sys.argv[6]
+    schema = sys.argv[7]
 
     if freq not in ['daily','weekly']:
         raise ValueError('Unknown frequency configuration')
@@ -97,4 +98,4 @@ if __name__ == '__main__':
 
     erp_client = Client(**erppeek)
 
-    update_kpis(dbapi, erp_client, freq)
+    update_kpis(dbapi, erp_client, freq, schema)

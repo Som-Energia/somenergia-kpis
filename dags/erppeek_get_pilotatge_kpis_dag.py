@@ -29,7 +29,7 @@ nfs_config = {
 driver_config = DriverConfig(name='local', options=nfs_config)
 mount_nfs = Mount(source="local", target="/repos", type="volume", driver_config=driver_config)
 
-with DAG(dag_id='erppeek_get_pilotatge_kpis_daily_dag', start_date=datetime(2022,9,1), schedule_interval='0 3 * * *', catchup=True, tags=["ERPPeek", "Extract"], default_args=args) as dag:
+with DAG(dag_id='erppeek_get_pilotatge_kpis_daily_dag', start_date=datetime(2022,9,1), schedule_interval='0 3 * * *', catchup=False, tags=["ERPPeek", "Extract"], default_args=args) as dag:
 
     task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='erppeek_get_pilotatge_kpis_daily')
     task_git_clone = build_git_clone_ssh_task(dag=dag)
@@ -42,8 +42,9 @@ with DAG(dag_id='erppeek_get_pilotatge_kpis_daily_dag', start_date=datetime(2022
         task_id='erppeek_get_pilotatge_kpis_daily',
         image='somenergia-kpis-requirements:latest',
         working_dir='/repos/somenergia-kpis',
-        command='python3 /repos/somenergia-kpis/datasources/erppeek/filtered_models_single_kpis.py "{{ var.value.puppis_prod_db }}" "daily" \
-                "{{ var.value.erp_server_prod_ro }}" "{{ var.value.erp_database }}" "{{ var.value.erp_user_airflow }}" "{{ var.value.erp_pass_airflow_secret }}"',
+        command='python3 /repos/somenergia-kpis/datasources/erppeek/filtered_models_single_kpis.py "{{ var.value.dades_prod_db }}" "daily" \
+                "{{ var.value.erp_server_prod_ro }}" "{{ var.value.erp_database }}" "{{ var.value.erp_user_airflow }}" \
+                "{{ var.value.erp_pass_airflow_secret }}" "{{ var.value.schema_kpis_dades_prod_db }}"',
         docker_url=Variable.get("moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
