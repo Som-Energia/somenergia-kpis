@@ -15,8 +15,7 @@ with combinable_kpis as (
         'Factures impagades de contractes de baixa: Import',
         'R1: Import',
         'Pobresa: Import',
-        'Fraccionament: Import_a',
-        'Fraccionament: Import_b',
+        'Fraccionament: Import',
         'Monitori: Import'
       ) then 'Import factures en procediment de tall: Import'
       when name in (
@@ -25,7 +24,6 @@ with combinable_kpis as (
         'R1: Número de factures',
         'Pobresa: Número de factures',
         'Fraccionament: Número de factures',
-        'Fraccionament: Import_b',
         'Monitori: Número de factures'
       ) then 'Import factures en procediment de tall: Número'
       else NULL
