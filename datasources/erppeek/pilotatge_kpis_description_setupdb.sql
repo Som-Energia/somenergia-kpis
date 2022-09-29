@@ -17,16 +17,16 @@ CREATE TABLE IF NOT EXISTS pilotatge_int_kpis (
     kpi_id INTEGER,
     value BIGINT NOT NULL,
     create_date timestamp with time zone,
-    CONSTRAINT fk_pilotatge_kpi
-        FOREIGN KEY(kpi_id)
-            REFERENCES pilotatge_kpis_description(id)
+    --CONSTRAINT fk_pilotatge_kpi
+        --FOREIGN KEY(kpi_id)
+            --REFERENCES pilotatge_kpis_description(id)
 );
 
 CREATE TABLE IF NOT EXISTS pilotatge_float_kpis (
     kpi_id INTEGER,
     value DECIMAL (100,5) NOT NULL,
     create_date timestamp with time zone,
-    CONSTRAINT fk_pilotatge_kpi
-        FOREIGN KEY(kpi_id)
-            REFERENCES pilotatge_kpis_description(id)
+    --CONSTRAINT fk_pilotatge_kpi
+        --FOREIGN KEY(kpi_id)
+            --REFERENCES pilotatge_kpis_description(id)
 );
