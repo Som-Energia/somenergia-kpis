@@ -5,15 +5,8 @@ import pandas as pd
 import ast
 import datetime
 
-# taules todo
-# pilotatge_kpis_description: id, name, description, filter, erp_model, , context, field, function, freq, type_value, teams, create_date
-# 1, 'Número de factures pendents', 'num factures amb deute',  'type = out_invoice AND invoice_id.pending_state.weight > 0 AND data_venciment < today()', 'giscedata.facturacio.factura', '', 'count', 'daily', 0, 'Cobraments', '2022-08-23'
-
-# pilotatge_numeric_kpis: kpi_id, value, create_date
-# 1, 80, '2022-08-24 02:00:00'
-
 def get_kpis_todo(dbapi, freq, schema = "public"):
-    query = f"SELECT id, name, filter, erp_model, context, field, function, freq, type_value FROM {schema}.pilotatge_kpis_description where freq = '{freq}'"
+    query = f"SELECT id, name, filter, erp_model, context, field, function, freq, type_value FROM {schema}.erppeek_kpis_description where freq = '{freq}'"
     df = pd.read_sql(query, dbapi)
     return df
 
@@ -23,10 +16,6 @@ def filter_string_to_list(filter):
     filter = filter.replace('__7_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=7)))
     filter = filter.replace('__3_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=3)))
     filter = filter.replace('__yesterday__', str(datetime.datetime.today().date() - datetime.timedelta(days=1)))
-
-    #if 'lot_actual' in filter:
-    #    id = erp_client.model(lot).search(obert)
-    #    filter = filter.replace('lot_actual', id)
 
     return ast.literal_eval(filter)
 
