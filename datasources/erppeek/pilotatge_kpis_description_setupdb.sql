@@ -62,6 +62,6 @@ INSERT INTO pilotatge_kpis_description(
         (25, 'Factures impagades de contractes de baixa: Import', 'Import de les factures que estan en impagades amb data venciment avui', '[("type", "=", "out_invoice"),   ("invoice_id.pending_state.weight", ">", 0), ("date_due", "<=", "__7_days_ago__" ), "|", ("pending_state", "ilike", "%advocats"), ("pending_state", "ilike", "%tugesto")]', 'giscedata.facturacio.factura', '{"type":"out_invoice"}', 'residual', 'sum', 'daily', 'float', 'Cobraments', NOW()),
         (26, 'Factures impagades de contractes de baixa: Número de factures', 'Num de factures que estan impagades amb data venciment avui', '[("type", "=", "out_invoice"), ("invoice_id.pending_state.weight", ">", 0), ("date_due", "<=", "__7_days_ago__" ), "|", ("pending_state", "ilike", "%advocats"), ("pending_state", "ilike", "%tugesto")]', 'giscedata.facturacio.factura', '{"type":"out_invoice"}', '', 'count', 'daily', 'int', 'Cobraments', NOW())
 
--- FACTURES EN PROCEDIMENT DE TALL:  import = 2 - 25 - 6 - 8 - (10+11) - 23
+-- FACTURES EN PROCEDIMENT DE TALL:  import = (2+3) - 25 - 6 - 8 - (10+11) - 23
 -- FACTURES EN PROCEDIMENT DE TALL:  numero = 1 - 26 - 7 - 9 - (12) - 24
 
