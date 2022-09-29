@@ -11,7 +11,7 @@ sources:
 
 models:
 
-  - name: pilotatge_kpis_model
+  - name: kpis_raw
     description: "Cleaned pilotatge numeric KPIs for the people"
     config:
       schema: warehouse
@@ -21,8 +21,28 @@ models:
         tests:
           - not_null
 
-  - name: combined_pilotatge_kpis
+  - name: kpis_combined
     description: "KPIS derived from a combination of kpis"
+    config:
+      schema: warehouse
+    columns:
+      - name: value
+        description: "The value of KPI"
+        tests:
+          - not_null
+
+  - name: kpis
+    description: "All KPIS, combined and direct repeteated runs"
+    config:
+      schema: warehouse
+    columns:
+      - name: value
+        description: "The value of KPI"
+        tests:
+          - not_null
+
+  - name: kpis_bucketed_daily
+    description: "All KPIS, combined and direct one kpi per day"
     config:
       schema: warehouse
     columns:

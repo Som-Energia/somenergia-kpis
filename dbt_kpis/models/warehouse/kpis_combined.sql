@@ -28,7 +28,7 @@ with combinable_kpis as (
       ) then 'Import factures en procediment de tall: Número'
       else NULL
     end as kpi_membership
-    from {{ref('pilotatge_kpis_model')}}
+    from {{ref('kpis_raw')}}
 )
 select
   create_date as kpi_date,
