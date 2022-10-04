@@ -1,8 +1,0 @@
-version: 2
-
-seeds:
-  - name: erppeek_kpis_description
-    config:
-      schema: operational
-      quote_columns: false
-      column_types: {create_date: timestamptz}

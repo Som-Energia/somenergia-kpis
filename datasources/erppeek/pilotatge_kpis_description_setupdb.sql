@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS pilotatge_kpis_description (
     id serial PRIMARY KEY,
-    name VARCHAR ( 70 ) UNIQUE NOT NULL,
+    name VARCHAR ( 70 ) NOT NULL,
+    code VARCHAR ( 70 ) UNIQUE NOT NULL,
     description VARCHAR ( 700 ),
     filter VARCHAR ( 1000 ),
     erp_model VARCHAR ( 50 ),

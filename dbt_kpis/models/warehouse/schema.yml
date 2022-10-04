@@ -5,6 +5,7 @@ sources:
   - name: erp_operational
     schema: prod_operational
     tables:
+      - name: erppeek_kpis_description
       - name: pilotatge_int_kpis
       - name: pilotatge_float_kpis
 
