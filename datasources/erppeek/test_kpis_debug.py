@@ -35,6 +35,7 @@ class QueryERPTest(unittest.TestCase):
         obj = self.erp_client.model(model_name)
         model_filter = [("state","=","pending"),("agent_actual","=","10")]
         cxt = {}
+        import ipdb; ipdb.set_trace()
         # model_filter = "[(""state"", ""="", ""erroni"")]"
         # cxt = "{""type"":""out_invoice""}"
         entries_ids = obj.search(model_filter, context = cxt)

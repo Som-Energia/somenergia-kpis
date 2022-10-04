@@ -13,9 +13,11 @@ def get_kpis_todo(dbapi, freq, schema = "public"):
 def filter_string_to_list(filter):
 
     filter = filter.replace('__today__', str(datetime.datetime.today().date()))
-    filter = filter.replace('__7_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=7)))
-    filter = filter.replace('__3_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=3)))
     filter = filter.replace('__yesterday__', str(datetime.datetime.today().date() - datetime.timedelta(days=1)))
+    filter = filter.replace('__3_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=3)))
+    filter = filter.replace('__5_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=5)))
+    filter = filter.replace('__7_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=7)))
+    filter = filter.replace('__30_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=30)))
 
     return ast.literal_eval(filter)
 
