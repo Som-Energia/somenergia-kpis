@@ -9,7 +9,22 @@ sources:
       - name: pilotatge_int_kpis
       - name: pilotatge_float_kpis
 
+  - name: datasources
+    schema: datasources
+    tables:
+      - name: pilotatge_int_kpis
+
 models:
+
+  - name: kpis_combined2
+    description: "KPIS derived from a transformation of the kpis"
+    config:
+      schema: warehouse
+    columns:
+      - name: value
+        description: "The value of KPI"
+        tests:
+          - not_null
 
   - name: kpis_raw
     description: "Cleaned pilotatge numeric KPIs for the people"
