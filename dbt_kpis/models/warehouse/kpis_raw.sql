@@ -20,34 +20,17 @@ with kpisvalues as (
 kpisvaluesrecoded as (
 
 	select
-		value,
-        description,
-        create_date,
+		*,
         case
             when erp_filter ilike '%__7_days_ago__%' then interval '7 days'
             when erp_filter ilike '%__3_days_ago__%' then interval '3 days'
             when erp_filter ilike '%__yesterday__%' then interval '1 days'
             else interval '0 days'
-        end as day_offset,
-		CASE
-			WHEN code IN ('COB2', 'COB3') THEN 'DBT3' -- 'Saldo pendent'
-			WHEN code IN ('COB8', 'COB9') THEN 'DBT4' -- 'Fraccionament: Import'
-			ELSE code
-		END as clean_code,
-		CASE
-			WHEN code IN ('COB2', 'COB3') THEN 'Saldo pendent'
-			WHEN code IN ('COB8', 'COB9') THEN 'Fraccionament: Import'
-			ELSE name
-		END as clean_name
+        end as day_offset
 	from kpisvalues
 )
 select
-    clean_code as code,
-    clean_name as name,
-    sum(value) as value,
-    string_agg(description, ' , ') as description,
-    min(create_date - day_offset) as kpi_date, -- we should be able to group by kpi_date, but offsets are different on summed kpis
-    create_date
+    *,
+    create_date - day_offset as kpi_date
 from kpisvaluesrecoded
-group by clean_code, clean_name, create_date
 
