@@ -6,7 +6,7 @@ import ast
 import datetime
 
 def get_kpis_todo(dbapi, freq, schema = "public"):
-    query = f"SELECT id, name, filter, erp_model, context, field, function, freq, type_value FROM {schema}.erppeek_kpis_description where freq = '{freq}'"
+    query = f"SELECT code ,name, filter, erp_model, context, field, function, freq, type_value FROM {schema}.erppeek_kpis_description where freq = '{freq}'"
     df = pd.read_sql(query, dbapi)
     return df
 
@@ -33,16 +33,16 @@ def calculate_kpi(erp_client, kpi):
     elif kpi['function'] == 'count':
         value = len(filtered)
     else:
-        raise ValueError(f"kpi: {kpi['name']} id: {kpi['id']} Unknown function {kpi['function']}")
-    print(f"Kpi calculated: {kpi['id']}: {kpi['name']} - valor: {value}")
-    return kpi['id'], value, kpi['type_value']
+        raise ValueError(f"kpi: {kpi['name']} code: {kpi['code']} Unknown function {kpi['function']}")
+    print(f"Kpi calculated: {kpi['code']}: {kpi['name']} - valor: {value}")
+    return kpi['code'], value, kpi['type_value']
 
 def get_kpis(erp_client, kpis_todo):
     kpis_values = []
     for index, kpi in kpis_todo.iterrows():
         kpis_values.append(calculate_kpi(erp_client, kpi))
 
-    df = pd.DataFrame.from_records(kpis_values, columns =['kpi_id', 'value', 'type_value'])
+    df = pd.DataFrame.from_records(kpis_values, columns =['kpi_code', 'value', 'type_value'])
     df['create_date'] = datetime.datetime.utcnow()
     df['create_date'] = df['create_date'].dt.tz_localize(tz='UTC')
 
