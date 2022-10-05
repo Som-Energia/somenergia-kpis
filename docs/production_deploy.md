@@ -1,11 +1,5 @@
 # How to deploy into production environment
 
-Steps:
-
-## Update KPIs Description table
-
-From your local machine launch script to update KPIs table from CSV.
-
 **tl; dr**
 
 ```bash
@@ -15,6 +9,22 @@ python scripts/csv_to_sqltable.py --csvpath "datasources/erppeek/erppeek_kpis_te
 
 dbt run --target prod -m +kpis_row+
 ```
+
+## Merge your branch into main
+
+:warning: Airflow is in Continuous Delivery, `main` branch will be automatically downloaded in production as soon as a task is run. :warning:
+
+```bash
+git pull
+git merge main
+git checkout main
+git merge YOUR_BRANCH
+git push
+```
+
+## Update KPIs Description table
+
+From your local machine launch script to update KPIs table from CSV.
 
 **This process overwrites the table.**
 

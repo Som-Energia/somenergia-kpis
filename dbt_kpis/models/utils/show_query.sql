@@ -1,7 +1,7 @@
 
 {% set show_query %}
 select * from {{ ref('pilotatge_kpis') }}
-limit 10
+order by create_date desc limit 10
 {% endset %}
 
 {% set results = run_query(show_query) %}

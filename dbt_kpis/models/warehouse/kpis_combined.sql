@@ -33,6 +33,11 @@ with combinable_kpis as (
 select
   create_date as kpi_date,
   create_date,
+  case
+    when kpi_membership = 'Import factures en procediment de tall: Import' then 'DBT1'
+    when kpi_membership = 'Import factures en procediment de tall: Número' then 'DBT2'
+    else NULL
+  end as code,
   kpi_membership as name,
   case
     when kpi_membership = 'Import factures en procediment de tall: Import' then 'FACTURES EN PROCEDIMENT DE TALL:  import = (COB2+COB3) - COB15 - COB4 - COB6 - (COB8+COB9) - 13'

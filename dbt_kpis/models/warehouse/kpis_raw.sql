@@ -30,13 +30,13 @@ kpisvaluesrecoded as (
             else interval '0 days'
         end as day_offset,
 		CASE
-			WHEN code IN ('COB2', 'COB3') THEN 'COB2COB3' -- 'Saldo pendent'
-			WHEN code IN ('COB8', 'COB9') THEN 'COB8COB9' -- 'Fraccionament: Import'
+			WHEN code IN ('COB2', 'COB3') THEN 'DBT3' -- 'Saldo pendent'
+			WHEN code IN ('COB8', 'COB9') THEN 'DBT4' -- 'Fraccionament: Import'
 			ELSE code
 		END as clean_code,
 		CASE
-			WHEN name IN ('COB2', 'COB3') THEN 'Saldo pendent'
-			WHEN name IN ('COB8', 'COB9') THEN 'Fraccionament: Import'
+			WHEN code IN ('COB2', 'COB3') THEN 'Saldo pendent'
+			WHEN code IN ('COB8', 'COB9') THEN 'Fraccionament: Import'
 			ELSE name
 		END as clean_name
 	from kpisvalues
