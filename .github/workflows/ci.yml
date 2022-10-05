@@ -5,9 +5,8 @@ on:
   push:
     branches:
       - master
-
-
       - main
+      - autodoc
 jobs:
   deploy:
     runs-on: ubuntu-latest
