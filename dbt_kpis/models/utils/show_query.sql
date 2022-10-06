@@ -1,6 +1,6 @@
 
 {% set show_query %}
-select * from {{ ref('pilotatge_kpis') }}
+select * from {{ ref('kpis_long') }}
 order by create_date desc limit 10
 {% endset %}
 

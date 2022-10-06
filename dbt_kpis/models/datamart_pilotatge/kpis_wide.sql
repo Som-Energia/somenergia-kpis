@@ -1,0 +1,9 @@
+{{ config(materialized='view') }}
+
+select
+    create_date,
+    {{ pivot(column='name', names=dbt_utils.get_column_values(table=ref('kpis_long'), column='name'), value_column='value', agg='max') }}
+from {{ref('kpis_long')}}
+group by create_date
+
+

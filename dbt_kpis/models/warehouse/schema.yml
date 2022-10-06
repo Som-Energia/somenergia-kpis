@@ -21,23 +21,13 @@ models:
         tests:
           - not_null
 
-  - name: kpis_combined
-    description: "KPIS derived from a combination of kpis"
+  - name: kpis_with_derived
+    description: "KPIS expanded with derived kpis"
     config:
       schema: warehouse
     columns:
-      - name: value
-        description: "The value of KPI"
-        tests:
-          - not_null
-
-  - name: kpis
-    description: "All KPIS, combined and direct repeteated runs"
-    config:
-      schema: warehouse
-    columns:
-      - name: value
-        description: "The value of KPI"
+      - name: create_date
+        description: "date of the creation of the kpis by airflow"
         tests:
           - not_null
 
@@ -46,7 +36,8 @@ models:
     config:
       schema: warehouse
     columns:
-      - name: value
-        description: "The value of KPI"
+      - name: create_date
+        description: "date of the creation of the kpis by airflow"
         tests:
           - not_null
+          - unique

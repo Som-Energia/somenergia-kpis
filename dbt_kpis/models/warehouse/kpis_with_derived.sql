@@ -1,6 +1,7 @@
 {{ config(materialized='view') }}
 
 SELECT
+  *,
   cob2 + cob3 as dbt1,
   cob8 + cob9 as dbt2,
   (cob2 + cob3) - cob15 - cob4 - cob6 - cob8 - cob9 - cob13 as dbt3,
