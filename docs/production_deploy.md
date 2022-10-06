@@ -3,7 +3,7 @@
 **tl; dr**
 
 ```bash
-python scripts/csv_to_sqltable.py --csvpath "datasources/erppeek/erppeek_kpis_test.csv" --dbapi "postgresql://somenergia:PASSWORD@puppis.somenergia.lan:5432/dades" --schema prod_operational --table erppeek_kpis_description --ifexists replace
+python scripts/csv_to_sqltable.py --csvpath "datasources/erppeek/erppeek_kpis_test.csv" --dbapi "postgresql://somenergia:PASSWORD@puppis.somenergia.lan:5432/dades" --schema prod_operational --table erppeek_kpis_description --ifexists append --truncate
 
 #Run Airflow DAG
 
@@ -28,8 +28,10 @@ From your local machine launch script to update KPIs table from CSV.
 
 **This process overwrites the table.**
 
+Given that dbt views depend on the table, we can't drop it. Therefore we truncate and append.
+
 ```bash
-python scripts/csv_to_sqltable.py --csvpath "datasources/erppeek/erppeek_kpis_test.csv" --dbapi "postgresql://somenergia:PASSWORD@puppis.somenergia.lan:5432/dades" --schema prod_operational --table erppeek_kpis_description --ifexists replace
+python scripts/csv_to_sqltable.py --csvpath "datasources/erppeek/erppeek_kpis_test.csv" --dbapi "postgresql://somenergia:PASSWORD@puppis.somenergia.lan:5432/dades" --schema prod_operational --table erppeek_kpis_description --ifexists append --truncate
 ```
 
 ## Launch Airflow DAG or wait for it

@@ -1,17 +1,30 @@
-import click
+import typer
 import pandas as pd
+import sqlalchemy
+import logging
 
-@click.command()
-@click.option('--csvpath', help='Path of origin csv')
-@click.option('--dbapi', help='DBApi of target DB')
-@click.option('--schema', help='Schema of target DB')
-@click.option('--table', help='table name of target DB')
-@click.option('--ifexists', help='Append or replace')
-def csv_to_sqltable(csvpath,dbapi,schema,table,ifexists):
-    click.echo(f"Let's insert a CSV")
+logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
+app = typer.Typer()
+
+@app.command()
+def csv_to_sqltable(
+        csvpath: str = typer.Option(None, help='Path of origin csv'),
+        dbapi: str = typer.Option(None, help='DBApi of target DB'),
+        schema: str = typer.Option(None, help='Schema of target DB'),
+        table: str = typer.Option(None, help='table name of target DB'),
+        ifexists: str = typer.Option(None, help='Append or replace'),
+        truncate: bool = typer.Option(False,help='Truncate table before insert (TRUE or FALSE)')
+    ):
+    logging.info(f"Let's insert a CSV")
+    dbEngine = sqlalchemy.create_engine(dbapi)
+    conn = dbEngine.connect()
+    logging.info(f"DB connection succesfully to {dbEngine.url.database}")
     df = pd.read_csv(csvpath)
-    df.to_sql(table, con=dbapi, schema=schema, if_exists=ifexists, index=False)
-    click.echo(f"CSV inserted")
+    if truncate:
+        truncquery = f'truncate table {schema}.{table};'
+        conn.execute(truncquery)
+    df.to_sql(table, con=conn, schema=schema, if_exists=ifexists, index=False)
+    logging.info(f"CSV inserted")
 
 if __name__ == '__main__':
-    csv_to_sqltable()
+    app()
