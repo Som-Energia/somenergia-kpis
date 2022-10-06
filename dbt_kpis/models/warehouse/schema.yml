@@ -21,6 +21,16 @@ models:
         tests:
           - not_null
 
+  - name: kpis_wider
+    description: "KPis row wider"
+    config:
+      schema: warehouse
+    columns:
+      - name: create_date
+        description: "date of the creation of the kpis by airflow"
+        tests:
+          - not_null
+
   - name: kpis_with_derived
     description: "KPIS expanded with derived kpis"
     config:
@@ -38,6 +48,17 @@ models:
     columns:
       - name: create_date
         description: "date of the creation of the kpis by airflow"
+        tests:
+          - not_null
+          - unique
+
+  - name: kpis_description
+    description: "KPIs description original + names, descriptions of computed new KPIs in DBT"
+    config:
+      schema: warehouse
+    columns:
+      - name: create_date
+        description: "date of the creation of the KPI description"
         tests:
           - not_null
           - unique
