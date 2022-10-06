@@ -18,6 +18,10 @@ def filter_string_to_list(filter):
     filter = filter.replace('__5_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=5)))
     filter = filter.replace('__7_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=7)))
     filter = filter.replace('__30_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=30)))
+    filter = filter.replace('__60_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=60)))
+    filter = filter.replace('__90_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=90)))
+    filter = filter.replace('__120_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=120)))
+    filter = filter.replace('__150_days_ago__', str(datetime.datetime.today().date() - datetime.timedelta(days=150)))
 
     return ast.literal_eval(filter)
 
