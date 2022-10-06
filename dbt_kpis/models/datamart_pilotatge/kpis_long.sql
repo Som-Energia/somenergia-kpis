@@ -12,7 +12,13 @@ with long as (
     ) }}
 )
 
-SELECT long.create_date, descr.name, long.value, descr.code, descr.description
+SELECT
+  long.create_date,
+  descr.name,
+  long.value,
+  long.create_date - descr.day_offset as kpi_date,
+  descr.code,
+  descr.description
 FROM long
 LEFT JOIN {{ref('kpis_description')}} as descr
 ON descr.code = long.code

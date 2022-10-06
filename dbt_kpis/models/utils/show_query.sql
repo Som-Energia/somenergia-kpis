@@ -1,4 +1,7 @@
 
+{{ config(enabled=false) }}
+
+
 {% set show_query %}
 select * from {{ ref('kpis_long') }}
 order by create_date desc limit 10
