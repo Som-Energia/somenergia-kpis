@@ -1,6 +1,6 @@
-# How to deploy into production environment
+# How to deploy to production environment
 
-**tl; dr**
+**tl; dr** aka **muxo testo**
 
 ```bash
 python scripts/csv_to_sqltable.py --csvpath "datasources/erppeek/erppeek_kpis_test.csv" --dbapi "postgresql://somenergia:PASSWORD@puppis.somenergia.lan:5432/dades" --schema prod_operational --table erppeek_kpis_description --ifexists append --truncate
