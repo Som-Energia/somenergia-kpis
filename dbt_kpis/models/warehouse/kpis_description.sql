@@ -10,15 +10,16 @@ with kpis_description_combined as (
       ('dbt10', 'Sol.licituts d''altes (A3 nous)', 'Casos A3 nous. Tos els casos A3 existents ahir - tots els casos existents abans d''ahir (con2 - con2 d''ahir). Segurament siguint tots A3 01 noves. Altes de subminitrament sol.licitades', '2022-10-06'::timestamptz::text),
       ('dbt11', 'Sol.licituds de contractació o canvi de comercialitzadora (Cs noves)', 'Casos CX nous (segurament 01 creats o 11 rebuts). Noves sol.licituts de contractació amb la cooperativa. (con5 - con5 d''ahir)', '2022-10-06'::timestamptz::text),
       ('dbt12', 'Sol.licituts de modificació (M1 nous)',	'Casos M1 nous. Tos els casos M1 existents ahir - tots els casos existents abans d''ahir. Segurament siguint tots M1 01 nous. Modificacions de contracte sol.licitades. (con7 - con7 d''ahir)', '2022-10-06'::timestamptz::text),
-      ('dbt13', 'Sol.licituts de baixa (B1 nous)', 'Casos B1 nous. Tos els casos B1 existents ahir - tots els casos existents abans d''ahir. Segurament siguint tots B1 01 nous. Baixes de contracte sol.licitades. (con9 - con9 d''ahir)', '2022-10-06'::timestamptz::text)
+      ('dbt13', 'Sol.licituts de baixa (B1 nous)', 'Casos B1 nous. Tos els casos B1 existents ahir - tots els casos existents abans d''ahir. Segurament siguint tots B1 01 nous. Baixes de contracte sol.licitades. (con9 - con9 d''ahir)', '2022-10-06'::timestamptz::text),
+      ('dbt14', 'Indic Endarrerida - *Percentatge Endarrerida vs total contractes', 'Utilitzant fac32 i fac33 per fer el percentatge', '2022-10-07'::timestamptz::text)
       )
     AS t (code, name, description, create_date)
 )
 SELECT
     code, name, description, create_date,
-    '1 days' as day_offset
+    interval '1 days' as day_offset
 FROM {{ source('erp_operational','erppeek_kpis_description') }}
 UNION
 SELECT
-    code, name, description, create_date, '1 days' as day_offset
+    code, name, description, create_date, interval '1 days' as day_offset
 FROM kpis_description_combined
