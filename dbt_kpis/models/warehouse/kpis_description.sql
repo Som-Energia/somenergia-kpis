@@ -16,14 +16,9 @@ with kpis_description_combined as (
 )
 SELECT
     code, name, description, create_date,
-    case
-            when filter ilike '%__7_days_ago__%' then interval '7 days'
-            when filter ilike '%__3_days_ago__%' then interval '3 days'
-            when filter ilike '%__yesterday__%' then interval '1 days'
-            else interval '0 days'
-    end as day_offset
+    '1 days' as day_offset
 FROM {{ source('erp_operational','erppeek_kpis_description') }}
 UNION
 SELECT
-    code, name, description, create_date, NULL as day_offset
+    code, name, description, create_date, '1 days' as day_offset
 FROM kpis_description_combined
