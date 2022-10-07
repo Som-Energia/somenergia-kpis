@@ -62,7 +62,7 @@ Arguments:
                suffix='',
                else_value='NULL',
                quote_identifiers=True) %}
-  {% for name in names %}
+  {%- for name in names %}
     {{ agg }}(
       case
       when {{ column }} {{ cmp }} '{{ escape_single_quotes(name) }}'
@@ -70,13 +70,13 @@ Arguments:
       else {{ else_value }}
       end
     )
-    {% if alias %}
-      {% if quote_identifiers %}
+    {% if alias -%}
+      {%- if quote_identifiers -%}
             as {{ adapter.quote(prefix ~ name ~ suffix) }}
-      {% else %}
+      {%- else -%}
         as {{ dbt_utils.slugify(prefix ~ name ~ suffix) }}
-      {% endif %}
-    {% endif %}
-    {% if not loop.last %},{% endif %}
-  {% endfor %}
+      {%- endif -%}
+    {%- endif -%}
+    {%- if not loop.last -%},{%- endif -%}
+  {%- endfor %}
 {% endmacro %}

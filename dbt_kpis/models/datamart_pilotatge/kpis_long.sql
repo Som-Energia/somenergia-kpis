@@ -14,9 +14,11 @@ with long as (
 
 SELECT
   long.create_date,
+  long.create_date at time zone 'Europe/Zurich' as create_date_local,
   descr.name,
   long.value,
   long.create_date - descr.day_offset as kpi_date,
+  (long.create_date - descr.day_offset) at time zone 'Europe/Zurich' as kpi_date_local,
   descr.code,
   descr.description
 FROM long

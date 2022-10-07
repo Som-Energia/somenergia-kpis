@@ -55,5 +55,11 @@ DBT already selects the newest run when publishing the kpis to the datamart.
 From your local machine run DBT workflow targeting production environment.
 
 ```bash
-dbt run --target prod -m +kpis_row+
+dbt run --target prod -m +kpis_wide+
+```
+
+or
+
+```bash
+dbt run --target prod
 ```
