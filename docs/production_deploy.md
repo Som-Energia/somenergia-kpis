@@ -3,7 +3,12 @@
 **tl; dr** aka **muxo testo**
 
 ```bash
-python scripts/csv_to_sqltable.py --csvpath "datasources/erppeek/erppeek_kpis_test.csv" --dbapi "postgresql://somenergia:PASSWORD@puppis.somenergia.lan:5432/dades" --schema prod_operational --table erppeek_kpis_description --ifexists append --truncate
+
+git merge YOUR_BRANCH
+
+python scripts/csv_to_sqltable.py --csvpath "datasources/erppeek/erppeek_kpis_decription.csv" --dbapi "postgresql://somenergia:PASSWORD@puppis.somenergia.lan:5432/dades" --schema prod_operational --table erppeek_kpis_description --ifexists append --truncate
+
+git push
 
 #Run Airflow DAG
 
@@ -19,6 +24,11 @@ git pull
 git merge main
 git checkout main
 git merge YOUR_BRANCH
+```
+
+When you're ready, push to production
+
+```bash
 git push
 ```
 
@@ -31,7 +41,7 @@ From your local machine launch script to update KPIs table from CSV.
 Given that dbt views depend on the table, we can't drop it. Therefore we truncate and append.
 
 ```bash
-python scripts/csv_to_sqltable.py --csvpath "datasources/erppeek/erppeek_kpis_test.csv" --dbapi "postgresql://somenergia:PASSWORD@puppis.somenergia.lan:5432/dades" --schema prod_operational --table erppeek_kpis_description --ifexists append --truncate
+python scripts/csv_to_sqltable.py --csvpath "datasources/erppeek/erppeek_kpis_description.csv" --dbapi "postgresql://somenergia:PASSWORD@puppis.somenergia.lan:5432/dades" --schema prod_operational --table erppeek_kpis_description --ifexists append --truncate
 ```
 
 ## Launch Airflow DAG or wait for it
