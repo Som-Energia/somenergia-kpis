@@ -10,7 +10,7 @@ SELECT
   cob8 + cob9 as dbt2,
   (cob2 + cob3) - cob15 - cob4 - cob6 - cob8 - cob9 - cob13 as dbt3,
   (cob1) - cob16 - cob5 - cob7 - cob10 - cob14 as dbt4,
-  (fac32/fac33)*100 as dbt14
+  (fac32::decimal / fac33)*100 as dbt14,
   con2 - lag(con2,1) over() as dbt10,
   con5 - lag(con5,1) over() as dbt11,
   con7 - lag(con7,1) over() as dbt12,
