@@ -6,7 +6,6 @@ on:
     branches:
       - master
       - main
-      - kpis_pilotatge
 jobs:
   deploy:
     runs-on: ubuntu-latest
