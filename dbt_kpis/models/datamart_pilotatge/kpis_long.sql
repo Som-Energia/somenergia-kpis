@@ -25,4 +25,4 @@ FROM long
 LEFT JOIN {{ref('kpis_description')}} as descr
 ON descr.code = long.code
 where descr.code not in ('cob2', 'cob3', 'cob8', 'cob9') --parcial KPIs Pilotatge no interested
-order by create_date desc, descr.code
+order by create_date asc, descr.code
