@@ -50,6 +50,14 @@ $ dbt init
 Edit the ~/.dbt/profiles.yml with your connection details. You can use dbt_profile.exemple.yml as an example.
 Set the schema to your user as `dbt_<name>`
 
+## dbt dependencies
+
+The dbt_utils macro `unpivot` requires dbt_utils macros, which can be installed with
+
+```bash
+dbt deps --project-dir dbt_kpis
+```
+
 ## run
 
 `python main.py --help` or `python main.py --list-functions`
