@@ -59,4 +59,3 @@ id,code,name,description,filter,erp_model,context,field,function,freq,type_value
 60,fac29,Indic Endarrerida - Actius endarrerits de més de 4 mesos," Esta per fer","[(""data_ultima_lectura"", ""<="", ""__120_days_ago__"")]",giscedata.polissa,{},,count,daily,int,Factura,2022-10-06 13:00:00.000000+02
 61,fac30,Indic Endarrerida - Contractes sense F1 (+5 mesos)," Esta per fer","[('data_ultima_lectura_f1', '<=', '__150_days_ago__')]",giscedata.polissa,{},,count,daily,int,Factura,2022-10-06 13:00:00.000000+02
 62,fac31,Indic Endarrerida - Actius endarrerits de més de 5 mesos," Esta per fer","[(""data_ultima_lectura"", ""<="", ""__150_days_ago__"")]",giscedata.polissa,{},,count,daily,int,Factura,2022-10-06 13:00:00.000000+02
-9999,test999,Indic Endarrerida - Actius endarrerits de més de 5 mesos," Esta per fer","[(""data_ultima_lectura"", ""<="", ""__150_days_ago__"")]",giscedata.polissa,{},,count,daily,int,Factura,2022-10-06 13:00:00.000000+02

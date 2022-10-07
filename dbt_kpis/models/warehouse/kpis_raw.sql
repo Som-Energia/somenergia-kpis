@@ -13,4 +13,3 @@ INNER JOIN {{ source('erp_operational', 'pilotatge_int_kpis')}} as pik
 ON pkd.id = pik.kpi_id
 where type_value = 'int'
 order by id
-
