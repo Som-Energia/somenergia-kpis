@@ -14,7 +14,8 @@ SELECT
   con2 - lag(con2,1) over() as dbt10,
   con5 - lag(con5,1) over() as dbt11,
   con7 - lag(con7,1) over() as dbt12,
-  con9 - lag(con9,1) over() as dbt13
+  con9 - lag(con9,1) over() as dbt13,
+  rec1 + rec2 as dbt15
 FROM kpis_wider_asc
 
 -- Saldo pendent (Saldopendent_a + saldo_pendent_b) as DBT1
