@@ -40,9 +40,10 @@ with DAG(dag_id='odoo_get_hr_employee_dag_v2', start_date=datetime(2022,5,23), s
     get_hr_employee_task = DockerOperator(
         api_version='auto',
         task_id='odoo_get_hr_employee',
-        image='somenergia-kpis-requirements:latest',
+        docker_conn_id='somenergia_registry',
+        image='{{ conn.somenergia_registry.host }}/somenergia-kpis-requirements:latest',
         command='python3 /repos/somenergia-kpis/datasources/odoo/hr_employees.py "{{ var.value.odoo_dbapi}}" "{{ var.value.puppis_prod_db}}" "{{ dag_run.start_date }}"',
-        docker_url=Variable.get("moll_url"),
+        docker_url=Variable.get("generic_moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
         auto_remove=True,

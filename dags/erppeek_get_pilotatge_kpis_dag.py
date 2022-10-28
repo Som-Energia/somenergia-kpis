@@ -40,12 +40,13 @@ with DAG(dag_id='erppeek_get_pilotatge_kpis_daily_dag', start_date=datetime(2022
     get_conversations_task = DockerOperator(
         api_version='auto',
         task_id='erppeek_get_pilotatge_kpis_daily',
-        image='somenergia-kpis-requirements:latest',
+        docker_conn_id='somenergia_registry',
+        image='{{ conn.somenergia_registry.host }}/somenergia-kpis-requirements:latest',
         working_dir='/repos/somenergia-kpis',
         command='python3 /repos/somenergia-kpis/datasources/erppeek/filtered_models_single_kpis.py "{{ var.value.dades_prod_db }}" "daily" \
                 "{{ var.value.erp_server_prod_ro }}" "{{ var.value.erp_database }}" "{{ var.value.erp_user_airflow }}" \
                 "{{ var.value.erp_pass_airflow_secret }}" "{{ var.value.schema_kpis_dades_prod_db }}"',
-        docker_url=Variable.get("moll_url"),
+        docker_url=Variable.get("generic_moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
         auto_remove=True,

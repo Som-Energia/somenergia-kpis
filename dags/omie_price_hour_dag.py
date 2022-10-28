@@ -40,9 +40,10 @@ with DAG(dag_id='omie_get_price_hour_dag', start_date=datetime(2022,6,15), sched
     get_hr_employee_task = DockerOperator(
         api_version='auto',
         task_id='omie_get_price_hour',
-        image='somenergia-kpis-requirements:latest',
+        docker_conn_id='somenergia_registry',
+        image='{{ conn.somenergia_registry.host }}/somenergia-kpis-requirements:latest',
         command='python3 /repos/somenergia-kpis/datasources/omie/omie_update_last_hour_price.py "{{ var.value.puppis_prod_db}}"',
-        docker_url=Variable.get("moll_url"),
+        docker_url=Variable.get("generic_moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
         auto_remove=True,
