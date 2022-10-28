@@ -40,11 +40,12 @@ with DAG(dag_id='hs_get_tags_dag', start_date=datetime(2022,6, 15), schedule_int
     get_tags_task = DockerOperator(
         api_version='auto',
         task_id='hs_get_tags',
-        image='somenergia-kpis-requirements:latest',
+        docker_conn_id='somenergia_registry',
+        image='{{ conn.somenergia_registry.host }}/somenergia-kpis-requirements:latest',
         working_dir='/repos/somenergia-kpis',
         command='python3 -m datasources.helpscout.hs_get_tags "{{ data_interval_start }}" "{{ data_interval_end }}" \
                 "{{ var.value.puppis_prod_db}}" "{{ var.value.helpscout_api_id}}" "{{ var.value.helpscout_api_secret}}"',
-        docker_url=Variable.get("moll_url"),
+        docker_url=Variable.get("generic_moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
         auto_remove=True,
