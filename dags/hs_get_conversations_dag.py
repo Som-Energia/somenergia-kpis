@@ -5,6 +5,7 @@ from util_tasks.t_git_clone_ssh import build_git_clone_ssh_task
 from util_tasks.t_check_repo import build_check_repo_task
 from util_tasks.t_image_build import build_image_build_task
 from util_tasks.t_remove_image import build_remove_image_task
+from util_tasks.t_update_docker_image import build_update_image_task
 from docker.types import Mount, DriverConfig
 from datetime import datetime, timedelta
 from airflow.models import Variable
@@ -38,6 +39,7 @@ with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2020,3,20), sche
     task_check_repo = build_check_repo_task(dag=dag, repo_github_name=repo_github_name)
     task_image_build = build_image_build_task(dag=dag, repo_github_name=repo_github_name)
     task_remove_image = build_remove_image_task(dag=dag, repo_github_name=repo_github_name)
+    task_update_image = build_update_image_task(dag=dag, repo_github_name=repo_github_name)
 
     get_conversations_task = DockerOperator(
         api_version='auto',
@@ -60,4 +62,5 @@ with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2020,3,20), sche
     task_git_clone >> task_image_build
     task_branch_pull_ssh >> get_conversations_task
     task_branch_pull_ssh >> task_remove_image
+    task_branch_pull_ssh >> task_update_image
     task_remove_image >> task_image_build >> get_conversations_task
