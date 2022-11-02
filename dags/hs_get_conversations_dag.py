@@ -39,7 +39,7 @@ with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2020,3,20), sche
     task_check_repo = build_check_repo_task(dag=dag, repo_github_name=repo_github_name)
     task_image_build = build_image_build_task(dag=dag, repo_github_name=repo_github_name)
     task_remove_image = build_remove_image_task(dag=dag, repo_github_name=repo_github_name)
-    task_update_image = build_update_image_task(dag=dag, repo_github_name=repo_github_name)
+    task_update_image = build_update_image_task(dag=dag, repo_name=repo_github_name)
 
     get_conversations_task = DockerOperator(
         api_version='auto',
