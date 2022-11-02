@@ -1,10 +1,10 @@
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
-from kpis_tasks.t_branch_pull_ssh import build_branch_pull_ssh_task
-from kpis_tasks.t_git_clone_ssh import build_git_clone_ssh_task
-from kpis_tasks.t_check_repo import build_check_repo_task
-from kpis_tasks.t_image_build import build_image_build_task
-from kpis_tasks.t_remove_image import build_remove_image_task
+from util_tasks.t_branch_pull_ssh import build_branch_pull_ssh_task
+from util_tasks.t_git_clone_ssh import build_git_clone_ssh_task
+from util_tasks.t_check_repo import build_check_repo_task
+from util_tasks.t_image_build import build_image_build_task
+from util_tasks.t_remove_image import build_remove_image_task
 from docker.types import Mount, DriverConfig
 from datetime import datetime, timedelta
 from airflow.models import Variable
@@ -31,11 +31,13 @@ mount_nfs = Mount(source="local", target="/repos", type="volume", driver_config=
 
 with DAG(dag_id='hs_get_conversations_dag', start_date=datetime(2020,3,20), schedule_interval='@hourly', catchup=True, tags=["Helpscout", "Extract"], default_args=args) as dag:
 
-    task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='hs_get_conversations')
-    task_git_clone = build_git_clone_ssh_task(dag=dag)
-    task_check_repo = build_check_repo_task(dag=dag)
-    task_image_build = build_image_build_task(dag=dag)
-    task_remove_image= build_remove_image_task(dag=dag)
+    repo_github_name = 'somenergia-kpis'
+
+    task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='hs_get_conversations', repo_github_name=repo_github_name)
+    task_git_clone = build_git_clone_ssh_task(dag=dag, repo_github_name=repo_github_name)
+    task_check_repo = build_check_repo_task(dag=dag, repo_github_name=repo_github_name)
+    task_image_build = build_image_build_task(dag=dag, repo_github_name=repo_github_name)
+    task_remove_image = build_remove_image_task(dag=dag, repo_github_name=repo_github_name)
 
     get_conversations_task = DockerOperator(
         api_version='auto',
