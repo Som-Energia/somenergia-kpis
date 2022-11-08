@@ -41,7 +41,7 @@ with DAG(dag_id='omie_get_price_hour_dag', start_date=datetime(2022,6,15), sched
         api_version='auto',
         task_id='omie_get_price_hour',
         docker_conn_id='somenergia_registry',
-        image='{{ conn.somenergia_registry.host }}/{}-requirements:latest'.format(repo_name),
+        image='{}/{}-requirements:latest'.format('{{ conn.somenergia_registry.host }}',repo_name),
         working_dir=f'/repos/{repo_name}',
         command='python3 -m datasources.omie.omie_update_last_hour_price "{{ var.value.puppis_prod_db}}"',
         docker_url=Variable.get("generic_moll_url"),
