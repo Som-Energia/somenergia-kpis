@@ -28,6 +28,8 @@ mount_nfs = Mount(source="local", target="/repos", type="volume", driver_config=
 
 with DAG(dag_id='hs_transform_conversations_dag', start_date=datetime(2020,3,20), schedule_interval='@hourly', catchup=True, tags=["Helpscout", "Transform"], default_args=args) as dag:
 
+    repo_name = 'somenergia-kpis'
+
     sensor_hs_cru = ExternalTaskSensor(
         task_id="sensor_hs_cru",
         external_dag_id='hs_get_conversations_dag',
@@ -40,8 +42,8 @@ with DAG(dag_id='hs_transform_conversations_dag', start_date=datetime(2020,3,20)
         api_version='auto',
         task_id='hs_transform_conversations',
         docker_conn_id='somenergia_registry',
-        image='{{ conn.somenergia_registry.host }}/somenergia-kpis-requirements:latest',
-        working_dir='/repos/somenergia-kpis',
+        image='{{ conn.somenergia_registry.host }}/{}-requirements:latest'.format(repo_name),
+        working_dir=f'/repos/{repo_name}',
         command='python3 -m pipelines.hs_transform_conversations "{{ data_interval_start }}" "{{ data_interval_end }}" \
                 "{{ var.value.puppis_prod_db }}"',
         docker_url=Variable.get("generic_moll_url"),
