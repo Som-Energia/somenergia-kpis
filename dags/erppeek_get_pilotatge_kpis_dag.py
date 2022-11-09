@@ -44,9 +44,9 @@ with DAG(dag_id='erppeek_get_pilotatge_kpis_daily_dag', start_date=datetime(2022
         docker_conn_id='somenergia_registry',
         image='{}/{}-requirements:latest'.format('{{ conn.somenergia_registry.host }}',repo_name),
         working_dir=f'/repos/{repo_name}',
-        command='python3 /repos/{}/datasources/erppeek/filtered_models_single_kpis.py "{{ var.value.dades_prod_db }}" "daily" \
+        command='python3 -m datasources.erppeek.filtered_models_single_kpis "{{ var.value.dades_prod_db }}" "daily" \
                 "{{ var.value.erp_server_prod_ro }}" "{{ var.value.erp_database }}" "{{ var.value.erp_user_airflow }}" \
-                "{{ var.value.erp_pass_airflow_secret }}" "{{ var.value.schema_kpis_dades_prod_db }}"'.format(repo_name),
+                "{{ var.value.erp_pass_airflow_secret }}" "{{ var.value.schema_kpis_dades_prod_db }}"',
         docker_url=Variable.get("generic_moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
