@@ -12,7 +12,7 @@ from pathlib import Path
 
 from sqlalchemy import create_engine
 
-from omie_utils import (
+from .omie_utils import (
     get_file_list,
 )
 
