@@ -7,13 +7,13 @@ from sqlalchemy.orm import Session
 
 from classes.models import HS_tag
 
-def create_HS_engine(engine, hs_app_id, hs_app_secret):
+def create_HS_engine(hs_app_id, hs_app_secret):
     hs = HelpScout(app_id=hs_app_id, app_secret=hs_app_secret, sleep_on_rate_limit_exceeded=True)
-    return hs, engine
+    return hs
 
 def update_tags(engine, hs_app_id, hs_app_secret, dis, die):
 
-    hs, engine = create_HS_engine(engine, hs_app_id, hs_app_secret)
+    hs = create_HS_engine(hs_app_id, hs_app_secret)
     #Importem totes les tags de Som Energia a HelpScout
     tags = hs.tags.get()
 

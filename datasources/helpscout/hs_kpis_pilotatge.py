@@ -26,6 +26,21 @@ def create_table(engine):
 
     return conv_table
 
+def to_iso(dates):
+    return [pendulum.from_format(date, 'YYYY-MM-DD', tz='Europe/Madrid').in_tz('UTC').to_iso8601_string()
+            for date in dates]
+
+def get_report(hs):
+    
+    start='2022-11-16'
+    end='2022-11-22'
+    previous_start='2022-11-09'
+    previous_end='2022-11-15'
+    isodates = to_iso([start, end, previous_start, previous_end])
+    mailbox_id=24004
+    report_dades = f'reports/email?start={isodates[0]}&end={isodates[1]}&previousStart={isodates[2]}&previousEnd={isodates[3]}&mailboxid={mailbox_id}&officeHours=true'
+    hs.hit(report_dades, 'get')
+
 def get_kpis_pilotatge(hs, engine, reports_table, inici, fi):
 
     mailbox=123456
