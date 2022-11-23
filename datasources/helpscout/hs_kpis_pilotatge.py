@@ -41,7 +41,7 @@ def get_report(hs):
     report_dades = f'reports/email?start={isodates[0]}&end={isodates[1]}&previousStart={isodates[2]}&previousEnd={isodates[3]}&mailboxid={mailbox_id}&officeHours=true'
     hs.hit(report_dades, 'get')
 
-def get_kpis_pilotatge(hs, engine, reports_table, inici, fi):
+def get_kpis_pilotatge(hs, engine, date_start, date_end):
 
     mailbox=123456
 
@@ -51,18 +51,23 @@ def get_kpis_pilotatge(hs, engine, reports_table, inici, fi):
 
     print(f"Let's get report with params: {params}")
 
-    conversations = hs.hit(report_url, )
+    report = hs.hit(report_url, 'get')
 
-    print(f"Let's insert conversations")
+    # convert report to dataframe
 
-    for c in conversations:
-        statement = reports_table.insert().values(
-            data=c.__dict__,
-            task_data_interval_start=pendulum.parse(inici),
-            task_data_interval_end=pendulum.parse(fi),
-            task_run=pendulum.now()
-        )
-        engine.execute(statement)
+    print(f"Let's insert report")
+
+    pd.to_sql(...)
+
+
+    # for c in conversations:
+    #     statement = reports_table.insert().values(
+    #         data=c.__dict__,
+    #         task_data_interval_start=pendulum.parse(inici),
+    #         task_data_interval_end=pendulum.parse(fi),
+    #         task_run=pendulum.now()
+    #     )
+    #     engine.execute(statement)
 
     return True
 
@@ -71,16 +76,9 @@ def update_hs_kpis_pilotatge(date_interval_start, date_interval_end, engine, hs_
     date_start=pendulum.parse(date_interval_start)
     date_end=pendulum.parse(date_interval_end)
 
-    hs, engine = create_HS_engine(engine, hs_app_id, hs_app_secret)
-    reports_table = create_table(engine)
+    hs = create_HS_engine(hs_app_id, hs_app_secret)
 
-    params = {
-        'inici': date_start,
-        'fi': date_end,
-        'status':'closed',
-    }
-
-    return get_kpis_pilotatge(hs, engine, reports_table, **params)
+    return get_kpis_pilotatge(hs, engine, date_start, date_end)
 
 if __name__ == '__main__':
 

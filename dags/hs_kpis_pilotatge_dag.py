@@ -28,7 +28,7 @@ nfs_config = {
 driver_config = DriverConfig(name='local', options=nfs_config)
 mount_nfs = Mount(source="local", target="/repos", type="volume", driver_config=driver_config)
 
-with DAG(dag_id='hs_kpis_pilotatge_dag', start_date=datetime(2020,3,20), schedule_interval='@hourly', catchup=True, tags=["Helpscout", "Extract"], default_args=args) as dag:
+with DAG(dag_id='hs_kpis_pilotatge_dag', start_date=datetime(2022,11,21), schedule_interval='@weekly', catchup=True, tags=["Helpscout", "Extract"], default_args=args) as dag:
 
     repo_name = 'somenergia-kpis'
 
@@ -39,7 +39,7 @@ with DAG(dag_id='hs_kpis_pilotatge_dag', start_date=datetime(2020,3,20), schedul
 
     get_conversations_task = DockerOperator(
         api_version='auto',
-        task_id='hs_get_kpis_pilotatge',
+        task_id='hs_kpis_pilotatge',
         docker_conn_id='somenergia_registry',
         image='{}/{}-requirements:latest'.format('{{ conn.somenergia_registry.host }}',repo_name),
         working_dir=f'/repos/{repo_name}',
