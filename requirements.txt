@@ -13,3 +13,4 @@ ERPpeek>=1.7.1
 SQLAlchemy-Utils>=0.38.2
 dbt-postgres>=1.2.1
 typer==0.6.1
+paramiko==2.12.0
