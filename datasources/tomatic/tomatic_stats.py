@@ -15,6 +15,8 @@ def get_csv_by_ssh(dbapi, schema, username, password, hostname, sshport, remotep
     with sftp.open(remotepath) as f:
         calls = pd.read_csv(f, sep='\t')
         calls['DATE'] = pd.to_datetime(calls['DATE'], utc=True).dt.date
+        calls.columns = calls.columns.str.lower()
+        import ipdb; ipdb.set_trace()
         calls.to_sql("tomatic_stats", con=dbapi, schema=schema, if_exists='replace', index=False)
 
 
