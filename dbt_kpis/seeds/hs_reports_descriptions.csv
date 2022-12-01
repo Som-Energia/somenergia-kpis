@@ -1,5 +1,6 @@
-name,teams,instruccions,hs_endpoint,start_date,end_date,cmp_start_date,cmp_end_date,mailbox,office_hours
-Reclama Report,Reclama,Reports -> bustia reclama -> Filtre per setmana,Email Report,monday_of_previous_week,sunday_of_previous_week,'','',24004,true
-Factura Report,Factura,Reports -> bustia factura -> Filtre per setmana,Email Report,monday_of_previous_week,sunday_of_previous_week,'','',26699,true
-Comer Report,Factura,Reports -> bustia factura -> Filtre per setmana,Email Report,monday_of_previous_week,sunday_of_previous_week,'','',25853,true
-Modifica Report,Factura,Reports -> bustia factura -> Filtre per setmana,Email Report,monday_of_previous_week,sunday_of_previous_week,'','',25863,true
+name,teams,instruccions,hs_endpoint,start_date,end_date,cmp_start_date,cmp_end_date,mailbox,office_hours,frequency
+Reclama Setmanal,Reclama,Reports -> bustia reclama -> Filtre per setmana,Email Report,monday_of_previous_week,sunday_of_previous_week,'','',24004,true,weekly
+Factura Setmanal,Factura,Reports -> bustia factura -> Filtre per setmana,Email Report,monday_of_previous_week,sunday_of_previous_week,'','',26699,true,weekly
+Comer Setmanal,Factura,Reports -> bustia factura -> Filtre per setmana,Email Report,monday_of_previous_week,sunday_of_previous_week,'','',25853,true,weekly
+Modifica Setmanal,Factura,Reports -> bustia factura -> Filtre per setmana,Email Report,monday_of_previous_week,sunday_of_previous_week,'','',25863,true,weekly
+Cobraments Diari,Cobraments,,Email Report,yesterday,today,'','',138933,true,daily

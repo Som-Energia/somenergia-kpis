@@ -1,13 +1,10 @@
 from datetime import timedelta
 import datetime
 from helpscout.client import HelpScout
-from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy import Table, Column, Integer, MetaData, DateTime
 import sqlalchemy
 import sys
 import pendulum
 import pandas as pd
-import ast
 
 def get_hs_kpis_todo(dbapi, schema = "public"):
     query = f"SELECT name, start_date, end_date, cmp_start_date, cmp_end_date, office_hours, mailbox FROM {schema}.hs_reports_descriptions"
@@ -20,6 +17,11 @@ def human_string_to_date(filter):
         return str(datetime.datetime.today().date() - timedelta(days=datetime.datetime.today().date().weekday())+timedelta(days=0, weeks=-1))
     elif filter == 'sunday_of_previous_week':
         return str(datetime.datetime.today().date() - timedelta(days=datetime.datetime.today().date().weekday())+timedelta(days=0))
+    elif filter == 'yesterday':
+        return str(datetime.datetime.today().date() - timedelta(days=1))
+    elif filter == 'today':
+        return str(datetime.datetime.today().date())
+
     else:
         return filter
         #raise NotImplementedError(filter)
@@ -42,6 +44,7 @@ def to_iso(dates):
 
 def calculate_kpi(hs_engine, report, dbapi, schema):
     
+    #reports
     start = human_string_to_date(report['start_date'])
     end = human_string_to_date(report['end_date'])
     previous_start = report['cmp_start_date']
@@ -54,7 +57,21 @@ def calculate_kpi(hs_engine, report, dbapi, schema):
     report_name = report['name']
     
     print(f"Let's get report with params: {params}")
-
+    
+    import ipdb; ipdb.set_trace()
+    
+    #conversations
+    mailbox = report['mailbox']
+    status = 'active'
+    assigned_to = 
+    conversations_url = f'conversations?{params}'
+    params2 = f'?status=active&query=(assigned:"Unassigned")&mailbox=24004'
+    
+    hs_engine.conversations.get('status=active&query=(assigned:"Unassigned")&mailbox=26699')
+    hs_engine.conversations.get('query=(assigned:"Unassigned" AND mailbox:26699)')
+    hs_engine.conversations.get('query=(status: AND mailbox:26699)')
+    hs_engine.conversations.get('?mailbox=94031')#pobreza
+    
     hs_response = hs_engine.hit(report_url, 'get')
     
     df = pd.DataFrame.from_dict(hs_response[0]['current'])
