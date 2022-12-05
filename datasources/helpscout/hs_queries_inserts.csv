@@ -1,0 +1,3 @@
+id,create_date,name,description,action,query,frequency,is_active
+1,2022-12-05 00:00:00+00,Reports,All reports from reports endpoint HS,report,"",weekly,True
+2,2022-12-05 00:00:00+00,Unassigned indicators,Custom metrics about unassigned conversations,unassigned,"assigned=Unassigned",weekly,True

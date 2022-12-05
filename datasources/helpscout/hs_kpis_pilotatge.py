@@ -1,4 +1,6 @@
 import pandas as pd
+import re
+import pendulum
 import sqlalchemy
 from sqlalchemy import MetaData, Integer, DateTime, Boolean, Column, String, Table
 from helpscout.client import HelpScout
@@ -10,10 +12,10 @@ app = typer.Typer()
 
 def create_table(conn, schema):
 
-    table_name = f'hs_queries'
+    table_name = 'hs_queries'
 
     meta = MetaData(conn)
-    dbtable = Table(table_name, meta,
+    hs_queries_table = Table(table_name, meta,
         Column("id", Integer, primary_key=True, autoincrement=True),
         Column("create_date", DateTime(timezone=True)),
         Column("name", String),
@@ -25,31 +27,46 @@ def create_table(conn, schema):
         schema=schema
     )
 
-    dbtable.create(conn, checkfirst=True)
+    hs_queries_table.create(conn, checkfirst=True)
 
-    import ipdb; ipdb.set_trace()
-    dbtable.insert().values()
+    conn.execute(f"TRUNCATE TABLE {schema}.{table_name}")
 
+    pd.read_csv('datasources/helpscout/hs_queries_inserts.csv').to_sql(table_name, con=conn, schema=schema, if_exists='append', index=False)
+
+    table_name = 'hs_values'
+
+    hs_kpis_table = Table(table_name, meta,
+        Column("insert_time", DateTime(timezone=True)),
+        Column("dag_start_date", DateTime(timezone=True)),
+        Column("dag_end_date", DateTime(timezone=True)),
+        Column("hs_query_id", Integer),
+        Column("mailbox_id", Integer),
+        Column("mailbox_email", String),
+        Column("kpi_name", String),
+        Column("value", Integer),
+        schema=schema
+    )
+
+    hs_kpis_table.create(meta.bind, checkfirst=True)
 
 
 def get_hs_kpis_todo(dbapi, schema = "public"):
-    query = f"SELECT name, description, action, query, frequency, is_active FROM {schema}.hs_queries WHERE is_active = true"
+    query = f"SELECT id, name, description, action, query, frequency, is_active FROM {schema}.hs_queries WHERE is_active = true"
     df = pd.read_sql(query, dbapi)
     return df
 
 def create_hs_engine(hs_app_id, hs_app_secret):
     return HelpScout(app_id=hs_app_id, app_secret=hs_app_secret, sleep_on_rate_limit_exceeded=True)
 
-def get_mailbox_status(dbapi, schema, hs_engine, kpis_todo, iso_date_start: str, iso_date_end: str):
-    import ipdb; ipdb.set_trace()
+def get_mailbox_status(dbapi, schema, hs_engine, query_params, iso_date_start: str, iso_date_end: str, kpi_id: int, mailbox: dict):
 
-    params = f"{kpis_todo['query']}&start={iso_date_start}&end={iso_date_end}"
+    params = f"start={iso_date_start}&end={iso_date_end}&{query_params}"
 
-    logging.info(f"Get conversation stats with params: {params}")
+    print(f"Get conversation stats with params: {params}")
 
     hs_response = hs_engine.conversations.get(params=params)
 
-    logging.info(f"Insert report to db")
+    print(f"Insert report to db")
 
     df = pd.DataFrame.from_dict(hs_response[0]['current'])
     df.reset_index(inplace=True)
@@ -60,14 +77,12 @@ def get_mailbox_status(dbapi, schema, hs_engine, kpis_todo, iso_date_start: str,
     return hs_response
 
 
-def get_report(dbapi, schema, hs_engine, kpis_todo, iso_date_start: str, iso_date_end: str):
+def get_report(dbapi, schema, hs_engine, query_params, iso_date_start: str, iso_date_end: str, kpi_id: int, mailbox: dict):
 
     # params = f'&mailboxes={mailbox_id}&start={isodates[0]}&end={isodates[1]}&cmpStartDate={isodates[2]}&cmpEndDate={isodates[3]}&officeHours={office_hours}'
+    report_url = f'reports/email?start={iso_date_start}&end={iso_date_end}&{query_params}'
 
-    params = kpis_todo['query']
-    report_url = f'reports/email?{params}&start={iso_date_start}&end={iso_date_end}'
-
-    logging.info(f"Get report with params: {report_url}")
+    print(f"Get report with params: {report_url}")
 
     hs_response = hs_engine.hit(report_url, 'get')
 
@@ -76,12 +91,14 @@ def get_report(dbapi, schema, hs_engine, kpis_todo, iso_date_start: str, iso_dat
     df['values'] = df[['volume','resolutions','responses']].bfill(axis=1).iloc[:, 0]
     df.drop(columns=['volume', 'resolutions', 'responses'], axis=1, inplace=True)
 
-    df['query_name'] =  kpis_todo['name']
-    df['query_description'] =  kpis_todo['description']
+    df['mailbox_id'] = mailbox['id']
+    df['mailbox_email'] = mailbox['email']
+    df['hs_query_id'] = kpi_id
+    df['dag_start_date'] = pendulum.parse(iso_date_start)
+    df['dag_end_date'] = pendulum.parse(iso_date_end)
+    df['insert_time'] = pd.Timestamp.utcnow()
 
-    df['calculation_time'] = pd.Timestamp.utcnow()
-
-    logging.info(f"Insert report to db")
+    print(f"Insert report to db")
 
     df.to_sql(con=dbapi, name='hs_reports', if_exists='append', schema=schema, index=False)
     #print(f"{kpi} report inserted to db")
@@ -93,9 +110,8 @@ def update_hs_kpis_pilotatge(
         dbapi: str,
         schema: str,
         hs_app_id: str,
-        hs_app_secret: str,
-        kpi_todo: str
-    ):
+        hs_app_secret: str
+):
 
     interval_start = to_iso(interval_start)
     interval_end = to_iso(interval_end)
@@ -104,7 +120,7 @@ def update_hs_kpis_pilotatge(
 
     hs_engine = create_hs_engine(hs_app_id, hs_app_secret)
 
-    mailboxes = [
+    mailboxes = { m.id:
         {
             'id':m.id,
             'created_at': m.createdAt,
@@ -112,23 +128,40 @@ def update_hs_kpis_pilotatge(
             'name': m.name,
             'updated_at': m.updatedAt
         } for m in hs_engine.mailboxes.get()
-    ]
+    }
 
-    for _, kpi_todo in kpis_todo.iterrows():
+    # all_query_params = [kpi_todo if 'mailbox' in kpi_todo['query'] else f"{kpis_todo['query']}&mailboxes={mailbox}" for mailbox in mailboxes for _, kpi_todo in kpis_todo.iterrows]
 
-        if kpi_todo['action'] == 'report':
-            # if not 'mailbox' in kpi_todo['query']
-            #   for mailbox in mailboxes
-            #        kpi_todo['query'] = f"{kpi_todo['query']}&mailbox={mailbox['id']}"
-            #        get_report()
-            get_report(dbapi, schema, hs_engine, kpi_todo, dbapi, schema, interval_start, interval_end)
+    # for query_params in all_query_params:
+    #     if kpi_todo['action'] == 'report':
+    #         get_report(dbapi, schema, hs_engine, query_params, dbapi, interval_start, interval_end)
+    #     elif kpi_todo['action'] == 'unassigned':
+    #         get_mailbox_status(dbapi, schema, hs_engine, query_params, interval_start, interval_end)
+    #     else:
+    #         raise NotImplementedError(kpi_todo['action'])
 
-        elif kpi_todo['action'] == 'unassigned':
+    for kpi_todo in kpis_todo.to_dict('records'):
 
-            get_mailbox_status(dbapi, schema, hs_engine, kpi_todo, interval_start, interval_end)
-
+        if not kpi_todo['query'] or not 'mailbox' in kpi_todo['query']:
+            for mailbox_id, mailbox in mailboxes.items():
+                query_params = f"{kpi_todo['query']}&mailboxes={mailbox_id}" if kpi_todo['query'] else f"mailboxes={mailbox_id}"
+                if kpi_todo['action'] == 'report':
+                    get_report(dbapi, schema, hs_engine, query_params, interval_start, interval_end, kpi_todo['id'], mailbox)
+                elif kpi_todo['action'] == 'unassigned':
+                    get_mailbox_status(dbapi, schema, hs_engine, query_params, interval_start, interval_end, kpi_todo['id'], mailbox)
+                else:
+                    raise NotImplementedError(kpi_todo['action'])
         else:
-            raise NotImplementedError(kpi_todo['action'])
+            query_mailbox_id = re.search('mailboxes=(\d*)', kpi_todo['query']).group(1)
+            if not query_mailbox_id:
+                raise Exception(f"malformed query param {kpi_todo['query']}")
+            mailbox = mailboxes[query_mailbox_id]
+            if kpi_todo['action'] == 'report':
+                get_report(dbapi, schema, hs_engine, kpi_todo['query'], interval_start, interval_end, kpi_todo['id'], mailbox)
+            elif kpi_todo['action'] == 'unassigned':
+                get_mailbox_status(dbapi, schema, hs_engine, kpi_todo['query'], interval_start, interval_end, kpi_todo['id'], mailbox)
+            else:
+                raise NotImplementedError(kpi_todo['action'])
 
 
 @app.command()
