@@ -1,4 +1,5 @@
 import datetime
+import pendulum
 
 from pathlib import Path
 import pytz
@@ -42,3 +43,6 @@ def dateCETstr_to_CETtzdt(date: str, format='%Y%m%d'):
     date = datetime.datetime.strptime(date, format)
     time = pytz.timezone('Europe/Madrid').localize(date)
     return time
+
+def to_iso(date):
+    return pendulum.parse(date).in_tz('UTC').to_iso8601_string()

@@ -44,7 +44,7 @@ with DAG(dag_id='hs_kpis_pilotatge_dag', start_date=datetime(2022,11,21), schedu
         image='{}/{}-requirements:latest'.format('{{ conn.somenergia_registry.host }}',repo_name),
         working_dir=f'/repos/{repo_name}',
         command='python3 -m datasources.helpscout.hs_kpis_pilotatge "{{ data_interval_start }}" "{{ data_interval_end }}" \
-                "{{ var.value.puppis_prod_db }}" "{{ var.value.helpscout_api_id }}" "{{ var.value.helpscout_api_secret }}"',
+                "{{ var.value.dades_prod_db }}" prod "{{ var.value.helpscout_api_id }}" "{{ var.value.helpscout_api_secret }}"',
         docker_url=Variable.get("generic_moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
