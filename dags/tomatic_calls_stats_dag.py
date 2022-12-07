@@ -28,22 +28,24 @@ nfs_config = {
 driver_config = DriverConfig(name='local', options=nfs_config)
 mount_nfs = Mount(source="local", target="/repos", type="volume", driver_config=driver_config)
 
-with DAG(dag_id='odoo_get_hr_employee_dag_v2', start_date=datetime(2022,5,23), schedule_interval='@weekly', catchup=False, tags=["Odoo", "Extract"], default_args=args) as dag:
+with DAG(dag_id='tomatic_calls_stats_dag', start_date=datetime(2022,11,28), schedule_interval='@daily', catchup=False, tags=["Tomatic", "Extract"], default_args=args) as dag:
 
     repo_name = 'somenergia-kpis'
 
     task_check_repo = build_check_repo_task(dag=dag, repo_name=repo_name)
     task_git_clone = build_git_clone_ssh_task(dag=dag, repo_name=repo_name)
-    task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='odoo_get_hr_employee', repo_name=repo_name)
+    task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='tomatic_calls_stats', repo_name=repo_name)
     task_update_image = build_update_image_task(dag=dag, repo_name=repo_name)
 
-    get_hr_employee_task = DockerOperator(
+    tomatic_calls_stats_task = DockerOperator(
         api_version='auto',
-        task_id='odoo_get_hr_employee',
+        task_id='tomatic_calls_stats',
         docker_conn_id='somenergia_registry',
         image='{}/{}-requirements:latest'.format('{{ conn.somenergia_registry.host }}',repo_name),
         working_dir=f'/repos/{repo_name}',
-        command='python3 -m datasources.odoo.hr_employees "{{ var.value.odoo_dbapi}}" "{{ var.value.puppis_prod_db}}" "{{ dag_run.start_date }}"',
+        command='python3 -m datasources.tomatic.tomatic_stats "{{ var.value.dades_prod_db }}" prod "{{ var.value.tomatera_user }}" \
+                 "{{ var.value.tomatera_password }}" "{{ var.value.tomatera_host }}" "{{ var.value.tomatera_port }}" \
+                  "/opt/www/somenergia-tomatic/scripts/stats.csv"',
         docker_url=Variable.get("generic_moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
@@ -55,6 +57,6 @@ with DAG(dag_id='odoo_get_hr_employee_dag_v2', start_date=datetime(2022,5,23), s
     task_check_repo >> task_git_clone
     task_check_repo >> task_branch_pull_ssh
     task_git_clone >> task_update_image
-    task_branch_pull_ssh >> get_hr_employee_task
+    task_branch_pull_ssh >> tomatic_calls_stats_task
     task_branch_pull_ssh >> task_update_image
-    task_update_image >> get_hr_employee_task
+    task_update_image >> tomatic_calls_stats_task
