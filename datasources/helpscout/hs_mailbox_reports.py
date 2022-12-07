@@ -2,13 +2,16 @@ import pandas as pd
 import re
 import pendulum
 import sqlalchemy
-from sqlalchemy import MetaData, Integer, DateTime, Boolean, Column, String, Table
+from sqlalchemy import MetaData, Integer, DateTime, Boolean, Column, String, Table, Float
 from helpscout.client import HelpScout
 import typer
 import logging
 from common.utils import to_iso
 
 app = typer.Typer()
+
+class MalformedRequestException(Exception):
+    pass
 
 def create_table(conn, schema):
 
@@ -33,7 +36,7 @@ def create_table(conn, schema):
 
     pd.read_csv('datasources/helpscout/hs_queries_inserts.csv').to_sql(table_name, con=conn, schema=schema, if_exists='append', index=False)
 
-    table_name = 'hs_values'
+    table_name = 'hs_queries_values'
 
     hs_kpis_table = Table(table_name, meta,
         Column("insert_time", DateTime(timezone=True)),
@@ -43,7 +46,7 @@ def create_table(conn, schema):
         Column("mailbox_id", Integer),
         Column("mailbox_email", String),
         Column("kpi_name", String),
-        Column("value", Integer),
+        Column("value", Float),
         schema=schema
     )
 
@@ -58,26 +61,55 @@ def get_hs_kpis_todo(dbapi, schema = "public"):
 def create_hs_engine(hs_app_id, hs_app_secret):
     return HelpScout(app_id=hs_app_id, app_secret=hs_app_secret, sleep_on_rate_limit_exceeded=True)
 
-def get_mailbox_status(dbapi, schema, hs_engine, query_params, iso_date_start: str, iso_date_end: str, kpi_id: int, mailbox: dict):
+def get_mailbox_status(dbapi, schema, hs_engine: HelpScout, query, kpi_id: int, mailbox: dict):
 
-    params = f"start={iso_date_start}&end={iso_date_end}&{query_params}"
+    query_params = f"{query}&mailbox={mailbox['id']}" if query else f"mailbox={mailbox['id']}"
 
-    print(f"Get conversation stats with params: {params}")
+    print(f"Get conversation stats with params: {query_params}")
 
-    hs_response = hs_engine.conversations.get(params=params)
+    hs_response = hs_engine.conversations.get(params=query_params)
 
-    print(f"Insert report to db")
+    if hs_response:
+        nunassigned = len(hs_response)
+        oldest_unassigned_time = min([pendulum.parse(d.createdAt) for d in hs_response])
+        oldest_unassigned_minutes = oldest_unassigned_time.diff(pendulum.now()).in_minutes()
+        oldest_unassigned_timestamp = oldest_unassigned_time.timestamp()
+    else:
+        nunassigned = 0
+        oldest_unassigned_timestamp = None
+        oldest_unassigned_minutes = None
 
-    df = pd.DataFrame.from_dict(hs_response[0]['current'])
-    df.reset_index(inplace=True)
+    print(f"Insert mailbox status query result to db ({nunassigned},{oldest_unassigned_timestamp},{oldest_unassigned_minutes})")
 
-    df.to_sql(con=dbapi, name='hs_reports', if_exists='append', schema=schema, index=False)
+    df = pd.DataFrame(
+        columns=['kpi_name','value'],
+        data=[
+            ("unassigned_conversations",nunassigned),
+            ('oldest_unassigned_timestamp',oldest_unassigned_timestamp),
+            ('minutes_unassigned',oldest_unassigned_minutes)
+        ]
+    )
+
+    df = df.astype(
+        dtype= {"kpi_name":object, "value":"float64"}
+    )
+
+    df['mailbox_id'] = mailbox['id']
+    df['mailbox_email'] = mailbox['email']
+    df['hs_query_id'] = kpi_id
+    df['dag_start_date'] = None
+    df['dag_end_date'] = None
+    df['insert_time'] = pd.Timestamp.utcnow()
+
+    df.to_sql(con=dbapi, name='hs_queries_values', if_exists='append', schema=schema, index=False)
     #print(f"{kpi} report inserted to db")
 
     return hs_response
 
 
-def get_report(dbapi, schema, hs_engine, query_params, iso_date_start: str, iso_date_end: str, kpi_id: int, mailbox: dict):
+def get_report(dbapi, schema, hs_engine, query, iso_date_start: str, iso_date_end: str, kpi_id: int, mailbox: dict):
+
+    query_params = f"{query_params}&mailboxes={mailbox['id']}" if query else f"mailboxes={mailbox['id']}"
 
     # params = f'&mailboxes={mailbox_id}&start={isodates[0]}&end={isodates[1]}&cmpStartDate={isodates[2]}&cmpEndDate={isodates[3]}&officeHours={office_hours}'
     report_url = f'reports/email?start={iso_date_start}&end={iso_date_end}&{query_params}'
@@ -87,9 +119,10 @@ def get_report(dbapi, schema, hs_engine, query_params, iso_date_start: str, iso_
     hs_response = hs_engine.hit(report_url, 'get')
 
     df = pd.DataFrame.from_dict(hs_response[0]['current'])
-    df.reset_index(inplace=True)
-    df['values'] = df[['volume','resolutions','responses']].bfill(axis=1).iloc[:, 0]
-    df.drop(columns=['volume', 'resolutions', 'responses'], axis=1, inplace=True)
+    df = df.reset_index().rename(columns={'index':'kpi_name'})
+
+    df['value'] = df[['volume','resolutions','responses']].bfill(axis=1).iloc[:, 0] # coalesce
+    df.drop(columns=['volume', 'resolutions', 'responses','startDate','endDate'], axis=1, inplace=True)
 
     df['mailbox_id'] = mailbox['id']
     df['mailbox_email'] = mailbox['email']
@@ -100,8 +133,16 @@ def get_report(dbapi, schema, hs_engine, query_params, iso_date_start: str, iso_
 
     print(f"Insert report to db")
 
-    df.to_sql(con=dbapi, name='hs_reports', if_exists='append', schema=schema, index=False)
-    #print(f"{kpi} report inserted to db")
+    df.to_sql(con=dbapi, name='hs_queries_values', if_exists='append', schema=schema, index=False)
+    print(f"{query} report inserted to db")
+
+def get_report_or_query(action, dbapi, schema, hs_engine, query, interval_start, interval_end, kpi_id, mailbox):
+    if action == 'report':
+        get_report(dbapi, schema, hs_engine, query, interval_start, interval_end, kpi_id, mailbox)
+    elif action == 'unassigned':
+        get_mailbox_status(dbapi, schema, hs_engine, query, kpi_id, mailbox)
+    else:
+        raise NotImplementedError(action)
 
 @app.command()
 def update_hs_kpis_pilotatge(
@@ -130,39 +171,17 @@ def update_hs_kpis_pilotatge(
         } for m in hs_engine.mailboxes.get()
     }
 
-    # all_query_params = [kpi_todo if 'mailbox' in kpi_todo['query'] else f"{kpis_todo['query']}&mailboxes={mailbox}" for mailbox in mailboxes for _, kpi_todo in kpis_todo.iterrows]
-
-    # for query_params in all_query_params:
-    #     if kpi_todo['action'] == 'report':
-    #         get_report(dbapi, schema, hs_engine, query_params, dbapi, interval_start, interval_end)
-    #     elif kpi_todo['action'] == 'unassigned':
-    #         get_mailbox_status(dbapi, schema, hs_engine, query_params, interval_start, interval_end)
-    #     else:
-    #         raise NotImplementedError(kpi_todo['action'])
-
     for kpi_todo in kpis_todo.to_dict('records'):
 
         if not kpi_todo['query'] or not 'mailbox' in kpi_todo['query']:
             for mailbox_id, mailbox in mailboxes.items():
-                query_params = f"{kpi_todo['query']}&mailboxes={mailbox_id}" if kpi_todo['query'] else f"mailboxes={mailbox_id}"
-                if kpi_todo['action'] == 'report':
-                    get_report(dbapi, schema, hs_engine, query_params, interval_start, interval_end, kpi_todo['id'], mailbox)
-                elif kpi_todo['action'] == 'unassigned':
-                    get_mailbox_status(dbapi, schema, hs_engine, query_params, interval_start, interval_end, kpi_todo['id'], mailbox)
-                else:
-                    raise NotImplementedError(kpi_todo['action'])
+                get_report_or_query(kpi_todo['action'], dbapi, schema, hs_engine, kpi_todo['query'], interval_start, interval_end, kpi_todo['id'], mailbox)
         else:
-            query_mailbox_id = re.search('mailboxes=(\d*)', kpi_todo['query']).group(1)
+            query_mailbox_id = re.search('mailbox(es)?=(\d*)', kpi_todo['query']).group(1)
             if not query_mailbox_id:
-                raise Exception(f"malformed query param {kpi_todo['query']}")
+                raise MalformedRequestException(f"malformed query param {kpi_todo['query']}. Mailbox(es) parameter not found.")
             mailbox = mailboxes[query_mailbox_id]
-            if kpi_todo['action'] == 'report':
-                get_report(dbapi, schema, hs_engine, kpi_todo['query'], interval_start, interval_end, kpi_todo['id'], mailbox)
-            elif kpi_todo['action'] == 'unassigned':
-                get_mailbox_status(dbapi, schema, hs_engine, kpi_todo['query'], interval_start, interval_end, kpi_todo['id'], mailbox)
-            else:
-                raise NotImplementedError(kpi_todo['action'])
-
+            get_report_or_query(kpi_todo['action'], dbapi, schema, hs_engine, kpi_todo['query'], interval_start, interval_end, kpi_todo['id'], mailbox)
 
 @app.command()
 def setupdb(dbapi: str, schema: str):
