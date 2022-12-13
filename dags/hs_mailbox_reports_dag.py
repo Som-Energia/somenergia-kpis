@@ -43,7 +43,7 @@ with DAG(dag_id='hs_mailbox_reports_dag', start_date=datetime(2022,11,21), sched
         docker_conn_id='somenergia_registry',
         image='{}/{}-requirements:latest'.format('{{ conn.somenergia_registry.host }}',repo_name),
         working_dir=f'/repos/{repo_name}',
-        command='python3 -m datasources.helpscout.hs_mailbox_reports "{{ data_interval_start }}" "{{ data_interval_end }}" \
+        command='python3 -m datasources.helpscout.hs_mailbox_reports update_hs_kpis_pilotatge "{{ data_interval_start }}" "{{ data_interval_end }}" \
                 "{{ var.value.dades_prod_db }}" prod "{{ var.value.helpscout_api_id }}" "{{ var.value.helpscout_api_secret }}"',
         docker_url=Variable.get("generic_moll_url"),
         mounts=[mount_nfs],
