@@ -28,7 +28,7 @@ nfs_config = {
 driver_config = DriverConfig(name='local', options=nfs_config)
 mount_nfs = Mount(source="local", target="/repos", type="volume", driver_config=driver_config)
 
-with DAG(dag_id='hs_mailbox_reports_dag', start_date=datetime(2022,11,21), schedule_interval='@weekly', catchup=True, tags=["Helpscout", "Extract"], default_args=args) as dag:
+with DAG(dag_id='hs_mailbox_reports_dag', start_date=datetime(2021,12,1), schedule_interval='@weekly', catchup=True, tags=["Helpscout", "Extract"], default_args=args) as dag:
 
     repo_name = 'somenergia-kpis'
 
