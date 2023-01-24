@@ -10,9 +10,9 @@ import logging
 class Employees_summary(pa.SchemaModel):
 
     employee_id: Series[int] = pa.Field(nullable=False)
-    active: Series[bool] = pa.Field(nullable=False)
-    gender: Series[str] = pa.Field(nullable=False)
-    marital: Series[str] = pa.Field(nullable=False)
+    active: Series[bool] = pa.Field(nullable=True)
+    gender: Series[str] = pa.Field(nullable=True)
+    marital: Series[str] = pa.Field(nullable=True)
     children: Series[int] = pa.Field(nullable=True)
     birthday: Series[DateTime] = pa.Field(nullable=True)
     km_home_work: Series[int] = pa.Field(nullable=True)
