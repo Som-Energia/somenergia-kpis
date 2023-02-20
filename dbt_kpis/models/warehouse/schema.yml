@@ -8,6 +8,12 @@ sources:
       - name: erppeek_kpis_description
       - name: pilotatge_int_kpis
       - name: pilotatge_float_kpis
+  - name: odoo
+    schema: public
+    tables:
+      - name: airbyte_odoo_hr_employee
+      - name: airbyte_odoo_hr_employee_calendar
+      - name: airbyte_odoo_hr_department
 
 models:
 
