@@ -29,23 +29,32 @@ class Employees_summary(pa.SchemaModel):
 
 def get_raw_hr_employees(engine):
     query = '''
-        SELECT
-            he.id as employee_id,
-            he.active,
-            he.gender,
-            he.marital,
-            he.children,
-            he.birthday,
-            he.km_home_work,
-            hd.name as department,
-            he.create_date,
-            he.write_date,
-            he.theoretical_hours_start_date
-        FROM hr_employee AS he
-        LEFT JOIN hr_department AS hd
-        ON he.department_id = hd.id
-        WHERE he.work_email IS NOT NULL
-	    AND he.user_id IS NOT NULL
+	SELECT distinct on (he.id)
+        he.id as employee_id,
+        he.active,
+        he.gender,
+        he.marital,
+        he.children,
+        he.birthday,
+        he.km_home_work,
+        hd.name as department,
+        he.create_date,
+        he.write_date,
+        he.theoretical_hours_start_date,
+        hc.date_start,
+        hc.date_end
+    FROM hr_employee AS he
+    LEFT JOIN hr_department AS hd
+    ON he.department_id = hd.id
+    left join hr_employee_calendar as hc
+    on hc.employee_id = he.id
+    WHERE he.work_email IS NOT NULL
+    AND he.user_id IS NOT NULL
+    AND hc.date_start IS NOT NULL
+	AND hc.date_start <= CURRENT_DATE
+    AND (hc.date_end IS NULL OR CURRENT_DATE <= hc.date_end)
+	AND he.active is TRUE
+    order by he.id, hc.create_date desc
     '''
 
     return pd.read_sql_query(
@@ -53,7 +62,7 @@ def get_raw_hr_employees(engine):
         con=engine,
         coerce_float=False,
         dtype={'children': 'Int64', 'km_home_work': 'Int64'},
-        parse_dates=['birthday', 'create_date', 'write_date', 'theoretical_hours_start_date']
+        parse_dates=['birthday', 'create_date', 'write_date', 'theoretical_hours_start_date', 'date_start', 'date_end']
     )
 
 
