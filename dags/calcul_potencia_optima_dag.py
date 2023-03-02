@@ -28,22 +28,22 @@ nfs_config = {
 driver_config = DriverConfig(name='local', options=nfs_config)
 mount_nfs = Mount(source="local", target="/repos", type="volume", driver_config=driver_config)
 
-with DAG(dag_id='test_mongo_dag', start_date=datetime(2023,3,2), schedule_interval='@weekly', catchup=False, tags=["ERP", "Extract", "BeeData"], default_args=args) as dag:
+with DAG(dag_id='calcul_potencia_optima_dag', start_date=datetime(2023,3,2), schedule_interval='@weekly', catchup=False, tags=["ERP", "Extract", "BeeData"], default_args=args) as dag:
 
     repo_name = 'somenergia-kpis'
 
     task_check_repo = build_check_repo_task(dag=dag, repo_name=repo_name)
     task_git_clone = build_git_clone_ssh_task(dag=dag, repo_name=repo_name)
-    task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='test_mongo', repo_name=repo_name)
+    task_branch_pull_ssh = build_branch_pull_ssh_task(dag=dag, task_name='calcul_potencia_optima', repo_name=repo_name)
     task_update_image = build_update_image_task(dag=dag, repo_name=repo_name)
 
     get_conversations_task = DockerOperator(
         api_version='auto',
-        task_id='test_mongo',
+        task_id='calcul_potencia_optima',
         docker_conn_id='somenergia_registry',
         image='{}/{}-requirements:latest'.format('{{ conn.somenergia_registry.host }}',repo_name),
         working_dir=f'/repos/{repo_name}',
-        command='python3 -m datasources.mongo.test_mongo "{{ var.value.puppis_prod_db }}"',
+        command='python3 -m datasources.erp.calcul_potencia_optima "{{ var.value.puppis_prod_db }}"',
         docker_url=Variable.get("generic_moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
