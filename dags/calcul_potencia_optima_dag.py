@@ -43,7 +43,7 @@ with DAG(dag_id='calcul_potencia_optima_dag', start_date=datetime(2023,3,2), sch
         docker_conn_id='somenergia_registry',
         image='{}/{}-requirements:latest'.format('{{ conn.somenergia_registry.host }}',repo_name),
         working_dir=f'/repos/{repo_name}',
-        command='python3 -m datasources.erp.calcul_potencia_optima "{{ var.value.dades_prod_db }}"',
+        command='python3 -m datasources.erp.calcul_potencia_optima "{{ var.value.erp_server_prod_ro }}" "{{ var.value.dades_prod_db }}"',
         docker_url=Variable.get("generic_moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
