@@ -107,7 +107,7 @@ Edit `dbconfig.py` with your data. You will have to create a database.
 
 The visualization user has to have access to new tables by default, because some scripts replace the table each day. You can set this with:
 
-```
+```sql
 ALTER DEFAULT PRIVILEGES IN SCHEMA public
 GRANT SELECT ON TABLES TO username;
 ```
@@ -118,6 +118,7 @@ GRANT SELECT ON TABLES TO username;
 $ pip install dbt-postgres
 $ dbt init
 ```
+
 Edit the ~/.dbt/profiles.yml with your connection details. You can use dbt_profile.exemple.yml as an example.
 Set the schema to your user as `dbt_<name>`
 

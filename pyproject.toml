@@ -21,10 +21,13 @@ sqlalchemy-utils = "^0.40.0"
 dbt-postgres = "^1.4.4"
 paramiko = "^3.0.0"
 typer = "^0.7.0"
+loguru = "^0.6.0"
 
 
 [tool.poetry.group.dev.dependencies]
 mkdocs-material = "^9.1.1"
+black = "^23.1.0"
+flake8 = "^6.0.0"
 
 [build-system]
 requires = ["poetry-core"]
