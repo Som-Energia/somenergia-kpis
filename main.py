@@ -106,7 +106,7 @@ function_list = {
 @click.option("-s", "--dry-run", default=False, is_flag=True, help="Show dataframes but dont save to db")
 def dispatch(function, verbose, list_functions, dry_run):
     if verbose > 1:
-        logger.info(f"[{datetime.datetime.now()}] Start operations")
+        logger.info("Start operations")
 
     if list_functions:
         logger.info(f"Available functions {list(function_list.keys())}")
@@ -130,8 +130,8 @@ def dispatch(function, verbose, list_functions, dry_run):
         results.append(result)
 
     if verbose > 1:
-        logger.info(results)
-        logger.info(f"[{datetime.datetime.now()}] Job's Done, Have a Nice Day")
+        logger.info(results or "No results to show")
+        logger.info("Job's Done, Have a Nice Day")
     return results
 
 
