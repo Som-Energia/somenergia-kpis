@@ -91,11 +91,14 @@ This means that if you have the environment activated, you can now use the `poet
 This will export the dependencies listed in `pyproject.toml` to `requirements.txt` and `requirements-dev.txt` files. This is useful for deployment in production environments. Read more about this in the [poetry documentation](https://python-poetry.org/docs/cli/#export).
 
 ```sh
-$ poetry export -f requirements.txt --only main --output requirements.txt --without-hashes
-
-$ poetry export -f requirements.txt --only dev --output requirements-dev.txt --without-hashes
+poetry export -f requirements.txt --only main --output requirements.txt --without-hashes
 ```
 
+for development dependencies:
+
+```sh
+poetry export -f requirements.txt --only dev --output requirements-dev.txt --without-hashes
+```
 
 
 ## Database configuration
