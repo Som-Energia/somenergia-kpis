@@ -49,7 +49,7 @@ def main_update_historical_hour_price(verbose, dry_run):
 
 # TODO Pendent de posar a prod
 def main_get_historical_energy_buy(verbose, dry_run):
-    raise NotImplemented
+    raise NotImplementedError
     engine = None if dry_run else create_engine(local_db["dbapi"])
     omie_pdbc_dir = Path(directories["OMIE_HISTORICAL_PDBC"])
     return get_historical_energy_buy(engine, omie_pdbc_dir, verbose, dry_run)
