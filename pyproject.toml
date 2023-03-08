@@ -5,6 +5,13 @@ description = ""
 authors = ["Equip de dades de Som Energia <dades@somenergia.coop>"]
 readme = "README.md"
 
+packages = [
+    { include = "main.py", from = "." }
+]
+
+[tool.poetry.scripts]
+somenergia-kpis-cli = 'main:app'
+
 [tool.poetry.dependencies]
 python = "^3.8.12"
 python-helpscout-v2 = "^2.0.0"
@@ -27,6 +34,7 @@ loguru = "^0.6.0"
 mkdocs-material = "^9.1.1"
 black = "^23.1.0"
 flake8 = "^6.0.0"
+ipykernel = "^6.21.3"
 
 [build-system]
 requires = ["poetry-core"]

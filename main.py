@@ -1,8 +1,9 @@
-import datetime
-import sys
 from pathlib import Path
+from typing import List
+import enum
 
-import click
+import typer
+from loguru import logger
 from sqlalchemy import create_engine
 
 from datasources.helpscout.hs_get_conversations import update_hs_conversations
@@ -19,7 +20,7 @@ from dbconfig import directories, helpscout_api, local_db
 from pipelines.energy_budget import pipe_hourly_energy_budget
 from pipelines.omie_garantia import pipe_omie_garantia
 
-from loguru import logger
+app = typer.Typer(context_settings={"help_option_names": ["-h", "--help"]})
 
 
 def main_update_closing_prices_month(verbose, dry_run):
@@ -84,47 +85,69 @@ def main_pipe_omie_garantia(verbose, dry_run):
     return pipe_omie_garantia(engine)
 
 
-function_list = {
-    "meff_update_closing_prices_day": main_update_closing_prices_day,
-    "meff_update_closing_prices_month": main_update_closing_prices_month,
-    "omie_get_historical_hour_price": main_get_historical_hour_price,
-    "omie_update_latest_hour_price": main_update_omie_latest_hour_price,
-    "omie_update_historical_hour_price": main_update_historical_hour_price,
-    "omie_get_historical_energy_buy": main_get_historical_energy_buy,
-    "omie_update_energy_buy": main_update_energy_buy,
-    "neuro_update_energy_prediction": main_update_neuroenergia,
-    "hs_update_conversations": main_update_conversations,
-    "pipe_hourly_energy_budget": main_pipe_hourly_energy_budget,
-    "pipe_omie_garantia": main_pipe_omie_garantia,
-}
+class AvailableFunctions(str, enum.Enum):
+    meff_update_closing_prices_day = "meff_update_closing_prices_day"
+    meff_update_closing_prices_month = "meff_update_closing_prices_month"
+    omie_get_historical_hour_price = "omie_get_historical_hour_price"
+    omie_update_latest_hour_price = "omie_update_latest_hour_price"
+    omie_update_historical_hour_price = "omie_update_historical_hour_price"
+    omie_get_historical_energy_buy = "omie_get_historical_energy_buy"
+    omie_update_energy_buy = "omie_update_energy_buy"
+    neuro_update_energy_prediction = "neuro_update_energy_prediction"
+    hs_update_conversations = "hs_update_conversations"
+    pipe_hourly_energy_budget = "pipe_hourly_energy_budget"
+    pipe_omie_garantia = "pipe_omie_garantia"
+
+    @classmethod
+    def pretty_list(cls):
+        return [f.value for f in cls]
+
+    @classmethod
+    def get_function(cls, function_name):
+        __dispatcher = {
+            "meff_update_closing_prices_day": main_update_closing_prices_day,
+            "meff_update_closing_prices_month": main_update_closing_prices_month,
+            "omie_get_historical_hour_price": main_get_historical_hour_price,
+            "omie_update_latest_hour_price": main_update_omie_latest_hour_price,
+            "omie_update_historical_hour_price": main_update_historical_hour_price,
+            "omie_get_historical_energy_buy": main_get_historical_energy_buy,
+            "omie_update_energy_buy": main_update_energy_buy,
+            "neuro_update_energy_prediction": main_update_neuroenergia,
+            "hs_update_conversations": main_update_conversations,
+            "pipe_hourly_energy_budget": main_pipe_hourly_energy_budget,
+            "pipe_omie_garantia": main_pipe_omie_garantia,
+        }
+
+        return __dispatcher[function_name]
 
 
-@click.command()
-@click.option("-f", "--function", type=str, default=None, help="Choose which function you want to run.", multiple=True)
-@click.option("-v", "--verbose", default=2, count=True)
-@click.option("-l", "--list-functions", default=False, is_flag=True)
-@click.option("-s", "--dry-run", default=False, is_flag=True, help="Show dataframes but dont save to db")
-def dispatch(function, verbose, list_functions, dry_run):
+@app.command()
+def dispatch(
+    function: List[AvailableFunctions] = typer.Argument(..., help="Choose which function you want to run."),
+    verbose: int = typer.Option(2, "-v", "--verbose", count=True, help="Increase verbosity"),
+    list_functions: bool = typer.Option(False, "-l", "--list-functions", is_flag=True, help="List available functions"),
+    dry_run: bool = typer.Option(False, "-s", "--dry-run", is_flag=True, help="Show dataframes, but don't save to db"),
+):
     if verbose > 1:
         logger.info("Start operations")
 
     if list_functions:
-        logger.info(f"Available functions {list(function_list.keys())}")
+        logger.info(f"Available functions: {AvailableFunctions.pretty_list()}")
         return 0
 
     results = []
 
     for one_function in function:
         logger.info(f"Running {one_function}")
-        operation_function = function_list.get(one_function, None)
+        operation_function = AvailableFunctions.get_function(one_function)
 
         if operation_function:
             result = operation_function(verbose, dry_run)
             if result != 0 and verbose > 0 or result and verbose > 1:
-                logger.info(f"{function} ended with result {result}")
+                logger.info(f"{one_function} ended with result {result}")
         else:
             if verbose > 0:
-                logger.info(f"{function} not found. options: {list(function_list.keys())}")
+                logger.info(f"{function} not found. options: {AvailableFunctions.pretty_list()}")
             result = -1
 
         results.append(result)
@@ -136,6 +159,4 @@ def dispatch(function, verbose, list_functions, dry_run):
 
 
 if __name__ == "__main__":
-    results = dispatch()
-    final_result = min(results)
-    sys.exit(final_result)
+    app()
