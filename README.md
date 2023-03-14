@@ -49,6 +49,35 @@ pyenv activate somenergia-kpis
 poetry install
 ```
 
+You should be able to access the project's CLI as in
+
+```sh
+$ somenergia-kpis-cli --help
+Usage: somenergia-kpis-cli [OPTIONS] FUNCTION:{meff_update_closing_prices_day|
+                           meff_update_closing_prices_month|omie_get_historica
+                           l_hour_price|omie_update_latest_hour_price|omie_upd
+                           ate_historical_hour_price|omie_get_historical_energ
+                           y_buy|omie_update_energy_buy|neuro_update_energy_pr
+                           ediction|hs_update_conversations|pipe_hourly_energy
+                           _budget|pipe_omie_garantia}...
+
+Arguments:
+  FUNCTION:{meff_update_closing_prices_day|meff_update_closing_prices_month|omie_get_historical_hour_price|omie_update_latest_hour_price|omie_update_historical_hour_price|omie_get_historical_energy_buy|omie_update_energy_buy|neuro_update_energy_prediction|hs_update_conversations|pipe_hourly_energy_budget|pipe_omie_garantia}...
+                                  Choose which function you want to run.
+                                  [required]
+
+Options:
+  -v, --verbose                   Increase verbosity  [default: 2]
+  -l, --list-functions            List available functions
+  -s, --dry-run                   Show dataframes, but don't save to db
+  --install-completion [bash|zsh|fish|powershell|pwsh]
+                                  Install completion for the specified shell.
+  --show-completion [bash|zsh|fish|powershell|pwsh]
+                                  Show completion for the specified shell, to
+                                  copy it or customize the installation.
+  -h, --help                      Show this message and exit.
+```
+
 Read the following sections for more details.
 
 ### Using `pyenv`
