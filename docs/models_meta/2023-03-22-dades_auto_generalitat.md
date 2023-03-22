@@ -10,7 +10,7 @@ Contractes amb auto subjectes d'anàlisi:
 - [42] - Con excedentes y compensación Colectivo– Consumo
 - [43] - Con excedentes y compensación Colectivo a través de red– Consumo
 
-L'anàlisi es troba a [dbt_kpis](/dbt_kpis/analyses/dades_auto_generalitat.sql)
+El codi sql _analyse_ de dbt es troba a [dbt_kpis](https://github.com/Som-Energia/somenergia-kpis/blob/main/dbt_kpis/analyses/dades_auto_generalitat_via_d1s.sql)
 
 ## Necessitat 1
 
@@ -20,16 +20,29 @@ i que en el contracte no aparegui autoconsum actiu.
 
 via erpclient:
 
- cups_iniciats = cerquem tots els cups que en algun moment han fet un tramit d'auto col.lectiu:
-       tots els casos >    'Informació adicional': '-> 42;'  i  'Proces': M i 'estat': 'tancat'
-       tots els casos >    'Informació adicional': '-> 43;'  i  'Proces': M i 'estat': 'tancat'
+ cups_iniciats = cerquem tots els cups que en algun moment han fet un tramit d'auto coŀlectiu:
+
+```
+tots els casos
+> 'Informació adicional': '-> 42;' i 'Proces': M i 'estat': 'tancat'
+> 'Informació adicional': '-> 43;' i 'Proces': M i 'estat': 'tancat'
+```
+
  cups_auto_col = cercar a totes les polisses: auto 42 i a totes les polisses: auto 43
  cups_sense = cups_iniciats - cups_auto_col
+
+fent-ho a través de la base de dades, quedaria així 
+
+``` sql
+{!../dbt_kpis/analyses/dades_auto_generalitat_via_switching_finalitzats.sql!}
+```
+
+Per la necessitat 2, més tard hem descobert que podiem fer servir la mateixa tècnica però seleccionant els que **si** que havien finalitzat. És una manera més senzilla i podeu saltar-vos tot el procés que hem seguit per fer l'anàlisi via d1s. Ho trobareu al [final de tot d'aquest document](#via-el-cas-de-switching).
 
 
 ## Necessitat 2
 
-Nº de contractes amb D101(04) coŀlectiu en pas 02 d'acceptació, sense M102 obertes i acceptades i que no tinguin autoconsum actiu en el contracte
+- Nº de contractes amb D101(04) coŀlectiu en pas 02 d'acceptació, sense M102 obertes i acceptades i que no tinguin autoconsum actiu en el contracte
 
 Fem l'extracció de dades directament sobre la db de l'erp sp2.
 
@@ -102,33 +115,35 @@ fent els joins a switching basant-se en els m1:
 
 ```sql
 with d102_accepted as (
-        select ss.sw_id
-        from giscedata_switching_d1_02 as d102
+        select ss.sw_id 
+        from giscedata_switching_d1_02 as d102 
         left join giscedata_switching_step_header as ss on ss.id = d102.header_id
         where rebuig = false
     ),
     d102_ac_accepted as (
-        select ps.name as cups_d1, ps.id as ps_id
+        select ps.name as cups_d1, ps.id as ps_id, distri.name as distri
         from giscedata_switching_d1_01 as d101
         left join giscedata_switching_step_header as ss on ss.id = d101.header_id
 		left join giscedata_switching as sw on sw.id = ss.sw_id
 		left join giscedata_cups_ps ps on ps.id = sw.cups_id
         inner join d102_accepted as d102a on ss.sw_id = d102a.sw_id
-        where motiu_canvi = '04' and collectiu is True
+		left join giscedata_polissa as pol on ps.id = pol.cups
+		left join res_partner as distri on distri.id = ps.distribuidora_id
+        where motiu_canvi = '04' and collectiu is True and pol.state = 'activa'
     ),
     pol_amb as (
         select ps.name as cups_name
         from giscedata_polissa as p
         left join giscedata_cups_ps as ps on ps.id = p.cups
-        where autoconsumo ilike '42' or autoconsumo ilike '43'
+        where (autoconsumo ilike '42' or autoconsumo ilike '43') 
     ),
-    pol_sense_a as (
-        select sw.*
-        from d102_ac_accepted as sw
+	pol_sense_a as (
+        select sw.ps_id, cups_d1, distri
+        from d102_ac_accepted as sw		
         left join pol_amb as p on sw.cups_d1 = p.cups_name
-        where p.cups_name is null
+		where p.cups_name is null 
     ),
-    m101_col as (
+	m101_col as (
         select sw.cups_id, m1.id as m1_id, header_id, ss.id as ss_id, ss.sw_id
         from giscedata_switching_M1_01 as m1
     	left join giscedata_switching_step_header as ss on ss.id = m1.header_id
@@ -182,8 +197,31 @@ where m102_col.id is null
 
 La query final de la necessitat dos és, doncs:
 
+D'aquesta query en direm `query_a` més endavant.
+
 ``` sql
-{!../dbt_kpis/analyses/dades_auto_generalitat.sql!}
+{!../dbt_kpis/analyses/dades_auto_generalitat_via_d1s.sql!}
 ```
 
+Aquesta query parteix dels d1 per a arribar als casos M. Una manera alternativa és partir dels casos de switching i fer servir l'additional_info.
+
+### via el cas de switching
+
+D'aquesta query en direm `query_b`
+
+``` sql
+{!../dbt_kpis/analyses/dades_auto_generalitat_via_switching_no_finalitzats.sql!}
+```
+
+Poden haver-hi diferències entre les dues queries perquè una 
+
+- id_polissa = 312905: aquest surt amb la query_b pero no amb la query_a perque no té D1
+- id_polissa = 93247: aquest surt amb la query_a pero no la query_b perque tot i tenir una 02 aceptada, tb te una 05.
+- id_polissa = 146266: idem, hi ha un 02 acceptació pero hi ha tb un 04 (lo capta la query_a no la query_b)
+
+# Queries que ens han estat útils en l'anàlisi
+
+La query [estat_del_cas_de_giscedata_switching](https://github.com/Som-Energia/somenergia-kpis/blob/main/dbt_kpis/analyses/estat_del_cas_de_giscedata_switching.sql) agafa 6 processos de switching d'auto. 
+
+També ha estat útil saber que giscedata_switching té informació tant del tipus de cas ATR, es a dir, M, C, D, etc (columna proces_id = giscedata_switching_proces) com del pas en el que es troba el cas ATR (columna step_id = giscedata_switching_step)
 

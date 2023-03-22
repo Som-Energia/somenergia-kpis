@@ -1,5 +1,8 @@
 site_name: Somenergia's KPIs documentation
 
+extra_css:
+  - css/extra.css
+
 theme:
   name: material
   features:
