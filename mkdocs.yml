@@ -2,6 +2,8 @@ site_name: Somenergia's KPIs documentation
 
 theme:
   name: material
+  features:
+  - content.code.copy
   palette:
   - media: '(prefers-color-scheme: light)'
     scheme: default
@@ -19,7 +21,15 @@ theme:
       name: Switch to dark mode
 
 markdown_extensions:
-  - attr_list
+  - markdown_include.include:
+      base_path: docs
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+      - name: mermaid
+        class: mermaid
+        format: !!python/name:pymdownx.superfences.fence_code_format ''
+  - toc:
+      permalink: ⚓

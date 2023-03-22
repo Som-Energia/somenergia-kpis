@@ -13,7 +13,7 @@ packages = [
 somenergia-kpis-cli = 'main:app'
 
 [tool.poetry.dependencies]
-python = "^3.8.12"
+python = "^3.8.1"
 python-helpscout-v2 = "^2.0.0"
 sqlalchemy = ">=1.4.27,<2.0.0"
 lxml = "^4.9.2"
@@ -36,6 +36,7 @@ mkdocs-material = "^9.1.1"
 black = "^23.1.0"
 flake8 = "^6.0.0"
 ipykernel = "^6.21.3"
+markdown-include = "^0.8.1"
 
 [build-system]
 requires = ["poetry-core"]

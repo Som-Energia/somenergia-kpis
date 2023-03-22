@@ -1,4 +1,4 @@
-# [short title of solved problem and solution]
+# Event driven data
 
 * Status: en discussió
 * Deciders: Equip de Dades

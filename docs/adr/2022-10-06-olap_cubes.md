@@ -1,4 +1,4 @@
-# Pivoting
+# OLAP cubes
 
 * Status: accepted
 * Deciders: Equip de Dades
@@ -20,15 +20,13 @@ OLAP cubes?
 ## Considered Options
 
 1. OLAP i algun vendor o nosé
-2. dbt model via macros on-demand
+2. datasets basats en dbt models via macros on-demand
 
 ## Decision Outcome
 
-Molta gent a dbt argumenta en contra:
+2\. datasets basats en dbt models
 
-* modern datawarehouses no tenen limitacions d'espai, la limitació és el dev-time
-* Necessita pre-calcular totes les combinacions de dimensions en la granularitat mínima [1](https://youtu.be/MdSMSbQxnO0?t=1588)
-* Molt costós de dissenyar (requereix stars de kimball) [2](https://www.youtube.com/watch?v=3OcS2TMXELU)
+A revisar en el futur
 
 ### Positive Consequences <!-- optional -->
 
@@ -42,7 +40,7 @@ Molta gent a dbt argumenta en contra:
 
 ## Pros and Cons of the Options <!-- optional -->
 
-### dbt pivot
+### OLAP cube
 
 [example | description | pointer to more information | …] <!-- optional -->
 
@@ -51,21 +49,14 @@ Molta gent a dbt argumenta en contra:
 * Bad, because [argument c]
 * … <!-- numbers of pros and cons can vary -->
 
-### crosstab
+### datasets
 
-[example | description | pointer to more information | …] <!-- optional -->
+Molta gent a dbt argumenta en contra de OLAP cubes i a favor de datasets
 
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
+* modern datawarehouses no tenen limitacions d'espai, la limitació és el dev-time
+* Necessita pre-calcular totes les combinacions de dimensions en la granularitat mínima [1](https://youtu.be/MdSMSbQxnO0?t=1588)
+* Molt costós de dissenyar (requereix stars de kimball) [2](https://www.youtube.com/watch?v=3OcS2TMXELU)
 
-### pandas fal
-
-
-* Good, because very flexible
-* Bad, because
-* … <!-- numbers of pros and cons can vary -->
 
 ## Links <!-- optional -->
 
