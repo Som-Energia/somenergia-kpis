@@ -10,6 +10,5 @@ select cups_input as cups_qb, distri.name as distri
 		and sw.finalitzat is not null
 		and pol.state = 'activa'
 		and sw.proces_id = 3
-		and sw.step_id = 22
 		and pol.autoconsumo != '43' and pol.autoconsumo != '42'
 		group by cups_input, distri.name
