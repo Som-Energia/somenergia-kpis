@@ -45,7 +45,7 @@ with DAG(dag_id='tomatic_calls_stats_dag', start_date=datetime(2022,11,28), sche
         working_dir=f'/repos/{repo_name}',
         command='python3 -m datasources.tomatic.tomatic_stats "{{ var.value.dades_prod_db }}" prod "{{ var.value.tomatera_user }}" \
                  "{{ var.value.tomatera_password }}" "{{ var.value.tomatera_host }}" "{{ var.value.tomatera_port }}" \
-                  "/opt/www/somenergia-tomatic/scripts/stats.csv"',
+                  "/opt/www/somenergia-tomatic/stats.csv"',
         docker_url=Variable.get("generic_moll_url"),
         mounts=[mount_nfs],
         mount_tmp_dir=False,
