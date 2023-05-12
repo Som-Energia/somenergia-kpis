@@ -20,7 +20,13 @@ Si posem `[citation needed]` vol dir que encara ho estem analitzant.
 
 # Resumet
 
-Tot datetime a la db en timestamptz i quan insertes has de fer-ho amb el timezone especificat. En general no confiem amb `show time zone;` del servidor o client [citation needed] _perquè potser podríem acceptar agregacions naïf_ .
+Opcions:
+
+1. **use timestamptz**
+2. use timestamp (without time zone)
+3. use timestamp (without time zone) to store UTC times
+
+Triem la opció 1. tot datetime a la db en timestamptz i quan insertes has de fer-ho amb el timezone especificat. En general no confiem amb `show time zone;` del servidor o client [citation needed _perquè potser podríem acceptar agregacions naïf_ si hi confiéssim].
 
 Agregacions amb timezone `date_trunc('day', some_timestamptz, 'Europe/Madrid')`
 
@@ -132,3 +138,22 @@ En general ho faríem tot en el time zone de l'Estat, però depèn del use case 
 ### Excepcions a la norma
 
 Pel cas que estem tractant actualment, previsió de la demanda, fem servir el dia local (a picture of a clock) perquè el què ens interessa no és comparar intervals de temps, sinó comportaments del dilluns, del cap de setmana, etc. Les hores a agrupar, els dies a agrupar, són culturals, encara que de fet representin packets d'hores universals diferents [citation needed].
+
+# problemes
+
+En general [aquest recull Don't do this](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_timestamp_.28without_time_zone.29) està força bé.
+
+## timestamptz a tot arreu
+
+`timestamptz` no està suportat a tot arreu, hi ha ORMs que no ho suporten bé.
+
+Tothom ha de ser conscient que ha d'inserir explicitant el timezone o bé assegurant-se que el timezone configurat del servidor és el què ell assumeix que és. Com que això últim és un pitfall, millor sempre passar a timestamptz de seguida i explicitament.
+
+## timestamp naïf utc
+
+Això implica que tothom sàpiga que els timestamps són naïfs semànticament. _TODO: Elaborar maneres alternatives de fer inserts a la proposada al Don't do this_
+
+## timestamp naïf 'Europe/Madrid'
+
+Si no tindràs mai de la vida altres timezones... però no ho recomanem, perquè després passa el què passa
+
