@@ -1,3 +1,5 @@
+# **Timezones segons dades**
+
 # Context
 
 Una mica de la festa de la timezone després de barallar-nos-hi un xic.
@@ -10,9 +12,19 @@ Sobre què fem a dades, coincideix bastant amb el què diu aquí:
 
 https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_timestamp_.28without_time_zone.29
 
-# resumet
+## Glossari
 
-Tot en timestamptz i quan insertes has de fer-ho amb el timezone especificat. En general no confiem amb `show time zone;` del servidor o client. – _això encara ho estem analitzant, perquè potser ens simplificaria la vida_
+Si posem `[citation needed]` vol dir que encara ho estem analitzant
+
+# Resumet
+
+Tot datetime a la db en timestamptz i quan insertes has de fer-ho amb el timezone especificat. En general no confiem amb `show time zone;` del servidor o client [citation needed] _perquè potser podríem acceptar agregacions naïf_ .
+
+Agregacions amb timezone `date_trunc('day', some_timestamptz, 'Europe/Madrid')`
+
+Les dates poden ser naïf (no existeix el concepte de date aware a postgres), però seran en local. Si es pot i té sentit, mantenir el timestamptz de mitjanit [citation needed].
+
+# Aprofundim
 
 ## types d'entrada
 
@@ -90,9 +102,6 @@ from (
 |2021-01-01 20:00:00|2021-01-01 21:00:00+01|2021-01-01 20:00:00|2021-01-01 01:00:00+01|2021-01-01|2021-01-01|2021-01-01 01:00:00+01|
 |2021-01-02 04:00:00|2021-01-02 05:00:00+01|2021-01-01 20:00:00|2021-01-01 09:00:00+01|2021-01-01|2021-01-02|2021-01-01 09:00:00+01|
 
-
-
-
 ## Agregacions
 
 Les agregacions (de calendari) sempre amb el time zone que sigui rellevant. Una agregació diaria està sempre lligada a un timezone concret, perquè el dia està definit només dins d'un timezone, sinó parlaríem d'agregacions de 24h, que faríem en utc.
@@ -110,6 +119,4 @@ En general ho faríem tot en el time zone de l'Estat, però depèn del use case 
 
 ### Excepcions a la norma
 
-Pel cas que estem tractant actualment, previsió de la demanda, fem servir el dia local (a picture of a clock) perquè el què ens interessa no és comparar intervals de temps, sinó comportaments del dilluns, del cap de setmana, etc. Les hores a agrupar, els dies a agrupar, són culturals, encara que de fet representin packets d'hores universals diferents.
-
-_Disclaimer: Aquesta part encara està en discussió._
+Pel cas que estem tractant actualment, previsió de la demanda, fem servir el dia local (a picture of a clock) perquè el què ens interessa no és comparar intervals de temps, sinó comportaments del dilluns, del cap de setmana, etc. Les hores a agrupar, els dies a agrupar, són culturals, encara que de fet representin packets d'hores universals diferents [citation needed].
