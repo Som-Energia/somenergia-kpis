@@ -14,7 +14,9 @@ https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_timestamp_.28withou
 
 ## Glossari
 
-Si posem `[citation needed]` vol dir que encara ho estem analitzant
+Si posem `[citation needed]` vol dir que encara ho estem analitzant.
+
+`show time zone` és `Europe/Madrid`. Per tant les visualitzacions de timestamptz s'ensenyen en `Europe/Madrid`
 
 # Resumet
 
@@ -38,13 +40,11 @@ Amb el timezone del client configurat a 'Europe/Madrid', dóna
 select
 	'2021-01-01'::date as adate,
 	'2021-01-01'::date at time zone 'Europe/Madrid', -- timestamp 😲 ❌
-	'2021-01-01'::date::timestamp at time zone 'Europe/Madrid', -- timestamptz 👍
-	TRUE
+	'2021-01-01'::date::timestamp at time zone 'Europe/Madrid' -- timestamptz 👍
 ```
-
-| adate |	timezone | timezone | date_trunc |
-| ----- | ---------- | ----- | ----- |
-| 2021-01-01 | 2021-01-01 00:00:00 | 2021-01-01 00:00:00+01 | 2021-01-01 00:00:00+01 |
+|adate|timezone|timezone|
+|-----|--------|--------|
+|2021-01-01|2021-01-01 00:00:00|2021-01-01 00:00:00+01|
 
 ## Sources amb naïf i columna dst
 
@@ -76,6 +76,12 @@ from (
         ('2021-01-01 10:00:00'::timestamp at time zone 'Atlantic/Canary', 'Atlantic/Canary')
 ) as foo(end_hour_aware, timezone);
 ```
+
+|end_hour_aware|end_hour_local|day_local|
+|--------------|--------------|---------|
+|2021-01-01 10:00:00+01|2021-01-01 10:00:00|2021-01-01 00:00:00+01|
+|2021-01-01 11:00:00+01|2021-01-01 10:00:00|2021-01-01 01:00:00+01|
+
 
 Podeu veure la casuística:
 
@@ -109,11 +115,17 @@ Les agregacions (de calendari) sempre amb el time zone que sigui rellevant. Una 
 ```sql
 select
     -- date_trunc per defecte fa servir el time zone configurat
-    date_trunc('day', '2021-01-01 10:00:00+05:00', 'Europe/Madrid'),
+    date_trunc('day', '2021-01-01 01:00:00+05:00'::timestamptz) as date_trunc_local,
+    date_trunc('day', '2021-01-01 01:00:00+05:00'::timestamptz, 'Europe/Madrid') as date_trunc_local_explicit,
     -- time_bucket per defecte fa servir utc
-    time_bucket('1 day', '2021-01-01 10:00:00+05:00', 'Europe/Madrid'),
-    TRUE
+    time_bucket('1 day', '2021-01-01 01:00:00+05:00'::timestamptz) as time_bucket_utc,
+    time_bucket('1 day', '2021-01-01 01:00:00+05:00'::timestamptz, 'Europe/Madrid') as time_bucket_local;
 ```
+
+|date_trunc_local|date_trunc_local_explicit|time_bucket_utc|time_bucket_local|
+|----------------|-------------------------|---------------|-----------------|
+|2020-12-31 00:00:00+01|2020-12-31 00:00:00+01|2020-12-31 01:00:00+01|2020-12-31 00:00:00+01|
+
 
 En general ho faríem tot en el time zone de l'Estat, però depèn del use case (Veure [Excepcions a la norma](#excepcions-a-la-norma)).
 
