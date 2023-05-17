@@ -135,7 +135,8 @@ select
 
 En general ho faríem tot en el time zone de l'Estat, però depèn del use case (Veure [Excepcions a la norma](#excepcions-a-la-norma)).
 
-Si hem de convertir a date caldrà passar-ho al time zone que toqui abans de convertir a date.
+Si hem de convertir a date caldrà passar-ho al time zone que toqui abans de convertir a date, com que no tenim una gunció time_bucket(timestamptz)->date (ni date_trunc)
+cal que abans de convertir a date ho passem a naïf del timezone que toqui per a què postgres no li apliqui el time zone que tinguem configurat.
 
 ```sql
 select '2022-12-31 23:00:00+00'::timestamptz,
