@@ -135,6 +135,25 @@ select
 
 En general ho faríem tot en el time zone de l'Estat, però depèn del use case (Veure [Excepcions a la norma](#excepcions-a-la-norma)).
 
+Si hem de convertir a date caldrà passar-ho al time zone que toqui abans de convertir a date.
+
+```sql
+select '2022-12-31 23:00:00+00'::timestamptz,
+'2022-12-31 23:00:00+00'::timestamptz at time zone 'Europe/Madrid',
+'2022-12-31 23:00:00'::timestamp at time zone 'Europe/Madrid' as naif,
+date_trunc('day', '2022-12-31 23:00:00+00'::timestamptz, 'Europe/Madrid'),
+date_trunc('day', '2022-12-31 23:00:00+00'::timestamptz, 'Europe/Madrid')::date as incorrect_dt_based_on_config,
+(date_trunc('day', '2022-12-31 23:00:00+00'::timestamptz, 'Europe/Madrid') at time zone 'Europe/Madrid')::date as correct_dt,
+(time_bucket('1 day', '2022-12-31 23:00:00+00'::timestamptz, 'Europe/Madrid') at time zone 'Europe/Madrid'),
+(time_bucket('1 day', '2022-12-31 23:00:00+00'::timestamptz, 'Europe/Madrid'))::date as incorrect_tb_based_on_config,
+(time_bucket('1 day', '2022-12-31 23:00:00+00'::timestamptz, 'Europe/Madrid') at time zone 'Europe/Madrid')::date as correct
+```
+|timestamptz|timezone|naif|date_trunc|incorrect_dt_based_on_config|correct_dt|timezone|incorrect_tb_based_on_config|correct|
+|-----------|--------|----|----------|----------------------------|----------|--------|----------------------------|-------|
+|2022-12-31 23:00:00+00|2023-01-01 00:00:00|2022-12-31 22:00:00+00|2022-12-31 23:00:00+00|2022-12-31|2023-01-01|2023-01-01 00:00:00|2022-12-31|2023-01-01|
+
+
+
 ### Excepcions a la norma
 
 Pel cas que estem tractant actualment, previsió de la demanda, fem servir el dia local (a picture of a clock) perquè el què ens interessa no és comparar intervals de temps, sinó comportaments del dilluns, del cap de setmana, etc. Les hores a agrupar, els dies a agrupar, són culturals, encara que de fet representin packets d'hores universals diferents [citation needed].
