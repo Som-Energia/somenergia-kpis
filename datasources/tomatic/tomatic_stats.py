@@ -32,8 +32,22 @@ def get_yamls_by_ssh(sftp, dbapi, schema, remotepath):
 
     remotefullpath = remotepath / stats_dir
 
+    colnames = ['calldate', 'id_stat', 'ivoz.asteriskcallid', 'ivoz.sipcallid',
+        'ivoz.uniqueid', 'origsipcallid', 'karmausuario', 'extensiondestino',
+        'clidnum', 'clidname', 'channel', 'dstchannel', 'peerin', 'peerout',
+        'dcontext', 'lastapp', 'lastdata', 'nombrecentrocostedestino',
+        'nombredestino', 'uniqueid', 'modulo', 'src', 'srcagent', 'dst',
+        'billsec', 'agent_time', 'wait_time', 'ring_time', 'platform', 'cola',
+        'queuename', 'call_type', 'call_subtype', 'hangupcause',
+        'cdr_disposition', 'orig_pos', 'abandon_pos', 'xfer_dst_billsec',
+        'xfer_src_billsec', 'ano', 'mes', 'dia', 'hora', 'minuto', 'fecha',
+        'virtual_did', 'call_descr', 'did_in', 'queue_agent_priority',
+        'custom_field_2', 'custom_field_3', 'id_dialplan_partition',
+        'dialplan_partition', 'pata1.localizada', 'pata2.localizada', 'utctime',
+        'localtime', 'extensionorigen', 'ruta', 'nombrecentrocosteorigen',
+        'nombreorigen', 'origin_filename']
+
     # Let's load everything in RAM since we'll replace all this by GOING TO THE SOURCE
-    allcalls = pd.DataFrame()
 
     call_files = sorted(sftp.listdir_attr(str(remotefullpath)), key=attrgetter('filename'))
     logging.info(f"Download {len(call_files)} call files")
@@ -50,13 +64,12 @@ def get_yamls_by_ssh(sftp, dbapi, schema, remotepath):
             logging.info(f'Processing file {f.filename}')
             with sftp.open(str(remotefullpath/f.filename)) as file:
                 data = yaml.load(file, Loader=yaml.FullLoader)
-                calls = pd.DataFrame.from_dict(data['calls'])
-                calls['origin_filename'] = f.filename
-                allcalls = allcalls.append(calls, ignore_index=True)
-
-    allcalls = allcalls.rename(columns={'@calldate':'calldate'})
-    allcalls.to_sql("tomatic_calls_hourly", con=dbapi, schema=schema, if_exists='append', index=False)
-
+            calls = pd.DataFrame.from_dict(data['calls'])
+            calls['origin_filename'] = f.filename
+            calls = calls.rename(columns={'@calldate':'calldate'})
+            calls = calls[calls.columns.intersection(colnames)]
+            calls['localtime'] = calls['localtime'].dt.tz_localize(None)
+            calls.to_sql("tomatic_calls_hourly", con=dbapi, schema=schema, if_exists='append', index=False)
 
 if __name__ == '__main__':
 
