@@ -8,6 +8,10 @@ sources:
       - name: erppeek_kpis_description
       - name: pilotatge_int_kpis
       - name: pilotatge_float_kpis
+      - name: giscedata_polissa
+        description: NOT IN DB YET
+      - name: giscedata_tarifa
+        description: NOT IN DB YET
 
 models:
 
