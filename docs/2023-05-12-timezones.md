@@ -4,7 +4,7 @@
 
 Una mica de la festa de la timezone després de barallar-nos-hi un xic.
 
-mantras: Timestamp is a picture of a clock. You don't want a picture of a clock.
+mantras: `Timestamp` is a picture of a clock. You don't want a picture of a clock.
 
 Sobre timestamptz, contrariament al què hom pensaria quan llegeix "timestamp with time zone", aquest datatype de Postgres no guarda un timezone. És un "flag binari" de visualizació, un helper d'inserció i de visualització que converteix de la teva configuració o la de servidor a unix timestamp.
 
@@ -28,7 +28,7 @@ Opcions:
 
 Triem la opció 1. tot datetime a la db en timestamptz i quan insertes has de fer-ho amb el timezone especificat. En general no confiem amb `show time zone;` del servidor o client [citation needed _perquè potser podríem acceptar agregacions naïf_ si hi confiéssim].
 
-Agregacions amb timezone `date_trunc('day', some_timestamptz, 'Europe/Madrid')`
+Quan estem fent servir `timescaledb` fem agregacions amb la funció `time_bucket` per que el query planner sàpiga com accedir els chunks correctament. En altre cas, fem servir agregacions amb `date_trunc('day', some_timestamptz, 'Europe/Madrid')`
 
 Les dates poden ser naïf (no existeix el concepte de date aware a postgres), però seran en local. Si es pot i té sentit, mantenir el timestamptz de mitjanit [citation needed].
 
