@@ -52,7 +52,6 @@ select
 |adate|timezone|timezone|
 |-----|--------|--------|
 |2021-01-01|2021-01-01 00:00:00|2021-01-01 00:00:00+01|
-||||
 
 ## Sources amb naïf i columna dst
 
@@ -151,10 +150,10 @@ date_trunc('day', '2022-12-31 23:00:00+00'::timestamptz, 'Europe/Madrid')::date 
 (time_bucket('1 day', '2022-12-31 23:00:00+00'::timestamptz, 'Europe/Madrid'))::date as incorrect_tb_based_on_config,
 (time_bucket('1 day', '2022-12-31 23:00:00+00'::timestamptz, 'Europe/Madrid') at time zone 'Europe/Madrid')::date as correct
 ```
+
 |timestamptz|timezone|naif|date_trunc|incorrect_dt_based_on_config|correct_dt|timezone|incorrect_tb_based_on_config|correct|
 |-----------|--------|----|----------|----------------------------|----------|--------|----------------------------|-------|
 |2022-12-31 23:00:00+00|2023-01-01 00:00:00|2022-12-31 22:00:00+00|2022-12-31 23:00:00+00|2022-12-31|2023-01-01|2023-01-01 00:00:00|2022-12-31|2023-01-01|
-||||||||||
 
 
 
