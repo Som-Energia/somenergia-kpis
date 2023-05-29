@@ -10,7 +10,7 @@ Sobre timestamptz, contrariament al què hom pensaria quan llegeix "timestamp wi
 
 Sobre què fem a dades, coincideix bastant amb el què diu aquí:
 
-https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_timestamp_.28without_time_zone.29
+[Don't Do This](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_timestamp_.28without_time_zone.29)
 
 ## Glossari
 
