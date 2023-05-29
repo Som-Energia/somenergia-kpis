@@ -1,4 +1,4 @@
-# **Timezones segons dades**
+# Timezones segons dades
 
 # Context
 
@@ -48,9 +48,11 @@ select
 	'2021-01-01'::date at time zone 'Europe/Madrid', -- timestamp 😲 ❌
 	'2021-01-01'::date::timestamp at time zone 'Europe/Madrid' -- timestamptz 👍
 ```
+
 |adate|timezone|timezone|
 |-----|--------|--------|
 |2021-01-01|2021-01-01 00:00:00|2021-01-01 00:00:00+01|
+||||
 
 ## Sources amb naïf i columna dst
 
