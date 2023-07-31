@@ -8,7 +8,7 @@ This repository aims to establish a data-driven pipeline for coooperatives of th
 
 The general schema proposal to date
 
-![Data Warehouse](docs/data_architecture.png)
+![Data Warehouse](docs/images/data_architecture.png)
 
 ### Extractors and Loaders (EL)
 
@@ -22,7 +22,7 @@ There are two modules, the datasources and the pipeline:
 
 - Pipeline: from the raw data it makes the transformation and performs the most complex operations
 
-![Indicadors_schema](/docs/Indicadors.jpg "Schema")
+![Indicadors_schema](/docs/images/Indicadors.jpg "Schema")
 
 ## Install using `virtualenvwrapper`
 
@@ -97,7 +97,7 @@ As per their documentation, `poetry` can be installed with
 curl -sSL https://install.python-poetry.org | python3 -
 ```
 
-Follow the instructions in [their documentation](https://python-poetry.org/docs/#installation) to install `poetry`. 
+Follow the instructions in [their documentation](https://python-poetry.org/docs/#installation) to install `poetry`.
 
 Alternatively, if you have `pipx` installed, you can install it with `pipx install poetry`. You can read more about this in their [installation documentation for `pipx`](https://python-poetry.org/docs/#installing-with-pipx).
 

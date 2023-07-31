@@ -1,9 +1,15 @@
-# Welcome to SomEnergia KPIs Documentation MKdocs
+# SomEnergia KPIs Documentation
 
-The github's [Readme.md](https://github.com/Som-Energia/somenergia-kpis) is a good place to start.
+# Per l'Equip Tècnic
+
+Comenceu [aquí](ET/2023-07-31-Overview)
+
+# For Developers
+
+The [Readme](README) or [Readme.md](https://github.com/Som-Energia/somenergia-kpis) is a good place to start.
 But if you're a dev making a new kpi, this will get you up to speed in 'I know kung-fu' style.
 
-# KPI wars: A new kpi
+## KPI wars: A new kpi
 
 We have a script (`filtered_models_single_kpis.py`) that connects to the erp via erppeek
 and queries the kpis stated in a table called `erppeek_kpis_description`. So we first need to create that table.
@@ -32,7 +38,11 @@ $ dbt run --target testing --project-dir ./dbt_kpis -m kpis_raw+
 You now have the `utils/show_query.sql` which you can set to whichever query you'd want dbt to output in the command-line
 if you don't want to go and check the tables yourself :smile:
 
-# About mkdocs
+### The New Hope
+
+However, if only raw data is needed –as opposed to _camps calculats_–, the current preferred approach is sync tables using airbyte and use dbt on top of them.
+
+## About mkdocs
 
 For full documentation on mkdocs visit [mkdocs.org](https://www.mkdocs.org).
 
@@ -40,15 +50,14 @@ In particular we are using [mkdocs-material](https://squidfunk.github.io/mkdocs-
 
 However, a quickstart is
 
-## Commands
+### Commands
 
-* `pip install mkdocs-material`
-* (`mkdocs new [dir-name]` - Create a new project.) not necessary
+* `poetry install --with docs`
 * `mkdocs serve` - Start the live-reloading docs server.
 * `mkdocs build` - Build the documentation site.
 * `mkdocs -h` - Print help message and exit.
 
-## Project layout
+### Project layout
 
     mkdocs.yml    # The configuration file.
     docs/
