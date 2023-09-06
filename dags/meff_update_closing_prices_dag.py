@@ -73,6 +73,7 @@ with DAG(
     schedule_interval="0 16 * * *",
     catchup=False,
     tags=["Meff", "Transform"],
+    max_active_runs=1,
     default_args=args,
 ) as dag_slice:
     repo_name = "somenergia-kpis"

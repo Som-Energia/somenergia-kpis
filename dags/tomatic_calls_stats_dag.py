@@ -41,6 +41,7 @@ with DAG(
     schedule_interval="@daily",
     catchup=False,
     tags=["Tomatic", "Extract"],
+    max_active_runs=1,
     default_args=args,
 ) as dag:
     repo_name = "somenergia-kpis"

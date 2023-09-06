@@ -40,6 +40,7 @@ with DAG(
     schedule_interval="@weekly",
     catchup=False,
     tags=["ERP", "Extract", "BeeData"],
+    max_active_runs=1,
     default_args=args,
 ) as dag:
     repo_name = "somenergia-kpis"

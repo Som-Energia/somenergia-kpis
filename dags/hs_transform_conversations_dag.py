@@ -41,6 +41,7 @@ with DAG(
     schedule_interval="@hourly",
     catchup=True,
     tags=["Helpscout", "Transform"],
+    max_active_runs=1,
     default_args=args,
 ) as dag:
     repo_name = "somenergia-kpis"
