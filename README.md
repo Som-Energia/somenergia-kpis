@@ -97,7 +97,7 @@ As per their documentation, `poetry` can be installed with
 curl -sSL https://install.python-poetry.org | python3 -
 ```
 
-Follow the instructions in [their documentation](https://python-poetry.org/docs/#installation) to install `poetry`.
+Follow the instructions in [their documentation](https://python-poetry.org/docs/#installation) to install `poetry`. 
 
 Alternatively, if you have `pipx` installed, you can install it with `pipx install poetry`. You can read more about this in their [installation documentation for `pipx`](https://python-poetry.org/docs/#installing-with-pipx).
 
