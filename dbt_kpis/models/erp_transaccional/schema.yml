@@ -2,9 +2,17 @@
 version: 2
 
 sources:
-  - name: datalake_erp
+  - name: erp
     tables:
       - name: somenergia_soci
+      - name: giscedata_cups_ps
+      - name: giscedata_polissa
+      - name: giscedata_polissa_tarifa
+      - name: res_comarca
+      - name: res_comunitat_autonoma
+      - name: res_country_state
+      - name: res_municipi
+      - name: res_partner
 
 models:
 

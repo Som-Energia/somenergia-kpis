@@ -16,4 +16,4 @@ SELECT
         ELSE FALSE
     end as data_baixa_coherent,
     create_date between '2009-01-01' and now() + interval '1 day' as data_alta_coherent
-FROM {{source('datalake_erp', 'somenergia_soci')}}
+FROM {{source('erp', 'somenergia_soci')}}
