@@ -3,6 +3,25 @@ from sqlalchemy import create_engine
 import sys
 from stdnum import es
 
+def id_type_relex(id):
+    # Patrones de expresiones regulares para NIF, CIF y NIE
+    patron_nif = r'^\d{8}[A-HJ-NP-TV-Z]$'
+    patron_cif = r'^[ABCDEFGHJKLMNPQRSUVW]\d{7}[0-9A-J]$'
+    patron_nie = r'^[XYZ]\d{7}[A-Z]$'
+
+    # Comprueba si el número coincide con alguno de los patrones
+    if re.match(patron_nif,id):
+        return 'NIF'
+    elif re.match(patron_cif, id):
+        return 'CIF'
+    elif re.match(patron_nie, id):
+        return 'NIE'
+    else:
+        return 'Otro'
+
+    df.loc[df['country_code'] == 'ES','id_type'] = df.loc[df['country_code'] == 'ES','id'].apply(lambda x: id_type_relex(x))
+    df['is_enterprise_relex'] = np.where(df['id_type'] == 'CIF', True, False)
+    df['diff'] = df['is_enterprise_relex'] != df['is_enterprise_stdnum']
 
 def is_juridic(df):
 
