@@ -50,9 +50,9 @@ with DAG(
     get_hr_employee_task = DockerOperator(
         api_version="auto",
         task_id="omie_get_price_hour",
-        docker_conn_id="somenergia_registry",
+        docker_conn_id="somenergia_harbor_dades_registry",
         image="{}/{}-requirements:latest".format(
-            "{{ conn.somenergia_registry.host }}", repo_name
+            "{{ conn.somenergia_harbor_dades_registry.host }}", repo_name
         ),
         working_dir=f"/repos/{repo_name}",
         command='python3 -m datasources.omie.omie_update_last_hour_price "{{ var.value.puppis_prod_db}}"',

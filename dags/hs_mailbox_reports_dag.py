@@ -50,9 +50,9 @@ with DAG(
     get_conversations_task = DockerOperator(
         api_version="auto",
         task_id="hs_mailbox_reports",
-        docker_conn_id="somenergia_registry",
+        docker_conn_id="somenergia_harbor_dades_registry",
         image="{}/{}-requirements:latest".format(
-            "{{ conn.somenergia_registry.host }}", repo_name
+            "{{ conn.somenergia_harbor_dades_registry.host }}", repo_name
         ),
         working_dir=f"/repos/{repo_name}",
         command='python3 -m datasources.helpscout.hs_mailbox_reports update-hs-kpis-pilotatge "{{ data_interval_start }}" "{{ data_interval_end }}" \
