@@ -13,6 +13,7 @@ sources:
       - name: res_country_state
       - name: res_municipi
       - name: res_partner
+      - name: res_partner_address
 
 models:
 
