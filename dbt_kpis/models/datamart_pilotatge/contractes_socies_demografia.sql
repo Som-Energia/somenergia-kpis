@@ -41,3 +41,10 @@ left join {{source('erp', 'res_municipi')}} as rm on rm.id = gpc.id_municipi
 left join {{source('erp', 'res_comarca')}} as rc on rm.comarca = rc.id
 left join {{source('erp', 'res_country_state')}} as rcs on rm.state = rcs.id
 left join {{source('erp', 'res_comunitat_autonoma')}} as rca on rcs.comunitat_autonoma = rca.id
+
+"""
+SELECT *
+FROM dbt_prod.socies_demografia
+WHERE contractes_actius > 0 and socia_activa IS TRUE
+ORDER BY RANDOM() LIMIT 3000
+"""
