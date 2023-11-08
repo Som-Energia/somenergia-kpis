@@ -22,3 +22,13 @@ group by
 	mobile,
 	email,
 	lang
+
+"""
+SELECT *
+FROM dbt_prod.socies_demografia
+WHERE contractes_actius > 0 and socia_activa IS TRUE
+ORDER BY RANDOM() LIMIT 3000
+
+-- Falta un left join amb la taula de noms i gènere de l'INE
+
+"""
