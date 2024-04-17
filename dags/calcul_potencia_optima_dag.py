@@ -47,13 +47,12 @@ with DAG(
 
     sampled_moll = get_random_moll()
 
-
     get_conversations_task = DockerOperator(
         api_version="auto",
         task_id="calcul_potencia_optima",
-        docker_conn_id="somenergia_registry",
+        docker_conn_id="somenergia_harbor_dades_registry",
         image="{}/{}-requirements:latest".format(
-            "{{ conn.somenergia_registry.host }}", repo_name
+            "{{ conn.somenergia_harbor_dades_registry.host }}", repo_name
         ),
         working_dir=f"/repos/{repo_name}",
         command='python3 -m datasources.erp.calcul_potencia_optima --dbapi "{{ var.value.erp_prod_sp2_uri_ro }}" --dbapi-dades "{{ var.value.dades_prod_db }}"',
@@ -64,4 +63,3 @@ with DAG(
         retrieve_output=True,
         trigger_rule="none_failed",
     )
-

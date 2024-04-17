@@ -59,9 +59,9 @@ with DAG(
     transform_conversations_task = DockerOperator(
         api_version="auto",
         task_id="hs_transform_conversations",
-        docker_conn_id="somenergia_registry",
+        docker_conn_id="somenergia_harbor_dades_registry",
         image="{}/{}-requirements:latest".format(
-            "{{ conn.somenergia_registry.host }}", repo_name
+            "{{ conn.somenergia_harbor_dades_registry.host }}", repo_name
         ),
         working_dir=f"/repos/{repo_name}",
         command='python3 -m pipelines.hs_transform_conversations "{{ data_interval_start }}" "{{ data_interval_end }}" \

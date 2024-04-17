@@ -51,9 +51,9 @@ with DAG(
     get_conversations_task = DockerOperator(
         api_version="auto",
         task_id="erppeek_get_pilotatge_kpis_daily",
-        docker_conn_id="somenergia_registry",
+        docker_conn_id="somenergia_harbor_dades_registry",
         image="{}/{}-requirements:latest".format(
-            "{{ conn.somenergia_registry.host }}", repo_name
+            "{{ conn.somenergia_harbor_dades_registry.host }}", repo_name
         ),
         working_dir=f"/repos/{repo_name}",
         command='python3 -m datasources.erppeek.filtered_models_single_kpis "{{ var.value.dades_prod_db }}" "daily" \

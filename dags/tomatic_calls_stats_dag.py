@@ -51,9 +51,9 @@ with DAG(
     tomatic_calls_stats_task = DockerOperator(
         api_version="auto",
         task_id="tomatic_calls_stats",
-        docker_conn_id="somenergia_registry",
+        docker_conn_id="somenergia_harbor_dades_registry",
         image="{}/{}-requirements:latest".format(
-            "{{ conn.somenergia_registry.host }}", repo_name
+            "{{ conn.somenergia_harbor_dades_registry.host }}", repo_name
         ),
         working_dir=f"/repos/{repo_name}",
         command='python3 -m datasources.tomatic.tomatic_stats "{{ var.value.dades_prod_db }}" prod "{{ var.value.tomatera_user }}" \

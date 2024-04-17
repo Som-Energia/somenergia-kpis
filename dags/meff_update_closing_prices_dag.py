@@ -51,9 +51,9 @@ with DAG(
     meff_update_closing_prices_task = DockerOperator(
         api_version="auto",
         task_id="meff_update_closing_prices",
-        docker_conn_id="somenergia_registry",
+        docker_conn_id="somenergia_harbor_dades_registry",
         image="{}/{}-requirements:latest".format(
-            "{{ conn.somenergia_registry.host }}", repo_name
+            "{{ conn.somenergia_harbor_dades_registry.host }}", repo_name
         ),
         working_dir=f"/repos/{repo_name}",
         command='python3 -m datasources.meff.meff_update_closing_prices "{{ var.value.puppis_prod_db}}"',
@@ -83,9 +83,9 @@ with DAG(
     meff_slice_day_closing_prices_task = DockerOperator(
         api_version="auto",
         task_id="meff_slice_day_closing_prices",
-        docker_conn_id="somenergia_registry",
+        docker_conn_id="somenergia_harbor_dades_registry",
         image="{}/{}-requirements:latest".format(
-            "{{ conn.somenergia_registry.host }}", repo_name
+            "{{ conn.somenergia_harbor_dades_registry.host }}", repo_name
         ),
         working_dir=f"/repos/{repo_name}",
         command='python3 -m pipelines.meff_closing_prices_day_slice "{{ var.value.puppis_prod_db}}"',
@@ -100,9 +100,9 @@ with DAG(
     meff_slice_month_closing_prices_task = DockerOperator(
         api_version="auto",
         task_id="meff_slice_month_closing_prices",
-        docker_conn_id="somenergia_registry",
+        docker_conn_id="somenergia_harbor_dades_registry",
         image="{}/{}-requirements:latest".format(
-            "{{ conn.somenergia_registry.host }}", repo_name
+            "{{ conn.somenergia_harbor_dades_registry.host }}", repo_name
         ),
         working_dir=f"/repos/{repo_name}",
         command='python3 -m pipelines.meff_closing_prices_month_slice "{{ var.value.puppis_prod_db}}"',
