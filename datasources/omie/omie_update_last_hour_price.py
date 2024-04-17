@@ -3,6 +3,8 @@ import logging
 
 import pandas as pd
 
+import ssl
+
 import datetime
 import urllib.request, gzip
 import lxml.html
@@ -99,6 +101,7 @@ def update(dbapi, dry_run=False):
     return df
 
 if __name__ == '__main__':
+    ssl._create_default_https_context = ssl._create_stdlib_context
     dbapi = sys.argv[1]
     dry_run = sys.argv[2] if len(sys.argv) > 2 else False
     update(dbapi, dry_run)
