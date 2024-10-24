@@ -68,7 +68,9 @@ select
 	rm.name as municipi,
 	rc.name as comarca,
 	rcs.name as provincia,
-	rca.name as ccaa
+	rca.name as ccaa,
+	ss.data_baixa_soci,
+	ss.write_date as write_date_soci
 from {{source('erp', 'somenergia_soci')}} as ss
 left join {{source('erp', 'giscedata_polissa')}} as gp on ss.partner_id = gp.titular
 left join {{source('erp', 'giscedata_polissa_tarifa')}} as gpt on gpt.id = gp.tarifa
