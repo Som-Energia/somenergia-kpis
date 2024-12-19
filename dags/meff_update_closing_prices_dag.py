@@ -36,9 +36,9 @@ mount_nfs = Mount(
 )
 
 with DAG(
-    dag_id="meff_update_closing_prices_dag",
+    dag_id="meff_update_closing_prices_dag_v2",
     start_date=datetime(2022, 6, 9),
-    schedule_interval="0 15 * * *",
+    schedule_interval="0 3 * * *",
     catchup=False,
     tags=["Meff", "Extract"],
     default_args=args,
@@ -68,9 +68,9 @@ with DAG(
 
 
 with DAG(
-    dag_id="meff_slice_closing_prices_dag_v2",
+    dag_id="meff_slice_closing_prices_dag_v3",
     start_date=datetime(2022, 6, 9),
-    schedule_interval="0 3 * * *",
+    schedule_interval="0 4 * * *",
     catchup=False,
     tags=["Meff", "Transform"],
     max_active_runs=1,
