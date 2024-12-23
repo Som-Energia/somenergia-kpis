@@ -36,7 +36,7 @@ def get_files(engine, filetype, potential_missing):
         print(f'No {filetype} new files available.')
         exit()
 
-    base_url = f'https://www.omie.es/es/file-download?parents%5B0%5D={filetype}&filename='
+    base_url = f'https://www.omie.es/es/file-download?parents={filetype}&filename='
 
     try:
         dfs = [
