@@ -1,4 +1,3 @@
-
 version: 2
 
 sources:
@@ -14,23 +13,10 @@ sources:
       - name: res_municipi
       - name: res_partner
       - name: res_partner_address
+      - name: giscedata_polissa_modcontractual
+      - name: product_pricelist
+      - name: res_subsistemas_electricos
+      - name: giscemisc_cnae
   - name: prod
     tables:
       - name: ine_nombres_sexo
-
-models:
-
-  - name: erp_somenergia_soci_dirty
-    description: "Taules somenergia socis amb columnes de coherència"
-
-  - name: erp_somenergia_soci
-    description: "Taules somenergia socis"
-    columns:
-      - name: data_alta
-        tests:
-          - not_null
-      - name: es_baixa
-        tests:
-          - not_null
-
-

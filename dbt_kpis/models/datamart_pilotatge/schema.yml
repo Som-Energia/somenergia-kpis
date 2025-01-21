@@ -17,9 +17,5 @@ models:
     description: "Altes de persones sòcies"
 
   - name: kpis_long
-    config:
-      schema: pilotatge
 
   - name: kpis_wide
-    config:
-      schema: pilotatge

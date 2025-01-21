@@ -13,8 +13,6 @@ models:
 
   - name: kpis_raw
     description: "Cleaned pilotatge numeric KPIs for the people"
-    config:
-      schema: warehouse
     columns:
       - name: value
         description: "The value of KPI"
@@ -23,8 +21,6 @@ models:
 
   - name: kpis_wider
     description: "KPis row wider"
-    config:
-      schema: warehouse
     columns:
       - name: create_date
         description: "date of the creation of the kpis by airflow"
@@ -33,8 +29,6 @@ models:
 
   - name: kpis_with_derived
     description: "KPIS expanded with derived kpis"
-    config:
-      schema: warehouse
     columns:
       - name: create_date
         description: "date of the creation of the kpis by airflow"
@@ -43,8 +37,6 @@ models:
 
   - name: kpis_bucketed_daily
     description: "All KPIS, combined and direct one kpi per day"
-    config:
-      schema: warehouse
     columns:
       - name: create_date
         description: "date of the creation of the kpis by airflow"
@@ -54,8 +46,6 @@ models:
 
   - name: kpis_description
     description: "KPIs description original + names, descriptions of computed new KPIs in DBT"
-    config:
-      schema: warehouse
     columns:
       - name: create_date
         description: "date of the creation of the KPI description"
