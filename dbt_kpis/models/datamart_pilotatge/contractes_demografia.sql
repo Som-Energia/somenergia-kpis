@@ -43,6 +43,27 @@ select
 		WHEN rp.vat ~ 'W[0-9]{7}' THEN 'Establiment permanent d''entitat no resident en territori espanyol'
 		ELSE 'Altres'
 	END as personalitat_juridica,
+	CASE
+		WHEN NOT gcnae.name = '9820' AND NOT gcnae.name = '9810' THEN TRUE
+		WHEN rp.vat like 'ESA%' THEN TRUE
+		WHEN rp.vat like 'ESB%' THEN TRUE
+		WHEN rp.vat like 'ESC%' THEN TRUE
+		WHEN rp.vat like 'ESD%' THEN TRUE
+		WHEN rp.vat like 'ESE%' THEN TRUE
+		WHEN rp.vat like 'ESF%' THEN TRUE
+		WHEN rp.vat like 'ESG%' THEN TRUE
+		WHEN rp.vat like 'ESH%' THEN TRUE
+		WHEN rp.vat like 'ESJ%' THEN TRUE
+		WHEN rp.vat like 'ESP%' THEN TRUE
+		WHEN rp.vat like 'ESQ%' THEN TRUE
+		WHEN rp.vat like 'ESR%' THEN TRUE
+		WHEN rp.vat like 'ESS%' THEN TRUE
+		WHEN rp.vat like 'ESU%' THEN TRUE
+		WHEN rp.vat like 'ESV%' THEN TRUE
+		WHEN rp.vat like 'ESN%' THEN TRUE
+		WHEN rp.vat like 'ESW%' THEN TRUE
+		ELSE False
+	END as contracte_eie,
 	ca.id as current_adress_id,
 	ca.create_date as current_adress_create_date,
 	gpc.name as cups,
@@ -57,7 +78,7 @@ select
 	rp.lang,
 	gpt.name as tarifa,
 	gp.id as polissa_id,
-	gp.cnae,
+	gcnae.name as cnae,
 	gp.potencia as potencia,
 	gp.autoconsumo,
 	gp.tipus_vivenda,
@@ -84,5 +105,6 @@ left join {{source('erp', 'res_municipi')}} as partner_rm on partner_rm.id = ca.
 left join {{source('erp', 'res_comarca')}} as partner_rc on partner_rm.comarca = partner_rc.id
 left join {{source('erp', 'res_country_state')}} as partner_rcs on partner_rm.state = partner_rcs.id
 left join {{source('erp', 'res_comunitat_autonoma')}} as partner_rca on partner_rcs.comunitat_autonoma = partner_rca.id
+left join {{source('erp', 'giscemisc_cnae')}} as gcnae on gp.cnae = gcnae.id
 left join (SELECT * FROM ine_noms WHERE rank = 1) as ine_genere
 	on LOWER(ine_genere.nom) = translate(LOWER(SPLIT_PART(rp.name, ', ',2)), 'áàéèíòóú', 'aaeeioouu')
