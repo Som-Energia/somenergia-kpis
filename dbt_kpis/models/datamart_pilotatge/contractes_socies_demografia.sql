@@ -1,4 +1,4 @@
-{{ config(materialized='view') }}
+{{ config(materialized='table') }}
 with last_rpa as (
 	select partner_id, max(id) as last_id
 	from {{source('erp', 'res_partner_address')}}
@@ -17,7 +17,7 @@ with last_rpa as (
 )
 select
 	rp.ref as partner_ref,
-	rp.id as res_partner_id,
+	ss.id as res_partner_id,
 	SPLIT_PART(rp.name, ', ',2) as nom_de_pila,
 	rp.name as nom_complet,
 	rp.vat as partner_vat,
