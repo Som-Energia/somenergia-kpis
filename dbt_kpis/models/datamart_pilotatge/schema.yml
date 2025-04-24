@@ -23,3 +23,7 @@ models:
   - name: kpis_wide
     config:
       schema: pilotatge
+
+  - name: public
+    tables:
+      - name: airbyte_odoo_donyet_hr_employee
