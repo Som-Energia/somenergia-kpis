@@ -76,7 +76,7 @@ with DAG(
 
     sampled_moll = get_random_moll()
 
-    dbapi = Variable.get("dades_kpis_db")
+    dbapi = Variable.get("dades_prod_db")
 
     dbapi_dict = dbapi_to_dict(dbapi)
 
