@@ -52,6 +52,7 @@ select
 	partner_rc.name as partner_comarca,
 	partner_rcs.name as partner_provincia,
 	partner_rca.name as partner_ccaa,
+	gpc.ref_catastral as ref_catastral,
 	ine_genere.genere as genere,
 	rp.lang,
 	gpt.name as tarifa,

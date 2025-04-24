@@ -74,6 +74,10 @@ select
 	partner_rc.name as partner_comarca,
 	partner_rcs.name as partner_provincia,
 	partner_rca.name as partner_ccaa,
+	CASE
+		WHEN gpc.ref_catastral not like '' THEN gpc.ref_catastral
+		ELSE NULL
+	END as ref_catastral,
 	ine_genere.genere as genere,
 	rp.lang,
 	gpt.name as tarifa,
