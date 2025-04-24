@@ -1,4 +1,4 @@
-{{ config(materialized='view') }}
+{{ config(materialized='table') }}
 with last_rpa as (
 	select partner_id, max(id) as last_id
 	from {{source('erp', 'res_partner_address')}}
@@ -17,7 +17,7 @@ with last_rpa as (
 )
 select
 	rp.ref as partner_ref,
-	rp.id as res_partner_id,
+	ss.id as res_partner_id,
 	SPLIT_PART(rp.name, ', ',2) as nom_de_pila,
 	rp.name as nom_complet,
 	rp.vat as partner_vat,
@@ -52,6 +52,7 @@ select
 	partner_rc.name as partner_comarca,
 	partner_rcs.name as partner_provincia,
 	partner_rca.name as partner_ccaa,
+	gpc.ref_catastral as ref_catastral,
 	ine_genere.genere as genere,
 	rp.lang,
 	gpt.name as tarifa,
@@ -68,7 +69,9 @@ select
 	rm.name as municipi,
 	rc.name as comarca,
 	rcs.name as provincia,
-	rca.name as ccaa
+	rca.name as ccaa,
+	ss.data_baixa_soci,
+	ss.write_date as write_date_soci
 from {{source('erp', 'somenergia_soci')}} as ss
 left join {{source('erp', 'giscedata_polissa')}} as gp on ss.partner_id = gp.titular
 left join {{source('erp', 'giscedata_polissa_tarifa')}} as gpt on gpt.id = gp.tarifa

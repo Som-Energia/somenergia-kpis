@@ -43,8 +43,30 @@ select
 		WHEN rp.vat ~ 'W[0-9]{7}' THEN 'Establiment permanent d''entitat no resident en territori espanyol'
 		ELSE 'Altres'
 	END as personalitat_juridica,
+	CASE
+		WHEN NOT gcnae.name = '9820' AND NOT gcnae.name = '9810' THEN TRUE
+		WHEN rp.vat like 'ESA%' THEN TRUE
+		WHEN rp.vat like 'ESB%' THEN TRUE
+		WHEN rp.vat like 'ESC%' THEN TRUE
+		WHEN rp.vat like 'ESD%' THEN TRUE
+		WHEN rp.vat like 'ESE%' THEN TRUE
+		WHEN rp.vat like 'ESF%' THEN TRUE
+		WHEN rp.vat like 'ESG%' THEN TRUE
+		WHEN rp.vat like 'ESH%' THEN TRUE
+		WHEN rp.vat like 'ESJ%' THEN TRUE
+		WHEN rp.vat like 'ESP%' THEN TRUE
+		WHEN rp.vat like 'ESQ%' THEN TRUE
+		WHEN rp.vat like 'ESR%' THEN TRUE
+		WHEN rp.vat like 'ESS%' THEN TRUE
+		WHEN rp.vat like 'ESU%' THEN TRUE
+		WHEN rp.vat like 'ESV%' THEN TRUE
+		WHEN rp.vat like 'ESN%' THEN TRUE
+		WHEN rp.vat like 'ESW%' THEN TRUE
+		ELSE False
+	END as contracte_eie,
 	ca.id as current_adress_id,
 	ca.create_date as current_adress_create_date,
+	gpc.name as cups,
 	ca.phone,
 	ca.mobile,
 	ca.email,
@@ -52,18 +74,22 @@ select
 	partner_rc.name as partner_comarca,
 	partner_rcs.name as partner_provincia,
 	partner_rca.name as partner_ccaa,
+	CASE
+		WHEN gpc.ref_catastral not like '' THEN gpc.ref_catastral
+		ELSE NULL
+	END as ref_catastral,
 	ine_genere.genere as genere,
 	rp.lang,
 	gpt.name as tarifa,
 	gp.id as polissa_id,
-	gp.cups,
-	gp.cnae,
+	gcnae.name as cnae,
 	gp.potencia as potencia,
 	gp.autoconsumo,
 	gp.tipus_vivenda,
 	gp.soci as soci_padri,
-	CASE WHEN gp.active = TRUE and gp.data_baixa is null THEN TRUE ELSE FALSE END as contracte_actiu,
+	CASE WHEN gp.active = TRUE and gp.data_baixa is null and gp.state = 'activa' THEN TRUE ELSE FALSE END as contracte_actiu,
     CASE WHEN ss.data_baixa_soci is null and ss.id is not null THEN TRUE ELSE FALSE END as socia_activa,
+	gp.state as gp_state,
 	ROUND(ABS(EXTRACT(days FROM (gp.data_alta - NOW()))/365.25)::decimal,2) as anys_antiguitat,
 	rm.name as municipi,
 	rc.name as comarca,
@@ -83,242 +109,6 @@ left join {{source('erp', 'res_municipi')}} as partner_rm on partner_rm.id = ca.
 left join {{source('erp', 'res_comarca')}} as partner_rc on partner_rm.comarca = partner_rc.id
 left join {{source('erp', 'res_country_state')}} as partner_rcs on partner_rm.state = partner_rcs.id
 left join {{source('erp', 'res_comunitat_autonoma')}} as partner_rca on partner_rcs.comunitat_autonoma = partner_rca.id
+left join {{source('erp', 'giscemisc_cnae')}} as gcnae on gp.cnae = gcnae.id
 left join (SELECT * FROM ine_noms WHERE rank = 1) as ine_genere
 	on LOWER(ine_genere.nom) = translate(LOWER(SPLIT_PART(rp.name, ', ',2)), 'áàéèíòóú', 'aaeeioouu')
-
-
-/*
-padrins:
-
-SELECT
-	CASE
-		WHEN personalitat_juridica = 'Persona física' or personalitat_juridica = 'Persona física estrangera' THEN SPLIT_PART(nom_complet, ', ',2)
-		ELSE nom_complet
-	END as nom,
-	CASE
-		WHEN personalitat_juridica = 'Persona física' or personalitat_juridica = 'Persona física estrangera' THEN SPLIT_PART(nom_complet, ', ',1)
-		ELSE ''
-	END
-	as cognoms,
-	email,
-	partner_ref,
-	CASE
-		WHEN contractes_apadrinats is not null THEN contractes_apadrinats
-		ELSE 0
-	END as contractes_apadrinats,
-	CASE
-		WHEN contractes_apadrinats is not null THEN 5 - contractes_apadrinats
-		ELSE 5
-	END as nebots_disponibles,
-	lang as llengua,
-	RIGHT(partner_vat, LENGTH(partner_vat) - 2) as dni_nie_nif,
-	RIGHT(REPLACE(partner_ref,'O','0'), LENGTH(partner_ref) - 1)::numeric as numero_socia,
-	personalitat_juridica
-FROM dbt_prod.socies_demografia as socies
-left join (
-	SELECT soci_padri, count(*) as contractes_apadrinats
-	FROM dbt_prod.contractes_socies_demografia as contractes
-	WHERE contracte_actiu = TRUE
-	GROUP BY soci_padri
-	ORDER BY contractes_apadrinats DESC
-) as padrins
-ON padrins.soci_padri = socies.res_partner_id
-where partner_ref NOT IN ('antiga',' ','XXXXS037683','P14869','XXXS021298',' T122937','XXXS026613','XXXS012527','XXXXS025835', 'S011343 no', 'S005996 (No informar del número a la Laura!)')
-and (contractes_apadrinats is null or contractes_apadrinats < 5)
-ORDER BY padrins.contractes_apadrinats ASC
-*/
-
---# ERRORS
-/*
-with cagada as (
-SELECT
-	CASE
-		WHEN personalitat_juridica = 'Persona física' or personalitat_juridica = 'Persona física estrangera' THEN SPLIT_PART(nom_complet, ', ',2)
-		ELSE nom_complet
-	END as nom,
-	CASE
-		WHEN personalitat_juridica = 'Persona física' or personalitat_juridica = 'Persona física estrangera' THEN SPLIT_PART(nom_complet, ', ',1)
-		ELSE ''
-	END
-	as cognoms,
-	email,
-	partner_ref,
-	CASE
-		WHEN contractes_apadrinats is not null THEN contractes_apadrinats
-		ELSE 0
-	END as contractes_apadrinats,
-	CASE
-		WHEN contractes_apadrinats is not null THEN 5 - contractes_apadrinats
-		ELSE 5
-	END as nebots_disponibles,
-	lang as llengua,
-	RIGHT(partner_vat, LENGTH(partner_vat) - 2) as dni_nie_nif,
-	RIGHT(REPLACE(partner_ref,'O','0'), LENGTH(partner_ref) - 1)::numeric as numero_socia,
-	personalitat_juridica,
-	socia_activa
-FROM dbt_prod.socies_demografia as socies
-left join (
-	SELECT soci_padri, count(*) as contractes_apadrinats
-	FROM dbt_prod.contractes_socies_demografia as contractes
-	WHERE contracte_actiu = TRUE
-	GROUP BY soci_padri
-	ORDER BY contractes_apadrinats DESC
-) as padrins
-ON padrins.soci_padri = socies.res_partner_id
-where partner_ref NOT IN ('antiga',' ','XXXXS037683','P14869','XXXS021298',' T122937','XXXS026613','XXXS012527','XXXXS025835', 'S011343 no', 'S005996 (No informar del número a la Laura!)')
-and (contractes_apadrinats is null or contractes_apadrinats < 5)
-ORDER BY padrins.contractes_apadrinats ASC
-), llista_bona as (
-
-SELECT
-	CASE
-		WHEN personalitat_juridica = 'Persona física' or personalitat_juridica = 'Persona física estrangera' THEN SPLIT_PART(nom_complet, ', ',2)
-		ELSE nom_complet
-	END as nom,
-	CASE
-		WHEN personalitat_juridica = 'Persona física' or personalitat_juridica = 'Persona física estrangera' THEN SPLIT_PART(nom_complet, ', ',1)
-		ELSE ''
-	END
-	as cognoms,
-	email,
-	partner_ref,
-	CASE
-		WHEN contractes_apadrinats is not null THEN contractes_apadrinats
-		ELSE 0
-	END as contractes_apadrinats,
-	CASE
-		WHEN contractes_apadrinats is not null THEN 5 - contractes_apadrinats
-		ELSE 5
-	END as nebots_disponibles,
-	lang as llengua,
-	RIGHT(partner_vat, LENGTH(partner_vat) - 2) as dni_nie_nif,
-	RIGHT(REPLACE(partner_ref,'O','0'), LENGTH(partner_ref) - 1)::numeric as numero_socia,
-	personalitat_juridica,
-	socia_activa
-FROM dbt_prod.socies_demografia as socies
-left join (
-	SELECT soci_padri, count(*) as contractes_apadrinats
-	FROM dbt_prod.contractes_demografia as contractes
-	WHERE contracte_actiu = TRUE
-	GROUP BY soci_padri
-	ORDER BY contractes_apadrinats DESC
-) as padrins
-ON padrins.soci_padri = socies.res_partner_id
-where partner_ref NOT IN ('antiga',' ','XXXXS037683','P14869','XXXS021298',' T122937','XXXS026613','XXXS012527','XXXXS025835', 'S011343 no', 'S005996 (No informar del número a la Laura!)')
-and (contractes_apadrinats is null or contractes_apadrinats < 5)
-and socia_activa is true
-ORDER BY padrins.contractes_apadrinats ASC
-), quantificant as (
-	select cagada.partner_ref, cagada.nom, cagada.cognoms, cagada.email, cagada.socia_activa, cagada.contractes_apadrinats as contractes_apadrinats_dolent,
-	llista_bona.contractes_apadrinats as contractes_apadrinats_bo, llista_bona.contractes_apadrinats = cagada.contractes_apadrinats as num_apadrinats_check, 
-	llista_bona.contractes_apadrinats - cagada.contractes_apadrinats as num_apadrinats_delta
-	from cagada as cagada
-	full join (select partner_ref, contractes_apadrinats from llista_bona ) as llista_bona
-	on cagada.partner_ref = llista_bona.partner_ref
-	where socia_activa is true
-) --select num_apadrinats_check, count(*) from quantificant group by num_apadrinats_check
-select num_apadrinats_delta, count(*) from quantificant group by num_apadrinats_delta
-
-*/
-
-
-/* SOCIES QUE HAN REBUT QUE TENIEN NEBOTS DISPONIBLES I NO EN TENEN (NO HAURIEN D'HAVER REBUT EL MAIL)
-	select * from quantificant where contractes_apadrinats_bo is null
-*/
-
-/* QUANTITAT D'ERRORS PER NOMBRE DE NEBOTS DISPONIBLES RESPECTE LA REALITAT
-	select num_apadrinats_delta, count(*) from quantificant group by num_apadrinats_delta
-*/
-
-
-
-/*
-with cagada as (
-SELECT
-	CASE
-		WHEN personalitat_juridica = 'Persona física' or personalitat_juridica = 'Persona física estrangera' THEN SPLIT_PART(nom_complet, ', ',2)
-		ELSE nom_complet
-	END as nom,
-	CASE
-		WHEN personalitat_juridica = 'Persona física' or personalitat_juridica = 'Persona física estrangera' THEN SPLIT_PART(nom_complet, ', ',1)
-		ELSE ''
-	END
-	as cognoms,
-	email,
-	partner_ref,
-	CASE
-		WHEN contractes_apadrinats is not null THEN contractes_apadrinats
-		ELSE 0
-	END as contractes_apadrinats,
-	CASE
-		WHEN contractes_apadrinats is not null THEN 5 - contractes_apadrinats
-		ELSE 5
-	END as nebots_disponibles,
-	lang as llengua,
-	RIGHT(partner_vat, LENGTH(partner_vat) - 2) as dni_nie_nif,
-	RIGHT(REPLACE(partner_ref,'O','0'), LENGTH(partner_ref) - 1)::numeric as numero_socia,
-	personalitat_juridica,
-	socia_activa
-FROM dbt_prod.socies_demografia as socies
-left join (
-	SELECT soci_padri, count(*) as contractes_apadrinats
-	FROM dbt_prod.contractes_socies_demografia as contractes
-	WHERE contracte_actiu = TRUE
-	GROUP BY soci_padri
-	ORDER BY contractes_apadrinats DESC
-) as padrins
-ON padrins.soci_padri = socies.res_partner_id
-where partner_ref NOT IN ('antiga',' ','XXXXS037683','P14869','XXXS021298',' T122937','XXXS026613','XXXS012527','XXXXS025835', 'S011343 no', 'S005996 (No informar del número a la Laura!)')
-and (contractes_apadrinats is null or contractes_apadrinats < 5)
-ORDER BY padrins.contractes_apadrinats ASC
-), llista_bona as (
-
-SELECT
-	CASE
-		WHEN personalitat_juridica = 'Persona física' or personalitat_juridica = 'Persona física estrangera' THEN SPLIT_PART(nom_complet, ', ',2)
-		ELSE nom_complet
-	END as nom,
-	CASE
-		WHEN personalitat_juridica = 'Persona física' or personalitat_juridica = 'Persona física estrangera' THEN SPLIT_PART(nom_complet, ', ',1)
-		ELSE ''
-	END
-	as cognoms,
-	email,
-	partner_ref,
-	CASE
-		WHEN contractes_apadrinats is not null THEN contractes_apadrinats
-		ELSE 0
-	END as contractes_apadrinats,
-	CASE
-		WHEN contractes_apadrinats is not null THEN 5 - contractes_apadrinats
-		ELSE 5
-	END as nebots_disponibles,
-	lang as llengua,
-	RIGHT(partner_vat, LENGTH(partner_vat) - 2) as dni_nie_nif,
-	RIGHT(REPLACE(partner_ref,'O','0'), LENGTH(partner_ref) - 1)::numeric as numero_socia,
-	personalitat_juridica,
-	socia_activa
-FROM dbt_prod.socies_demografia as socies
-left join (
-	SELECT soci_padri, count(*) as contractes_apadrinats
-	FROM dbt_prod.contractes_demografia as contractes
-	WHERE contracte_actiu = TRUE
-	GROUP BY soci_padri
-	ORDER BY contractes_apadrinats DESC
-) as padrins
-ON padrins.soci_padri = socies.res_partner_id
-where partner_ref NOT IN ('antiga',' ','XXXXS037683','P14869','XXXS021298',' T122937','XXXS026613','XXXS012527','XXXXS025835', 'S011343 no', 'S005996 (No informar del número a la Laura!)')
-and (contractes_apadrinats is null or contractes_apadrinats < 5)
-and socia_activa is true
-ORDER BY padrins.contractes_apadrinats ASC
-), quantificant as (
-	select cagada.partner_ref, cagada.nom, cagada.cognoms, cagada.email, cagada.socia_activa, cagada.contractes_apadrinats as contractes_apadrinats_dolent,
-	llista_bona.contractes_apadrinats as contractes_apadrinats_bo, llista_bona.contractes_apadrinats = cagada.contractes_apadrinats as num_apadrinats_check, 
-	llista_bona.contractes_apadrinats - cagada.contractes_apadrinats as num_apadrinats_delta
-	from cagada as cagada
-	full join (select partner_ref, contractes_apadrinats from llista_bona ) as llista_bona
-	on cagada.partner_ref = llista_bona.partner_ref
-	where socia_activa is true
-) --select num_apadrinats_check, count(*) from quantificant group by num_apadrinats_check
-select * from quantificant where contractes_apadrinats_bo is null
-*/

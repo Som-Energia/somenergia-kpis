@@ -1,0 +1,12 @@
+selectors:
+  - name: pilotatge
+    description: "Models rellevants per Pilotatge"
+    definition:
+      union:
+        - method: path
+          value: models/datamart_pilotatge
+        - exclude:
+          - method: fqn
+            value: kpis_long
+          - method: fqn
+            value: kpis_wide
