@@ -1,0 +1,36 @@
+---
+
+dbt_kpis:
+    outputs:
+        prod:
+            type: postgres
+            threads: 4
+            host: "{{ env_var('DBHOST') }}"
+            port: "{{ env_var('DBPORT') | as_number }}"
+            user: "{{ env_var('DBUSER') }}"
+            password: "{{ env_var('DBPASSWORD') }}"
+            dbname: "{{ env_var('DBNAME') }}"
+            schema: dbt_kpis_prod
+
+        pre:
+            type: postgres
+            threads: 4
+            host: "{{ env_var('DBHOST') }}"
+            port: "{{ env_var('DBPORT') | as_number }}"
+            user: "{{ env_var('DBUSER') }}"
+            password: "{{ env_var('DBPASSWORD') }}"
+            dbname: "{{ env_var('DBNAME') }}"
+            schema: dbt_kpis_pre
+
+        test:
+            type: postgres
+            threads: 4
+            host: "{{ env_var('DBHOST') }}"
+            port: "{{ env_var('DBPORT') | as_number }}"
+            user: "{{ env_var('DBUSER') }}"
+            password: "{{ env_var('DBPASSWORD') }}"
+            dbname: "{{ env_var('DBNAME') }}"
+            schema: dbt_kpis_test
+
+    target: pre
+

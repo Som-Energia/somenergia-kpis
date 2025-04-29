@@ -1,0 +1,23 @@
+version: 2
+models:
+  - name: raw_erp__historical_contract_terms
+    description: >
+      Aquest model denormalitza les dades de les condicions contractuals de l'ERP, i reconstrueix un historic de condicions contractuals, el que permet saber per exemple, quants contractes d'una determinada tarifa distri, hi ha en un moment determinat, o saber quanta potència contractada hi ha en un període de temps.
+    columns:
+      - name: cups_20
+      - name: is_valid_cups
+      - name: start_date
+      - name: end_date_corregit
+      - name: dso_tariff
+      - name: comer_tariff_name
+      - name: tariff_type
+      - name: comer_tariff
+      - name: categoria_potencia
+      - name: power_periods_kw
+        description: |
+          Un string
+      - name: auto_type
+      - name: subsystem_code
+      - name: system_code
+      - name: coeficient_k
+      - name: coeficient_d
