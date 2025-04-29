@@ -46,6 +46,12 @@ class Conversation_tag(Base):
     clean_conversation_id = Column(Integer, ForeignKey('hs_clean_conversation.id'), primary_key = True)
     tag_id = Column(Integer, ForeignKey('hs_tag.id'), primary_key = True)
 
-#Per crear les taules
-#engine = create_engine()
-#Base.metadata.create_all(engine)
+class HS_mailbox(Base):
+    __tablename__ = 'hs_mailbox'
+    id = Column(Integer, primary_key = True)
+    email = Column(String)
+    name = Column(String)
+
+# Per crear les taules
+# engine = create_engine()
+# Base.metadata.create_all(engine)
