@@ -87,6 +87,7 @@ select
 	gp.autoconsumo,
 	gp.tipus_vivenda,
 	gp.soci as soci_padri,
+	gp.donatiu as donatiu_voluntari,
 	CASE WHEN gp.active = TRUE and gp.data_baixa is null and gp.state = 'activa' THEN TRUE ELSE FALSE END as contracte_actiu,
     CASE WHEN ss.data_baixa_soci is null and ss.id is not null THEN TRUE ELSE FALSE END as socia_activa,
 	gp.state as gp_state,

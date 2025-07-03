@@ -1,4 +1,4 @@
-{{ config(materialized='table') }}
+{{ config(materialized='view') }}
 with last_rpa as (
 	select partner_id, max(id) as last_id
 	from {{source('erp', 'res_partner_address')}}
