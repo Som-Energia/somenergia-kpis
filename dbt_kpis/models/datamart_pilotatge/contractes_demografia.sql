@@ -41,7 +41,7 @@ select
 		WHEN rp.vat ~ 'U[0-9]{7}' THEN 'Unió Temporal d''Empreses'
 		WHEN rp.vat ~ 'V[0-9]{7}' THEN 'Altres tipus no definits en la resta de claus'
 		WHEN rp.vat ~ 'W[0-9]{7}' THEN 'Establiment permanent d''entitat no resident en territori espanyol'
-		ELSE 'Altres'
+		ELSE 'Desconegut'
 	END as personalitat_juridica,
 	CASE
 		WHEN NOT gcnae.name = '9820' AND NOT gcnae.name = '9810' THEN TRUE
