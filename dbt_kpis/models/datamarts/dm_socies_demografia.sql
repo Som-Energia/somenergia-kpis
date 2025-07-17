@@ -23,7 +23,7 @@
 	MAX(anys_antiguitat) as anys_antiguitat,
 	data_baixa_soci,
 	MAX(write_date_soci) as write_date_soci
-from {{ref('contractes_socies_demografia')}}
+from {{ref('dm_contractes_socies_demografia')}}
 --where res_partner_id is not null
 group by
 	partner_ref,

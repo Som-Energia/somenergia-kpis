@@ -1,12 +1,8 @@
 selectors:
-  - name: pilotatge
-    description: "Models rellevants per Pilotatge"
+  - name: demografia
+    description: "Models rellevants per preguntes de Balanç Social, Cultura Cooperativa, etc"
     definition:
       union:
-        - method: path
-          value: models/datamart_pilotatge
-        - exclude:
-          - method: fqn
-            value: kpis_long
-          - method: fqn
-            value: kpis_wide
+        - dm_socies_demografia
+        - dm_contractes_socies_demografia
+        - dm_contractes_demografia
