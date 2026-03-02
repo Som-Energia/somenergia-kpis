@@ -51,7 +51,7 @@ with DAG(
         api_version="auto",
         task_id="omie_get_price_hour",
         docker_conn_id="somenergia_harbor_dades_registry",
-        image="{}/{}-legacy:py38-latest".format(
+        image="{}/{}-main:latest".format(
             "{{ conn.somenergia_harbor_dades_registry.host }}", repo_name
         ),
         working_dir=f"/repos/{repo_name}",
