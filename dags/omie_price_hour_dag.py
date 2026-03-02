@@ -51,7 +51,7 @@ with DAG(
         api_version="auto",
         task_id="omie_get_price_hour",
         docker_conn_id="somenergia_harbor_dades_registry",
-        image="{}/{}-requirements:latest".format(
+        image="{}/{}-legacy:py38-latest".format(
             "{{ conn.somenergia_harbor_dades_registry.host }}", repo_name
         ),
         working_dir=f"/repos/{repo_name}",
@@ -59,7 +59,7 @@ with DAG(
         docker_url=sampled_moll,
         mounts=[mount_nfs],
         mount_tmp_dir=False,
-        auto_remove=True,
+        auto_remove="success",
         retrieve_output=True,
         trigger_rule="none_failed",
     )

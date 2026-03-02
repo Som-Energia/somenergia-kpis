@@ -36,18 +36,24 @@ cp dbconfig.example.py dbconfig.py
 
 ## Install using `pyenv`, `pipx` and `poetry`
 
-The following commands require `pyenv`, `pipx` and `poetry`.
+The following commands require `pyenv`, `pipx` and `poetry`. Install `pyenv` by following its [installation instructions](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation). Install `pipx` and then `poetry` with `pipx install poetry`. You can read more about this in their [installation documentation for `pipx`](https://python-poetry.org/docs/#installing-with-pipx).
 
 ### Quickstart
 
 Assuming `poetry` and `pyenv` are already installed, you can install the dependencies with the following commands:
 
 ```sh
-pyenv install 3.8.12
-pyenv virtualenv 3.8.12 somenergia-kpis
-pyenv activate somenergia-kpis
-poetry install
+# install the specified python version with pyenv
+pyenv install <PYTHON_VERSION> 
+
+# this will create a .python-version file with the specified version
+pyenv local <PYTHON_VERSION> 
+
+# this will install the dependencies specified in pyproject.toml and create a virtual environment for the project
+poetry install 
 ```
+
+Where `PYTHON_VERSION` is a version compatible with the one specified in the `pyproject.toml` file.
 
 You should be able to access the project's CLI as in
 
@@ -78,49 +84,6 @@ Options:
   -h, --help                      Show this message and exit.
 ```
 
-Read the following sections for more details.
-
-### Using `pyenv`
-
-1. Install `pyenv` using [pyenv-installer](https://github.com/pyenv/pyenv-installer) and follow their instructions. Pay special attention to the following steps:
-   1. Extending your `.bashrc` file, documented in [the pyenv-installer README](https://github.com/pyenv/pyenv#set-up-your-shell-environment-for-pyenv), so that `pyenv` is available in your shell.
-   2. Install `pyenv` dependencies for installing python versions as per the [pyenv wiki](https://github.com/pyenv/pyenv#install-python-build-dependencies)
-2. Install the required python version with `pyenv install 3.8.12`, and wait until it finishes.
-3. Create a new virtual environment of your choice. If you used `pyenv-installer` you should be able to create one with `pyenv virtualenv 3.8.12 somenergia-kpis`. Here, `somenergia-kpis` is the name of the virtual environment.
-4. Activate the virtual environment with `pyenv activate somenergia-kpis`. Alternatively, you can use `pyenv shell somenergia-kpis` to activate the virtual environment for the current shell session. You can also set the python version locally with `pyenv local somenergia-kpis`. This will create a file called `.python-version` which is used by pyenv to automatically activate the virtual environment when you `cd` into the directory.
-
-### Installing and using `poetry`
-
-As per their documentation, `poetry` can be installed with
-
-```sh
-curl -sSL https://install.python-poetry.org | python3 -
-```
-
-Follow the instructions in [their documentation](https://python-poetry.org/docs/#installation) to install `poetry`. 
-
-Alternatively, if you have `pipx` installed, you can install it with `pipx install poetry`. You can read more about this in their [installation documentation for `pipx`](https://python-poetry.org/docs/#installing-with-pipx).
-
-`pipx` acts as a global interface to pip, meant to consume and install python packages that expose CLIs e.g. `poetry`. To install it, follow their instructions at [their documentation](https://pypa.github.io/pipx/installation/) to install `pipx`.
-
-#### Managing the environment with `pyenv` and dependencies with `poetry`.
-
-At the root level of the repository you will find a [poetry.toml](./poetry.toml) file with some configurations that are valid at the **project level only**. More specifically,
-
-```toml
-[virtualenvs]
-in-project = false
-create = false
-```
-
-the `poetry.toml` file tells `poetry` to not create a virtual environment for the project, and will instead use the virtual environment created with `pyenv`. Read more about this in the [poetry documentation](https://python-poetry.org/docs/configuration/#virtualenvsin-project).
-
-This means that if you have the environment activated, you can now use the `poetry` CLI to manage dependencies.
-
-#### Adding dependencies
-
-`poetry add <package-name>` will add the package to the `pyproject.toml` file. You can also add a package as a development dependency with `poetry add --group dev <package-name>`. You can read more about this in the [poetry documentation](https://python-poetry.org/docs/cli/#add).
-
 #### Exporting `pyproject.toml` to `requirements.txt`
 
 This will export the dependencies listed in `pyproject.toml` to `requirements.txt` and `requirements-dev.txt` files. This is useful for deployment in production environments. Read more about this in the [poetry documentation](https://python-poetry.org/docs/cli/#export).
@@ -149,8 +112,8 @@ GRANT SELECT ON TABLES TO username;
 ### transformations using dbt
 
 ```sh
-$ pip install dbt-postgres
-$ dbt init
+pip install dbt-postgres
+dbt init
 ```
 
 Edit the ~/.dbt/profiles.yml with your connection details. You can use dbt_profile.exemple.yml as an example.
@@ -174,9 +137,14 @@ dbt deps --project-dir dbt_kpis
 
 ## test
 
-Testing will require installing `b2btest` which in turn requires `lxml` to be installed manually via pip
+Testing will require installing `b2btest`, install it with
+
+`$ poetry install --with dev`
+
+and then you can run pytest. At the time of writing, not all tests passed anymore.
+
+Since I was dealing with a ticket, I just made `pytest -k omie` work. :S
 
 Create an empty testing database and configure it in dbconfig.py at the `test_db` entry.
 
 `$ dbt test --target testing --project-dir dbt_kpis`
-

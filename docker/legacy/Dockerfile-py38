@@ -2,6 +2,6 @@
 
 FROM python:3.8-slim-buster
 
-COPY requirements38.txt .
+COPY requirements-py38.txt .
 
 RUN pip3 install -r requirements-py38.txt
