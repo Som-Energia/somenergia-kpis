@@ -1,93 +1,115 @@
 import datetime
-from pathlib import Path
-import pandas as pd
+import logging
 from functools import reduce
 
-import logging
+import pandas as pd
 
-from dbconfig import local_db
 
 def omie_energy_buy(engine):
     try:
-        omie_energy_buy = pd.read_sql('select * from omie_energy_buy', con=engine)
+        omie_energy_buy = pd.read_sql("select * from omie_energy_buy", con=engine)
     except:
-        logging.error('Error on fetching latest omie_energy_buy')
+        logging.error("Error on fetching latest omie_energy_buy")
         # TODO handle exceptions
         raise
 
-    omie_energy_buy = omie_energy_buy.\
-        rename(columns={'demand':'energy'})
-    omie_energy_buy['energy'] = -omie_energy_buy['energy']
+    omie_energy_buy = omie_energy_buy.rename(columns={"demand": "energy"})
+    omie_energy_buy["energy"] = -omie_energy_buy["energy"]
 
-    omie_energy_buy = omie_energy_buy[['date','energy']]
+    omie_energy_buy = omie_energy_buy[["date", "energy"]]
 
     return omie_energy_buy
 
+
 def omie_price_hour(engine):
     try:
-        omie_price_hour = pd.read_sql('select * from omie_price_hour', con=engine)
+        omie_price_hour = pd.read_sql("select * from omie_price_hour", con=engine)
     except:
-        logging.error('Error on fetching latest omie_price_hour')
+        logging.error("Error on fetching latest omie_price_hour")
         # TODO handle exceptions
         raise
-    
-    omie_price_hour = omie_price_hour[['date','price']]
-    omie_price_hour['date'] = pd.to_datetime(omie_price_hour['date'], utc=True) 
+
+    omie_price_hour = omie_price_hour[["date", "price"]]
+    omie_price_hour["date"] = pd.to_datetime(omie_price_hour["date"], utc=True)
     return omie_price_hour
-    
+
+
 def last_meff_prices_daily(engine):
     try:
-        last_meff_prices_daily = pd.read_sql('select * from meff_precios_cierre_dia where request_time IN (select request_time from meff_precios_cierre_dia order by request_time desc limit 1)', con=engine)
+        last_meff_prices_daily = pd.read_sql(
+            "select * from meff_precios_cierre_dia where request_time IN (select request_time from meff_precios_cierre_dia order by request_time desc limit 1)",
+            con=engine,
+        )
     except:
-        logging.error('Error on fetching latest meff_prices_daily')
+        logging.error("Error on fetching latest meff_prices_daily")
         # TODO handle exceptions
         raise
-    last_meff_prices_daily = last_meff_prices_daily.\
-        rename(columns={'base_precio':'price_forecast'})
+    last_meff_prices_daily = last_meff_prices_daily.rename(
+        columns={"base_precio": "price_forecast"}
+    )
 
-    last_meff_prices_daily['date'] = pd.to_datetime(last_meff_prices_daily['dia']).dt.tz_localize('Europe/Madrid').dt.tz_convert('UTC')
+    last_meff_prices_daily["date"] = (
+        pd.to_datetime(last_meff_prices_daily["dia"])
+        .dt.tz_localize("Europe/Madrid")
+        .dt.tz_convert("UTC")
+    )
 
-    last_meff_prices_daily = last_meff_prices_daily[['date','price_forecast','request_time']]
+    last_meff_prices_daily = last_meff_prices_daily[
+        ["date", "price_forecast", "request_time"]
+    ]
 
-    last_meff_prices_daily = last_meff_prices_daily.\
-        rename(columns={'request_time':'meff_request_time'})
+    last_meff_prices_daily = last_meff_prices_daily.rename(
+        columns={"request_time": "meff_request_time"}
+    )
 
     return last_meff_prices_daily
 
+
 def last_neuro_energy_buy(engine):
     try:
-        last_neuro_energy_buy = pd.read_sql('select * from energy_buy_forecast where request_time IN (select request_time from energy_buy_forecast order by request_time desc limit 1)', con=engine)
+        last_neuro_energy_buy = pd.read_sql(
+            "select * from energy_buy_forecast where request_time IN (select request_time from energy_buy_forecast order by request_time desc limit 1)",
+            con=engine,
+        )
     except:
-        logging.error('Error on fetching latest neuro_energy_buy')
+        logging.error("Error on fetching latest neuro_energy_buy")
         # TODO handle exceptions
         raise
-    
-    last_neuro_energy_buy = last_neuro_energy_buy.\
-        rename(columns={'base':'energy_forecast'})
 
-    last_neuro_energy_buy = last_neuro_energy_buy[['date','energy_forecast','request_time']]
+    last_neuro_energy_buy = last_neuro_energy_buy.rename(
+        columns={"base": "energy_forecast"}
+    )
 
-    last_neuro_energy_buy = last_neuro_energy_buy.\
-        rename(columns={'request_time':'neuro_request_time'})
+    last_neuro_energy_buy = last_neuro_energy_buy[
+        ["date", "energy_forecast", "request_time"]
+    ]
+
+    last_neuro_energy_buy = last_neuro_energy_buy.rename(
+        columns={"request_time": "neuro_request_time"}
+    )
 
     return last_neuro_energy_buy
 
 
 def interpolated_last_meff_prices_by_hour(meff_df):
 
-    next_day = pd.DataFrame({'date':[max(meff_df['date']) + datetime.timedelta(days=1)]})
-    meff_df = meff_df.append(next_day)
+    next_day = pd.DataFrame(
+        {"date": [max(meff_df["date"]) + datetime.timedelta(days=1)]}
+    )
+    meff_df = pd.concat([meff_df, next_day], ignore_index=True)
 
-    meff_df = meff_df\
-        .reset_index()\
-        .set_index('date', drop = False)[['price_forecast']]\
-        .resample('h')\
-        .interpolate(method='linear')\
+    meff_df = (
+        meff_df.reset_index()
+        .set_index("date", drop=False)[["price_forecast"]]
+        .resample("h")
+        .interpolate(method="linear")
         .reset_index(level=0)
+    )
 
-    meff_df = meff_df[meff_df['date'] != max(meff_df['date'])]
+    meff_df = meff_df[meff_df["date"] != max(meff_df["date"])]
 
     return meff_df
+
 
 # TODO Improve this?
 # assumes input dataframes have a timezone-aware date column and that the timezone is 'UTC'
@@ -95,43 +117,47 @@ def interpolated_last_meff_prices_by_hour(meff_df):
 # otherwise throws
 def joined_timeseries(timeseries_dfs):
 
-    from_date = min([df.iloc[0]['date'] for df in timeseries_dfs])
-    to_date = max([df.iloc[-1]['date'] for df in timeseries_dfs])
+    from_date = min([df.iloc[0]["date"] for df in timeseries_dfs])
+    to_date = max([df.iloc[-1]["date"] for df in timeseries_dfs])
 
     df_timeline = pd.DataFrame(
         pd.date_range(
-            from_date.astimezone('Europe/Madrid'),
-            (to_date.astimezone('Europe/Madrid') + datetime.timedelta(days=1)),
-            freq = 'H',
-            normalize = True,
-            closed = 'left',
-            tz='Europe/Madrid')
-        ).\
-        rename(columns={0:'date'})
+            from_date.astimezone("Europe/Madrid"),
+            (to_date.astimezone("Europe/Madrid") + datetime.timedelta(days=1)),
+            freq="H",
+            normalize=True,
+            inclusive="left",
+            tz="Europe/Madrid",
+        )
+    ).rename(columns={0: "date"})
 
     # convert to utc to merge without mixing timezones
-    df_timeline['date'] = pd.to_datetime(df_timeline['date'], utc=True)
+    df_timeline["date"] = pd.to_datetime(df_timeline["date"], utc=True)
 
-    df_merged = reduce(lambda  left,right: pd.merge(left,right,on=['date'],
-                                            how='left'), [df_timeline] + timeseries_dfs)
+    df_merged = reduce(
+        lambda left, right: pd.merge(left, right, on=["date"], how="left"),
+        [df_timeline] + timeseries_dfs,
+    )
 
     return df_merged
 
+
 def hourly_energy_budget(df):
 
-    df['energy_price'] = df['energy'] * df['price']
-    df['energy_price_forecast'] = df['energy'] * df['price_forecast']
-    df['energy_forecast_price'] = df['energy_forecast'] * df['price']
-    df['energy_forecast_price_forecast'] = df['energy_forecast'] * df['price_forecast']
+    df["energy_price"] = df["energy"] * df["price"]
+    df["energy_price_forecast"] = df["energy"] * df["price_forecast"]
+    df["energy_forecast_price"] = df["energy_forecast"] * df["price"]
+    df["energy_forecast_price_forecast"] = df["energy_forecast"] * df["price_forecast"]
 
-    df['budget'] = (
-        df['energy_price']\
-        .combine_first(df['energy_forecast_price'])\
-        .combine_first(df['energy_price_forecast'])\
-        .combine_first(df['energy_forecast_price_forecast'])
+    df["budget"] = (
+        df["energy_price"]
+        .combine_first(df["energy_forecast_price"])
+        .combine_first(df["energy_price_forecast"])
+        .combine_first(df["energy_forecast_price_forecast"])
     )
 
     return df
+
 
 def pipe_hourly_energy_budget(engine, verbose=2):
 
@@ -141,13 +167,20 @@ def pipe_hourly_energy_budget(engine, verbose=2):
     neuro_energy_buy_df = last_neuro_energy_buy(engine)
     meff_prices_daily_df = interpolated_last_meff_prices_by_hour(meff_prices_daily_df)
 
-    df = joined_timeseries([omie_energy_buy_df, omie_price_hour_df, meff_prices_daily_df, neuro_energy_buy_df])
+    df = joined_timeseries(
+        [
+            omie_energy_buy_df,
+            omie_price_hour_df,
+            meff_prices_daily_df,
+            neuro_energy_buy_df,
+        ]
+    )
     df = hourly_energy_budget(df)
 
-    df.to_sql('energy_budget_hourly', engine, if_exists = 'replace', index = False)
+    df.to_sql("energy_budget_hourly", engine, if_exists="replace", index=False)
 
-    if verbose>1:
-        print('Energy budget:')
+    if verbose > 1:
+        print("Energy budget:")
         print(df)
 
     return 0

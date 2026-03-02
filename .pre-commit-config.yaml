@@ -1,0 +1,49 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+        args: ["--unsafe"]
+      - id: trailing-whitespace
+      - id: detect-private-key
+      - id: name-tests-test
+        args: ["--pytest-test-first"]
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+  - repo: https://github.com/pycqa/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+        name: isort (python)
+        args: ["--profile", "black", "--filter-files"]
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    # Ruff version.
+    rev: "v0.12.11"
+    hooks:
+      - id: ruff
+  - repo: https://github.com/dbt-checkpoint/dbt-checkpoint
+    rev: v2.0.7
+    hooks:
+    - id: dbt-parse
+      stages: [manual]
+    - id: check-model-has-description
+      additional_dependencies: ["dbt-postgres"]
+      stages: [manual]
+      files: ^dbt_balanc
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 3.4.2
+    hooks:
+      # enable sqlfluff-fix will modify sql files.
+      - id: sqlfluff-fix
+        additional_dependencies: ["dbt-postgres", "sqlfluff-templater-dbt"]
+      - id: sqlfluff-lint
+        additional_dependencies: ["dbt-postgres", "sqlfluff-templater-dbt"]
+fail_fast: false
+files: ".*"
+exclude: |
+  (?x)^(
+      desktop.ini
+  )$

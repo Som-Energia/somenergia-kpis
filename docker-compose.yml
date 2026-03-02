@@ -1,0 +1,49 @@
+---
+name: "somenergia-balanc-costos"
+
+services:
+  main:
+    image: "harbor.somenergia.coop/dades/somenergia-kpis-main:${IMAGE_TAG:-latest}"
+    deploy:
+      replicas: 0 # never start service, since it is only for build purposes
+    build:
+      context: .
+      dockerfile: docker/main/Dockerfile
+      target: main
+      cache_from:
+        - "harbor.somenergia.coop/dades/somenergia-kpis-main:${IMAGE_TAG:-latest}"
+  dev:
+    image: "harbor.somenergia.coop/dades/somenergia-kpis-dev:${IMAGE_TAG:-latest}"
+    build:
+      context: .
+      dockerfile: docker/main/Dockerfile
+      target: dev
+      cache_from:
+        - "harbor.somenergia.coop/dades/somenergia-kpis-main:latest"
+    environment:
+      DBHOST: ${SOMENERGIA_KPIS_DB_HOST-dbdades.somenergia.lan}
+      DBPORT: ${SOMENERGIA_KPIS_DB_PORT-5432}
+      DBUSER: ${SOMENERGIA_KPIS_DB_USER}
+      DBPASSWORD: ${SOMENERGIA_KPIS_DB_PASSWORD}
+      DBNAME: ${SOMENERGIA_KPIS_DB_DBNAME-mercat_test}
+    volumes:
+      - .:/project
+    command: /bin/sh -c "sleep infinity" # keep container running
+    networks:
+      - db_nw
+    ports:
+      - 8050:8050 # for dbt docs server
+  legacy-py38:
+    image: "harbor.somenergia.coop/dades/somenergia-kpis-legacy:py38-${IMAGE_TAG:-latest}"
+    build:
+      context: docker/legacy
+      dockerfile: Dockerfile-py38
+  legacy-py310:
+    image: "harbor.somenergia.coop/dades/somenergia-kpis-legacy:py310-${IMAGE_TAG:-latest}"
+    build:
+      context: docker/legacy
+      dockerfile: Dockerfile-py310
+
+networks:
+  db_nw:
+    name: db_nw
