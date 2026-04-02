@@ -8,6 +8,12 @@ sources:
       - name: erppeek_kpis_description
       - name: pilotatge_int_kpis
       - name: pilotatge_float_kpis
+  - name: erp_derived
+    schema: public
+    tables:
+      - name: calcul_potencia_optima
+
+
 
 models:
 
